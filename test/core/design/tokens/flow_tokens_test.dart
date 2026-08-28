@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/core/design/tokens/flow_elevation.dart';
 import 'package:flow/core/design/tokens/flow_motion.dart';
