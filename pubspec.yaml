@@ -97,6 +97,12 @@ flutter:
       fonts:
         - asset: assets/fonts/PressStart2P-Regular.ttf
 
+  assets:
+    - assets/icons/onboarding/
+    - assets/icons/achievements/
+    - assets/illustrations/mascot/
+    - assets/brand/
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
