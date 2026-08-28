@@ -24,6 +24,16 @@ Source documentation (primary source of truth for this spec):
 `/Users/leojangelicomacario/Downloads/docs/00-README.md` through `13-brand-visual-system.md`,
 plus `/Users/leojangelicomacario/Downloads/docs/assets/`.
 
+**Design-token and component verification source:** the Figma file "FLOW —
+Onboarding v2" (`fileKey GGCrpp5JI69VK0kLguM40b`,
+https://www.figma.com/design/GGCrpp5JI69VK0kLguM40b/) — a "00 Foundations"
+page with live Figma-variable color/type/spacing bindings, and a "01
+Components" page with built components far beyond the onboarding scope. Where
+this file and the written docs disagree, Section 6 and Section 8 below note
+the correction and which source won (generally: Figma, since it's the more
+current, maintained artifact — its own color swatches are explicitly annotated
+as "live bindings, not pasted hex").
+
 ## 2. Scope decisions (confirmed with user)
 
 ### Removed entirely (from `lib/` and `pubspec.yaml`)
@@ -288,11 +298,24 @@ fills — see button rule below), `trackSubtle` `#DCE6EF`, `success` `#147A52`
 `streak` `#F5A15C`, `error` `#FF6B6B`, `warning` `#FFA940`, `scrim` `#000000` @
 70%.
 
-**Game-surface/frame tokens (§2.5, used by pixel-framed components):**
-`canvas.game` `#E4F5FD`, `panel.deep` `#085A82`, `panel.deepInk` `#FFFFFF`,
-`panel.deepAccent` `#7FDBFA`, `frame.ink` `#0B1E36`, `frame.depth` `#0A3E5C`
+**Game-surface/frame tokens (§2.5, used by pixel-framed components).**
+**Correction from Figma verification:** the written doc presented these as a
+single theme-independent table, but the actual Figma variable bindings show
+`canvas.game`, `panel.deep`, and `trackDark` are genuinely theme-dependent —
+confirmed by inspecting the file's bound variables directly, not just its
+light-mode swatches:
+
+| Token | Light | Dark |
+|---|---|---|
+| `canvas.game` | `#E4F5FD` | `#101A33` (= dark `background.primary`) |
+| `panel.deep` | `#085A82` | `#06405E` |
+| `panel.deepAccent` | `#7FDBFA` | `#7FDBFA` (same) |
+| `trackDark` | `#143A52` | `#0C2436` |
+
+Theme-independent (confirmed unchanged across both modes in Figma):
+`panel.deepInk` `#FFFFFF`, `frame.ink` `#0B1E36`, `frame.depth` `#0A3E5C`
 (never blurred), `frame.bevel` `#5FCBF5` @ 35%, `particle` `#7FDBFA` @ 30%,
-`brand.primaryActive` `#1C9AD1`, `trackDark` `#143A52`.
+`brand.primaryActive` `#1C9AD1`.
 
 **Gradients (exactly 3):** `gradient.hero` (160°, `brand.primary` →
 `brand.primaryPressed`), `gradient.share` (180°, `brand.primary` → `#083A5E`),
@@ -357,9 +380,15 @@ levels visible per card.
 
 ### Spacing, radius, elevation, motion
 - **Spacing** (4dp base): `space.2/4/8/12/16/20/24/32/40/48/64`.
-- **Radius:** `sm` 8 (buttons, chips, game panels), `md` 12 (inputs, tiles),
-  `lg` 16 (cards, sheets), `xl` 24 (modals/sheet top corners), `pill` 999
-  (`QuickAddChip` only — no other component uses it).
+- **Radius:** `sm` 8 (buttons, chip-shells, game panels), `md` 12 (inputs,
+  cards, tiles), `lg` 16 (cards, sheets), `xl` 24 (modals/sheet top corners).
+  **Correction from Figma verification:** the written doc lists a `pill` (999)
+  radius reserved for `QuickAddChip` — but the actual built `CMP-04
+  QuickAddChip` in Figma uses a **10px radius**, not a pill. `radius.pill`
+  appears to be unused anywhere in the current design. I'm keeping the token
+  defined (harmless, and easy to use if a future component needs a true pill)
+  but building `QuickAddChip` with a dedicated 10px radius rather than
+  `radius.pill`, matching what's actually in the file.
 - **Elevation:** light uses box-shadows (`elevation.1/2/3`, escalating blur/
   opacity); dark uses surface-color steps instead of shadow (near-invisible on
   dark backgrounds). Modals use `elevation.3`, cards use `elevation.1`, never
@@ -431,32 +460,54 @@ feature that needs them (Phase 4/5/8), not routes. Two flagged exceptions:
   placeholder route since it's cheap to stub now and avoids re-plumbing later;
   the doc conflict itself is not resolved by this spec.
 
-## 8. Component scope — `CMP-01` through `CMP-15` only
+## 8. Component scope — `CMP-01` through `CMP-15`, verified against Figma
 
-Matches the roadmap's own `US-003` foundation scope exactly (not the full
-~35-component catalogue in the wireframes doc). Each gets a widget test per
-documented state.
+Matches the roadmap's own `US-003` foundation scope (not the full component
+catalogue — the actual Figma file's "01 Components" page turns out to contain
+far more than 15 components, including a near-complete gamification/progress
+set; all of that is Phase 5+ work and stays out of scope here). Every spec
+below was pulled directly from the Figma file
+(`GGCrpp5JI69VK0kLguM40b`, "FLOW — Onboarding v2"), not just the written docs
+— several details below correct or sharpen what the wireframes/design-system
+docs said. Each component gets a widget test per documented state.
 
-| ID | Component | Key states/spec |
+A cross-cutting implementation note: nearly every component below shares the
+same "2dp `frame.ink` border, optional `frame.depth` offset, optional
+`frame.bevel` inner highlight" recipe. Worth building as one shared decoration
+helper in `core/design/components/` rather than duplicating it 12 times.
+
+| ID | Component | Verified spec |
 |---|---|---|
-| `CMP-01` | `PrimaryButton` | 56dp height (60dp incl. depth offset), `radius.sm`, pixel-frame recipe (2dp `frame.ink` stroke + 4dp `frame.depth` offset + 2dp `frame.bevel` inner top), label `type.buttonGame` in `text.primary` (navy, 7.50:1 — never `onPrimary` white), pressed/disabled/loading/milestone variants |
-| `CMP-02` | `SecondaryButton` | default + conditionally-hidden variant |
-| `CMP-03` | `TextButton` | link-style, low emphasis |
-| `CMP-04` | `QuickAddChip` | 56dp tall, `radius.pill` (only component using it), default/pressed/de-emphasized (see token-mapping gap above) |
-| `CMP-05` | `SegmentedChoice` | wraps to 2 lines at 320dp width |
-| `CMP-06` | `ChoiceCard` | default/selected (border + check icon, never color alone) |
-| `CMP-07` | `IconChoiceTile` | default/selected, min 96dp tall |
-| `CMP-08` | `PillarRow` | static |
-| `CMP-09` | `StepHeader` | back chevron + "Step N/5" + 4dp progress bar |
-| `CMP-10` | `TextField` | pristine/editing/invalid(inline error)/valid, numeric-hero variant |
-| `CMP-11` | `Slider` | keyboard/switch accessible, step increments |
-| `CMP-12` | `CheckRow` | multi-select, true checkbox semantics |
-| `CMP-13` | `InfoCard` | tone variants info/warning/error, conditional visibility, some `liveRegion` |
-| `CMP-14` | `SettingRow` | 48–56dp rows, chevron affordance |
-| `CMP-15` | `DayToggle` | 40dp circle, 48dp touch target, on/off + check state |
+| `CMP-01` | `PrimaryButton` | 56dp height (60dp incl. 4dp `frame.depth` offset), `radius.sm`, full frame recipe (2dp `frame.ink` stroke + 4dp solid `frame.depth` drop, never blurred + 2dp `frame.bevel` inner top). Fill `brand.primary` (pressed: `brand.primaryActive`). Label `type.buttonGame` in `text.primary` navy (7.50:1) — confirmed never `onPrimary` white. **Has an optional trailing icon slot** (e.g. `icon-arrow-right`) shown in Default/Pressed, hidden in Disabled — the written spec didn't mention this. States: Default/Pressed/Disabled; milestone variant swaps fill to `achievement`. |
+| `CMP-02` | `SecondaryButton` | 52dp tall — deliberately 4dp shorter than Primary's 60dp footprint. Outline only, no fill, no depth. Border: Default `frame.ink`, Pressed `brand.primary`, Disabled `surface.primary` (near-invisible). Label `type.buttonGame`: Default/Pressed `text.primary`, Disabled `text.secondary`. |
+| `CMP-03` | `TextButton` | 48dp tall **regardless of label length** (real hit target, not glyph bounds) — required explicitly for the Skip control. Label color is `brand.primaryTextSafe` (`#0A6E9E`), never raw `brand.primary` (2.32:1 contrast failure). Optional leading pixel icon. States: Default/Pressed/Disabled/NoIcon (Skip uses NoIcon). |
+| `CMP-04` | `QuickAddChip` | 56dp tall, **10px radius** (not `radius.pill` — see Section 6 correction), leading droplet icon + amount label. Selected: `brand.primary` fill + 3dp `frame.ink` border + navy label (7.50:1) — three-cue selection, not color alone. |
+| `CMP-05` | `SegmentedChoice` | Two real variants, both fill-selected-segment + 2dp frame + inner bevel + pixel check icon: **`/Unit`** (kg/lb) — 56dp shell, 4dp padding, **48dp segments** (Figma's own annotation notes a prior 40dp-segment build failed the 48×48 touch minimum — already fixed). **`/Sex`** (female/male/prefer-not-to-say) — 64dp shell, 56dp segments, with label wrapping enabled on every segment (a "WRAP FIX" annotation in the file notes "prefer not to say" previously clipped in a single line). |
+| `CMP-06` | `ChoiceCard` | Min-height 76dp. Leading element is a **pixel "bar-meter"** (1–5 vertical bars filled, matching the activity-level count) — not a generic icon; rebuilt per instance. Selected: `surface.tinted` fill + **3dp** frame (thicker than the default 2dp, not just recolored) + trailing 24dp check-badge circle (`brand.primary` fill, `frame.ink` border, check icon). Radio-group semantics. |
+| `CMP-07` | `IconChoiceTile` | **104dp tall** (the written doc said "min 96dp" — Figma's own note confirms 96dp is the minimum but it's actually built at 104dp). 2×2 grid tile. Leading pixel thermometer icon whose fill height *and* color both shift with the environment level (aqua→gold→orange→coral) — two channels, not one. Same selected treatment as `CMP-06` (tinted fill + 3dp frame + check badge). |
+| `CMP-08` | `PillarRow` | Not a stateful wrapper — it's a single static "Pillar" card (76dp, `radius.md`, 2dp frame border, `surface.primary` fill, 28dp leading icon + title + description, no selection state) reused 3× in a column on the welcome screen. Build one `Pillar` widget, not a `PillarRow` with internal variants. |
+| — | ~~`CMP-09 StepHeader`~~ **does not exist as one component.** Replaced by two real, separately-numbered components (build both, compose them where the wireframe doc described "StepHeader") | **`CMP-42 BackButton`**: 48×48dp touch target, `surface.primary` fill, 2dp `frame.ink` border, **3dp** depth (shallower than a primary button's 4dp, so it reads as secondary), `radius.sm`, pixel chevron-left icon (not a Material icon — onboarding uses no Material Symbols at all, per the file's own note). **`CMP-44 StepTrack`**: a 5-node horizontal track for ONB-03–07. Three node states, each with a *shape* cue as well as color (never color alone): done = 14dp square with a light notch; current = 22dp square with a white core (deliberately larger so "you are here" survives greyscale); upcoming = 14dp square on `trackSubtle`. Connectors fill remaining width. Pairs with a plain "Step N of 5" text label in `type.labelGame` — not baked into the component. |
+| `CMP-10` | `TextField` | `radius.sm`, 2dp border, **no depth offset** (inputs aren't tappable buttons, so no press affordance). States: Default (`borderStrong`), Focused (`brand.primary` stroke), Error (`color.error` stroke — error message rendered separately below in `type.caption` + `color.error`, never color alone). |
+| `CMP-11` | `Slider` | Range 25–250kg (55–550lb), **step 0.5kg** (the written spec just said "step increments" — Figma's note gives the exact value). 12dp tall track (`trackDark` rest / `brand.primary` filled), pixel handle 24×28dp with a 48dp hit area. The numeric field stays the accessible primary control — the slider is an enhancement exposing `Semantics(value: "68 kilograms")` stepping by 1 for screen readers. |
+| `CMP-12` | `CheckRow` | 48dp tall (full-row hit target), true checkbox semantics. Checked: `brand.primary` fill + pixel check icon + 2dp frame — three cues again, not color alone. Box is 24dp, `radius` 5. |
+| `CMP-13` | `InfoCard` | **Only two tone kinds — `Info` and `Caution`** (the written design-system summary said info/warning/error; Figma has exactly two). Info: `infoSurface` background, `info` text. Caution: intended as `warningSurface` background with `warning` text (matching Info's own tint-background pattern) — **flagging a real bug found in the Figma file itself:** the actual exported Caution variant has its text color set to the same value as its background fill (`warning` on `warning`), making the caution message invisible. I'm implementing the evidently-intended tinted version, not reproducing the bug, but this is worth reporting back to whoever owns the Figma file. |
+| `CMP-14` | `SettingRow` | 56dp row, `radius.sm`, 2dp `frame.ink` border + `surface.primary` fill (the written doc undersold this as a plain chevron row — it actually carries the full pixel-frame treatment). Value text in `text.secondary` keeps the label dominant. The chevron is the **same pixel chevron-left asset as `CMP-42 BackButton`, just rotated 180°** — one icon file, not two. |
+| `CMP-15` | `DayToggle` | 40dp circle (`radius` 20), single-letter day label in `type.labelGame`. On: `brand.primary` fill + 2dp `frame.ink` border + navy label. |
 
-Everything past `CMP-15` (achievement tiles, `HydrationGlass`, XP bars, day
-bars, etc.) is deferred to the phase that builds the screens using them.
+**Icon sourcing correction:** I'd originally planned to use Flutter's built-in
+`Icons.*_rounded` as a stand-in for "Material Symbols Rounded" everywhere.
+Figma's own component notes are explicit that **onboarding uses no Material
+Symbols at all** — every onboarding icon (chevron, check, arrow, info,
+droplet, thermometer, etc.) is one of the custom pixel-art SVGs already
+bundled in `assets/icons/onboarding/`, rendered via `flutter_svg`. Flutter's
+built-in rounded icons remain a reasonable substitute only for generic,
+non-onboarding chrome that isn't covered by a bundled asset (nothing in this
+foundation pass needs that yet).
+
+Everything past this list (achievement tiles, `HydrationGlass`, XP bars, day
+bars, `RarityBadge`, progress/stats cards, etc. — all of which already exist,
+fully designed, on the Figma file's Components page) is deferred to the phase
+that builds the screens using them.
 
 ## 9. Explicitly out of scope for this pass
 
@@ -502,6 +553,21 @@ research, not something this pass fixes:
 - A `§14.2` mascot-behavior change referenced in `13`'s changelog doesn't
   actually exist in the document body — flagged, not actionable without the
   missing section.
+
+**New, found during the Figma verification pass (Section 8):**
+- `CMP-13 InfoCard`'s "Caution" variant has matching text and background
+  colors in the actual Figma export (`warning` on `warning`), making the
+  message invisible — a real authoring bug in the file, not a doc/code gap.
+  Implementing the evidently-intended tinted version instead; worth reporting
+  to whoever owns the Figma file so the source gets fixed too.
+- The written docs describe `CMP-09 "StepHeader"` as one component; it doesn't
+  exist in Figma at all — the actual file has two separately-numbered
+  components (`CMP-42 BackButton`, `CMP-44 StepTrack`) plus a plain text label,
+  composed together. Not a conflict to resolve, just a docs-vs-file mismatch
+  worth knowing about if `06`/`05` get updated later.
+- `radius.pill` (999) is defined as a token and documented as reserved for
+  `QuickAddChip`, but the actual built chip uses a 10px radius — `radius.pill`
+  appears to be currently unused anywhere in the real design.
 
 ## 11. Validation criteria for this pass
 
