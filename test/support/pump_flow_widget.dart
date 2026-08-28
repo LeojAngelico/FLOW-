@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:riverpod/src/framework.dart';
 import 'package:flow/core/design/theme/flow_theme.dart';
 
 /// Standard wrapper for widget tests in this project: a 360x640dp
