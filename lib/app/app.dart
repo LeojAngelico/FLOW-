@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/design/theme/flow_theme.dart';
+import '../core/design/theme/reduce_motion_listener.dart';
 import 'router/app_router.dart';
 
 class App extends ConsumerWidget {
@@ -10,10 +12,13 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
-    return MaterialApp.router(
-      routerConfig: router,
-      theme: ThemeData(useMaterial3: true),
-      darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
+    return ReduceMotionListener(
+      child: MaterialApp.router(
+        routerConfig: router,
+        theme: FlowTheme.light,
+        darkTheme: FlowTheme.dark,
+        themeMode: ThemeMode.system,
+      ),
     );
   }
 }
