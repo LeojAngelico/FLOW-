@@ -53,15 +53,17 @@ class _SecondaryButtonState extends State<SecondaryButton> {
         height: 52,
         padding: const EdgeInsets.symmetric(horizontal: FlowSpacing.lg),
         alignment: Alignment.center,
-        // Border lives in `foregroundDecoration`, not `decoration`: when a
-        // bordered BoxDecoration is combined with an explicit `height` and a
-        // child, Container adds the border width to the constrained size
-        // (52dp becomes 56dp). foregroundDecoration paints on top without
-        // affecting layout. See Task 15 (FlowFrameBox/PrimaryButton) for the
-        // same gotcha.
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(FlowRadius.sm),
-        ),
+        // Border lives in `foregroundDecoration`, not `decoration`. This
+        // Container has an explicit `height: 52`, so the outer rendered
+        // height is 52dp either way — a tight height always wins over
+        // border-induced padding (unlike FlowFrameBox in Task 15, which
+        // shrink-wraps with no explicit height/constraints, where border
+        // placement does change the final size). The reason to use
+        // foregroundDecoration here is narrower: a border inside
+        // `decoration` becomes `BoxDecoration.padding` around the child,
+        // squeezing the label's available height by the border width
+        // (~48dp instead of 52dp). Painting the border in
+        // `foregroundDecoration` instead leaves the child the full 52dp.
         foregroundDecoration: BoxDecoration(
           border: Border.all(color: borderColor, width: 2),
           borderRadius: BorderRadius.circular(FlowRadius.sm),
