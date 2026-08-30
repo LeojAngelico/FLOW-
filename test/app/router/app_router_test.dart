@@ -39,7 +39,7 @@ void main() {
   );
 
   testWidgets(
-    'a returning user (onboarding complete) is redirected away from /onboarding routes',
+    'a returning user (onboarding complete) is redirected off the splash screen to Home',
     (tester) async {
       await pumpApp(tester, onboardingComplete: true);
 

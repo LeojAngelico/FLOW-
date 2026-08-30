@@ -90,4 +90,29 @@ void main() {
       '/recovery',
     );
   });
+
+  test('redirects a returning user off the bare splash location to /home', () {
+    expect(
+      resolveRedirect(
+        databaseHealthy: true,
+        onboardingComplete: true,
+        location: '/',
+      ),
+      '/home',
+    );
+  });
+
+  test(
+    'redirects a new user at the bare splash location to /onboarding/welcome',
+    () {
+      expect(
+        resolveRedirect(
+          databaseHealthy: true,
+          onboardingComplete: false,
+          location: '/',
+        ),
+        '/onboarding/welcome',
+      );
+    },
+  );
 }
