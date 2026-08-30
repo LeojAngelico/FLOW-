@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/app/router/app_router.dart';
 import 'package:flow/core/preferences/onboarding_provider.dart';
 import 'package:flow/core/database/database_provider.dart';
+import 'package:flow/l10n/generated/app_localizations.dart';
 
 void main() {
   Future<void> pumpApp(
@@ -17,8 +18,11 @@ void main() {
           databaseHealthyProvider.overrideWithValue(true),
         ],
         child: Consumer(
-          builder: (context, ref, _) =>
-              MaterialApp.router(routerConfig: ref.watch(appRouterProvider)),
+          builder: (context, ref, _) => MaterialApp.router(
+            routerConfig: ref.watch(appRouterProvider),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          ),
         ),
       ),
     );
@@ -39,10 +43,7 @@ void main() {
     (tester) async {
       await pumpApp(tester, onboardingComplete: true);
 
-      // /home doesn't exist until Task 33 — for now we only assert we did
-      // NOT land on an onboarding screen, since the redirect fires before
-      // Task 33 adds a real destination.
-      expect(find.text('Welcome'), findsNothing);
+      expect(find.widgetWithText(AppBar, 'Home'), findsOneWidget);
     },
   );
 }

@@ -106,6 +106,18 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get navHome;
 
+  /// No description provided for @navProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get navProgress;
+
+  /// No description provided for @navAwards.
+  ///
+  /// In en, this message translates to:
+  /// **'Awards'**
+  String get navAwards;
+
   /// No description provided for @navProfile.
   ///
   /// In en, this message translates to:

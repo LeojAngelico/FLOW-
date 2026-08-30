@@ -11,12 +11,18 @@ String? resolveRedirect({
   }
 
   final underOnboarding = location.startsWith('/onboarding');
+  final atSplash = location == '/';
 
   if (!onboardingComplete && !underOnboarding) {
     return '/onboarding/welcome';
   }
 
-  if (onboardingComplete && underOnboarding) {
+  // Also sweeps a returning user off the bare '/' splash location — Task
+  // 31 only covered leaving /onboarding, which left a returning user
+  // stuck on SplashPage forever since '/' is neither "under onboarding"
+  // nor a route the app ever navigates away from on its own. Found and
+  // fixed while implementing Task 33's shell (see task-33-34-report.md).
+  if (onboardingComplete && (underOnboarding || atSplash)) {
     return '/home';
   }
 
