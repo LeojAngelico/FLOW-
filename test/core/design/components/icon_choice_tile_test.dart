@@ -70,4 +70,32 @@ void main() {
 
     expect(find.text('Warm'), findsOneWidget);
   });
+
+  testWidgets('selected badge renders visibly without overflowing the tile', (
+    tester,
+  ) async {
+    await pumpFlowWidget(
+      tester,
+      SizedBox(
+        width: 154,
+        child: IconChoiceTile(
+          label: 'Warm',
+          level: 2,
+          selected: true,
+          onTap: () {},
+        ),
+      ),
+    );
+
+    // The 104dp height must hold even with the selected badge overlaid,
+    // guarding against a regression to the original overflow bug.
+    expect(tester.getSize(find.byType(IconChoiceTile)).height, 104);
+
+    // The badge is the sole Positioned child of the tile's Stack — assert
+    // it is actually present and rendered at its intended 22x22 size,
+    // rather than just checking the label still renders.
+    final badgeFinder = find.byType(Positioned);
+    expect(badgeFinder, findsOneWidget);
+    expect(tester.getSize(badgeFinder), const Size(22, 22));
+  });
 }

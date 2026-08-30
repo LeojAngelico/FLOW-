@@ -48,7 +48,7 @@ class IconChoiceTile extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _ThermometerIndicator(level: level),
+                _ThermometerIndicator(level: level, colors: colors),
                 const SizedBox(height: FlowSpacing.sm),
                 Text(
                   label,
@@ -81,20 +81,22 @@ class IconChoiceTile extends StatelessWidget {
 /// "Missing-asset note." Fill height and color both move with [level]
 /// so temperature reads through two channels, not one.
 class _ThermometerIndicator extends StatelessWidget {
-  const _ThermometerIndicator({required this.level});
+  const _ThermometerIndicator({required this.level, required this.colors});
 
   final int level;
-
-  static const _levelColors = [
-    Color(0xFF7FDBFA), // 1: temperate — aqua
-    Color(0xFFFFC542), // 2: warm — gold
-    Color(0xFFFF9142), // 3: hot — orange
-    Color(0xFFFF7A59), // 4: very hot — coral
-  ];
+  final FlowColors colors;
 
   @override
   Widget build(BuildContext context) {
-    final color = _levelColors[(level - 1).clamp(0, 3)];
+    final levelColors = [
+      colors.panelDeepAccent, // 1: temperate — aqua
+      colors.achievement, // 2: warm — gold
+      // 3: hot — orange. No matching FlowColors token exists for this
+      // shade; kept as a literal.
+      const Color(0xFFFF9142),
+      colors.reward, // 4: very hot — coral
+    ];
+    final color = levelColors[(level - 1).clamp(0, 3)];
     final fillFraction = level / 4;
 
     return SizedBox(
