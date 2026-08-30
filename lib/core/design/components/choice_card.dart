@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../tokens/flow_colors.dart';
+import '../tokens/flow_radius.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
 
@@ -42,7 +43,7 @@ class ChoiceCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? colors.surfaceTinted : colors.surfacePrimary,
           border: Border.all(color: colors.frameInk, width: selected ? 3 : 2),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(FlowRadius.md),
         ),
         child: Row(
           children: [

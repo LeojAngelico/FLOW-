@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../tokens/flow_colors.dart';
+import '../tokens/flow_radius.dart';
 import '../tokens/flow_typography.dart';
 import 'flow_frame_box.dart';
 
@@ -42,11 +43,11 @@ class SegmentedChoice<T> extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: colors.surfacePrimary,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(FlowRadius.sm),
       ),
       foregroundDecoration: BoxDecoration(
         border: Border.all(color: colors.frameInk, width: 2),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(FlowRadius.sm),
       ),
       child: Row(
         children: [
