@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../tokens/flow_colors.dart';
+import '../tokens/flow_radius.dart';
 import '../tokens/flow_typography.dart';
 
 /// CMP-11. Range/step come from the caller (e.g. 25-250kg, step 0.5 for
@@ -39,12 +40,14 @@ class FlowSlider extends StatelessWidget {
       children: [
         SliderTheme(
           data: SliderThemeData(
-            trackHeight: 12,
+            trackHeight: FlowRadius.md,
             activeTrackColor: colors.brandPrimary,
             inactiveTrackColor: colors.trackDark,
             thumbColor: colors.brandPrimary,
             overlayColor: colors.brandPrimary.withValues(alpha: 0.2),
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+            thumbShape: const RoundSliderThumbShape(
+              enabledThumbRadius: FlowRadius.md,
+            ),
           ),
           child: Semantics(
             value: '${value.round()} $unitLabel',
