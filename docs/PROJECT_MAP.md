@@ -9,203 +9,213 @@ not hand-edit.
 
 | | |
 |---|---|
-| Package name | `flutter_incident_reporting` |
-| Description | "A new Flutter project." (pubspec — not project-specific) |
-| Version | `0.0.2+2` |
+| Package name | `flow` |
+| Description | "FLOW mobile application." (`pubspec.yaml`) |
+| Version | `1.0.0+1` |
 
-**Flavors** — `dev`, `alpha`, `prod` (Android product flavors, `android/app/build.gradle.kts`; iOS schemes `dev.xcscheme`, `alpha.xcscheme`, `prod.xcscheme`).
+**Flavors** — `dev`, `alpha`, `prod` (Android product flavors, `android/app/build.gradle.kts`; iOS schemes `dev.xcscheme`, `alpha.xcscheme`, `prod.xcscheme` + matching `ios/Flutter/Flavors/*.xcconfig`).
 
 | Flavor | Android applicationId suffix | iOS bundle ID suffix |
 |---|---|---|
 | dev | `.dev` | `.dev` |
 | alpha | `.alpha` | `.alpha` |
-| prod | *(none — canonical `mecare.nurse.app`)* | *(none)* |
+| prod | *(none)* | *(none)* |
 
-Base Android `applicationId` / iOS `PRODUCT_BUNDLE_IDENTIFIER`: `mecare.nurse.app`.
+Base Android `applicationId` / iOS `PRODUCT_BUNDLE_IDENTIFIER`: `oiracam.flow.bloop`.
 
 ## Features
 
-Six directories under `lib/features/`:
+Nine directories under `lib/features/`, each with `presentation/` only — no feature currently has `data/` or `domain/`, and no feature has a `widgets/` subdirectory. Every screen below is a stub (`Scaffold` with an empty/placeholder body; no Notifier, no business logic wired in yet).
 
-| Feature | data/ | domain/ | presentation/ | Screens |
-|---|---|---|---|---|
-| `auth` | yes | yes | yes | `login`, `registration`, `profile`, `splash` (+ `session/` — session state, no page) |
-| `incident` | yes | yes | yes | `incident_page` (list), `create_incident_page`, `edit_incident_page`, `incident_details_page` |
-| `patient` | yes | yes | yes | `details/patient_details_page` (tabs: info, activity timeline) |
-| `activity` | yes | yes | yes | `record/record_activity_page`, `update/update_record_activity_page`, `review/review_submit_page`, `completed/visit_completed_page` |
-| `dashboard` | no | no | yes | `dashboard_page` |
-| `home` | no | no | yes | `home_page` (boilerplate incident-list home; not the MeCARE entry point) |
-
-`dashboard` and `home` have no `data/`/`domain/` of their own — `dashboard` reads `patient`'s `GetPatientsByWardUseCase`/providers directly; `home` reads `incident`'s `IncidentListNotifier`.
+| Feature | Screens |
+|---|---|
+| `gamification` | `awards_page`, `achievement_detail_page` |
+| `home` | `home_page` — **dead code**: declares its own `HomePage`, but nothing imports it (the router's `/home` route uses `hydration`'s `HomePage` instead); only reference in the whole repo is a doc file (`docs/guide/ui-kit.md`) |
+| `hydration` | `home_page`, `add_water_page`, `progress_page`, `day_detail_page`, `target_settings_page` |
+| `onboarding` | `splash_page`, `welcome_page`, `basics_page`, `weight_page`, `activity_page`, `environment_page`, `target_page`, `reminders_page`, `recovery_page` |
+| `profile` | *(no directory — `settings` owns `profile_page`; there is no `lib/features/profile/`)* |
+| `reminders` | `reminder_settings_page` |
+| `settings` | `profile_page`, `general_settings_page`, `about_page` |
+| `trivia` | `trivia_page` |
 
 ## Routes
 
-From `lib/app/router/app_router.dart` (`GoRouter`, `initialLocation: /splash`):
+From `lib/app/router/app_router.dart` (`GoRouter`, `initialLocation: '/'`):
 
 | Path | Screen |
 |---|---|
-| `/ui-playground` | `UiPlaygroundPage` (only when `AppEnvironment.enableUiPlayground`) |
-| `/splash` | `SplashPage` |
-| `/login` | `LoginPage` |
-| `/registration` | `RegistrationPage` |
-| `/dashboard` | `DashboardPage` |
-| `/scan` | `QrScannerPage` (generic, patient-agnostic) |
-| `/patients/:code` | `PatientDetailsPage` |
-| `/activities/record` | `RecordActivityPage` (`extra`: `Patient`) |
-| `/activities/update` | `UpdateRecordActivityPage` (`extra`: `int` index) |
-| `/activities/review` | `ReviewSubmitPage` (`extra`: `Patient`) |
-| `/activities/completed` | `VisitCompletedPage` (`extra`: `Patient`) |
-| `/incidents/create` | `CreateIncidentPage` |
-| `/incidents/:id` | `IncidentDetailsPage` |
-| `/incidents/:id/edit` | `EditIncidentPage` (`extra`: `Incident`) |
-| `/home` | `HomePage` (shell branch) |
-| `/incidents` | `IncidentPage` (shell branch) |
-| `/profile` | `ProfilePage` (shell branch) |
+| `/` | `SplashPage` |
+| `/onboarding/welcome` | `WelcomePage` |
+| `/onboarding/basics` | `BasicsPage` |
+| `/onboarding/weight` | `WeightPage` |
+| `/onboarding/activity` | `ActivityPage` |
+| `/onboarding/environment` | `EnvironmentPage` |
+| `/onboarding/target` | `TargetPage` |
+| `/onboarding/reminders` | `RemindersPage` |
+| `/home` | `HomePage` (`hydration`; shell branch) |
+| `/progress` | `ProgressPage` (shell branch) |
+| `/awards` | `AwardsPage` (shell branch) |
+| `/profile` | `ProfilePage` (`settings`; shell branch) |
+| `/home/add` | `AddWaterPage` |
+| `/home/trivia` | `TriviaPage` |
+| `/progress/day/:date` | `DayDetailPage` (`date` path param) |
+| `/awards/:achievementId` | `AchievementDetailPage` (`achievementId` path param) |
+| `/profile/target` | `TargetSettingsPage` |
+| `/profile/reminders` | `ReminderSettingsPage` |
+| `/profile/settings` | `GeneralSettingsPage` |
+| `/profile/settings/about` | `AboutPage` |
+| `/recovery` | `RecoveryPage` |
 
-`/home`, `/incidents`, `/profile` are grouped under a `StatefulShellRoute.indexedStack` (`MainShell`) — the boilerplate bottom-navigation shell, still reachable but not the MeCARE entry point (`/dashboard` is). Redirect logic: unauthenticated → `/login`; authenticated on splash/login/registration → `/dashboard`.
+`/home`, `/progress`, `/awards`, `/profile` are grouped under a `StatefulShellRoute.indexedStack` (`MainShell`, `lib/app/main_shell.dart`) — a 4-tab bottom `NavigationBar`.
+
+Redirect logic (`lib/app/router/app_redirect.dart`, pure function `resolveRedirect`): `!databaseHealthy` → `/recovery`; `!onboardingComplete` and not under `/onboarding` → `/onboarding/welcome`; `onboardingComplete` and (under `/onboarding` or at `/`) → `/home`.
 
 ## UI Kit Catalog
 
-`lib/core/ui_kit/`, barrel `ui_kit.dart`. Excludes `tokens/`, the barrel, and `playground/ui_playground_page.dart`.
+The app's live component library is `lib/core/design/components/` (no barrel file; imported directly per component). Token files and private (`_`-prefixed) helper classes are excluded.
 
-| Category | File | Class |
-|---|---|---|
-| buttons | `app_button.dart` | `AppButton` |
-| inputs | `app_text_field.dart` | `AppTextField` |
-| inputs | `app_password_field.dart` | `AppPasswordField` |
-| surfaces | `app_avatar.dart` | `AppAvatar` |
-| surfaces | `app_bottom_sheet.dart` | `AppBottomSheet` |
-| surfaces | `app_card.dart` | `AppCard` |
-| surfaces | `app_info_row.dart` | `AppInfoRow` |
-| surfaces | `app_section_header.dart` | `AppSectionHeader` |
-| indicators | `app_badge.dart` | `AppBadge` |
-| indicators | `app_chip.dart` | `AppChip` |
-| indicators | `app_environment_badge.dart` | `AppEnvironmentBadge` |
-| feedback | `app_alert_banner.dart` | `AppAlertBanner` |
-| feedback | `app_empty_state.dart` | `AppEmptyState` |
-| feedback | `app_error_state.dart` | `AppErrorState` |
-| feedback | `app_loading_indicator.dart` | `AppLoadingIndicator` |
-| feedback | `app_result_view.dart` | `AppResultView` |
-| feedback | `app_snackbar.dart` | `AppSnackbar` |
-| dialogs | `app_confirmation_dialog.dart` | `AppConfirmationDialog` |
-| dialogs | `app_dialog.dart` | `AppDialog` |
-| dialogs | `app_loading_dialog.dart` | `AppLoadingDialog` |
+| File | Public class |
+|---|---|
+| `back_button.dart` | `FlowBackButton` |
+| `check_row.dart` | `CheckRow` |
+| `choice_card.dart` | `ChoiceCard` |
+| `day_toggle.dart` | `DayToggle` |
+| `flow_frame_box.dart` | `FlowFrameBox` |
+| `flow_slider.dart` | `FlowSlider` |
+| `flow_text_button.dart` | `FlowTextButton` |
+| `flow_text_field.dart` | `FlowTextField` |
+| `icon_choice_tile.dart` | `IconChoiceTile` |
+| `info_card.dart` | `InfoCard` (+ `enum InfoCardKind`) |
+| `pillar.dart` | `Pillar` |
+| `primary_button.dart` | `PrimaryButton` |
+| `quick_add_chip.dart` | `QuickAddChip` |
+| `secondary_button.dart` | `SecondaryButton` |
+| `segmented_choice.dart` | `SegmentedChoice<T>` |
+| `setting_row.dart` | `SettingRow` |
+| `step_track.dart` | `StepTrack` |
 
-20 components across 5 category subdirectories (buttons, inputs, surfaces, indicators, feedback, dialogs — 6 counting dialogs separately).
+17 components, one class per file. None of these components are imported by any feature page yet (all feature screens are still unstyled `Scaffold` stubs); only `flow_theme.dart` (colors/typography) is wired into `app.dart`.
+
+**Dead code**: `lib/core/ui_kit/` is a second, entirely separate component library (categories `buttons/`, `inputs/`, `surfaces/`, `indicators/`, `feedback/`, `dialogs/`, plus its own `tokens/`, a barrel `ui_kit.dart`, and `playground/ui_playground_page.dart`) — 16 component files declaring `AppButton`, `AppTextField`, `AppPasswordField`, `AppAvatar`, `AppBottomSheet`/`AppBottomSheetAction`, `AppCard`, `AppChip`, `AppBadge`, `AppEnvironmentBadge`, `AppLoadingIndicator`, `AppErrorState`, `AppEmptyState`, `AppSnackbar`, `AppDialog`, `AppLoadingDialog`, `AppConfirmationDialog`. Nothing under `lib/` or `test/` imports `core/ui_kit/` — confirmed unreferenced. It appears to be a leftover from the original (non-FLOW) boilerplate this project was cloned from, not part of the current app.
 
 ## Design Tokens
 
-`lib/core/ui_kit/tokens/`:
+Live tokens, `lib/core/design/tokens/` (consumed by `FlowTheme` in `lib/core/design/theme/flow_theme.dart`, wired into `MaterialApp.router` in `lib/app/app.dart`):
 
 | Class | Covers |
 |---|---|
-| `AppColors` | Warning role (M3 has none), MeCARE brand colors (`brandBlue`, `brandRed`), decorative motif color, and the hand-built MeCARE `ColorScheme` (navy primary, periwinkle containers, mint tertiary/success, red error) |
-| `AppSpacing` | Spacing scale: `xs`(4) `sm`(8) `md`(12) `lg`(16) `xl`(24) `xxl`(32) |
-| `AppRadius` | Corner radii: `sm`(8) `md`(12) `lg`(16) `xl`(20) `pill`(999) + matching `BorderRadius` constants |
-| `AppSizing` | Touch target (48), button heights, icon sizes, dialog icon, avatar sizes |
-| `AppMotion` | Animation durations: `fast`(150ms) `medium`(250ms) `slow`(400ms) |
+| `FlowColors` (`ThemeExtension`) | Brand/role colors, `light`/`dark` variants: brand primary/secondary, xp/achievement/reward/streak accents, background/surface/border/text roles, success/error/warning/info + their surface tints, and a "pixel game" panel/frame/particle palette |
+| `FlowTypography` (`ThemeExtension`) | Type scale in two families (`Inter`, `Press Start 2P`): numeric hero/large, pixel display/hero/title/unit, game label/button, display L/M, headline, title L/M, body L/M, label, caption, button |
+| `FlowSpacing` | 4dp-base scale: `xs2`(2) `xs`(4) `sm`(8) `smMd`(12) `md`(16) `mdLg`(20) `lg`(24) `xl3`(32) `xl4`(40) `xl5`(48) `xl6`(64) |
+| `FlowRadius` | Corner radii: `sm`(8) `md`(12) `lg`(16) `xl`(24) `pill`(999, currently unused) `quickAddChip`(10) |
+| `FlowElevation` | Light-mode shadow levels 1–3 (`BoxShadow` lists); dark mode uses surface-color steps instead, handled in `FlowTheme` directly |
+| `FlowMotion` | Durations `instant`(100ms) `fast`(180ms) `base`(280ms) `slow`(450ms) `celebrate`(650ms) `page`(300ms) + matching curves |
+
+**Dead code**: `lib/core/ui_kit/tokens/` declares a second, parallel token set (`AppColors`, `AppSpacing`, `AppRadius`, `AppSizing`, `AppMotion`) used only by the unreferenced `core/ui_kit/` directory above — not part of the live theme.
 
 ## Network Layer
 
-- **HTTP client**: `Dio`, built in `lib/core/network/network_providers.dart` (`dioProvider`), wrapped by `ApiClient` (`lib/core/network/api_client.dart`) exposing `get`/`post`/`put`/`delete`.
-- **Interceptors** (attached in `dioProvider`, in order):
-  - `RedactedLogInterceptor` — logs method/URL/status always; headers+body only when `AppEnvironment.logLevel == verbose`, nothing when `minimal`. Redacts `authorization`, `token`, `password`, `access_token`, `refresh_token` keys.
-  - `AuthInterceptor` (`QueuedInterceptor`) — attaches `Authorization: Bearer <token>` from `AuthSessionManager`; on a `401` (not itself a refresh call, not already retried) refreshes the token via a **separate** `Dio` instance (`_refreshDio`, no interceptors — avoids an infinite loop) and retries the original request once; on refresh failure calls `AuthSessionManager.clearSession()`.
-- **Request convention**: one class per call under `data/requests/`, e.g. `CreateIncidentRequest` — plain fields, `toJson()` where needed (GET/list-style requests) or consumed directly (multipart calls like `createIncident`/`editIncident` build `FormData` in the datasource).
-- **Response convention**: one class per call under `data/responses/`, suffixed `...ResponseDto`, e.g. `IncidentResponseDto.fromJson` — parses the shared envelope (`msg`→message, `status`, `status_code`→statusCode, `data`) and the payload. Shared envelope-only shape: `GeneralResponseDto` (`lib/core/models/general_response.dart`) for calls with no meaningful data payload, also carries `errors`/`has_requirements`.
-- **Data models**: `data/models/` DTOs (e.g. `IncidentModel`) mirror the response shape with `fromJson` + `toDomain()` converting to the plain `domain/models/` type.
-- **Error mapping**: `ErrorMapper.map(Object)` (`lib/core/errors/error_mapper.dart`) — `DioException` → `Failure` subtype (`NetworkFailure` for timeouts/connection errors, `ServerFailure` for 5xx, `UnauthorizedFailure` for 401, `ValidationFailure` for 400/422, `UnknownFailure` otherwise), parsing the backend's `status_code`/`msg`/`errors` fields where present. `Failure.message` is either a stable `ErrorCodes` constant (localized via `ErrorLocalizer` at display time) or raw backend text for `ValidationFailure`.
-- **Credential/token storage**: `SecureStorageService` (`lib/core/storage/secure_storage_service.dart`) wraps `flutter_secure_storage`, storing access token, cached user JSON, and locale code. `AuthSessionManager` (`lib/core/auth/`) reads/writes the token through it and exposes `clearSession()`, called by the auth interceptor on unrecoverable 401s.
+**None.** `pubspec.yaml` has no HTTP client dependency (no `dio`, no `http`); FLOW has no backend. `lib/core/result/failure.dart` says so explicitly: *"FLOW has no backend, so there are deliberately no network-related cases here."*
+
+- **Local error/result convention** (`lib/core/result/`): `sealed class Result<T>` (`Ok<T>` / `Err<T>`) and `sealed class Failure` with `ValidationFailure`, `StorageFailure`, `PermissionFailure`, `UnknownFailure` — intended for the Repository → UseCase → Notifier boundary described in the skill, but not yet consumed anywhere (no feature has reached that layer).
+- **Persistence**: local only — Drift/SQLite (`lib/core/database/`) for structured data, `shared_preferences` for flags (e.g. onboarding-complete). No credential/token storage exists (no auth in this app).
+
+**Dead code**: `lib/core/errors/` (`Failure`/`NetworkFailure`/`ServerFailure`/`UnauthorizedFailure`/`AuthenticationFailure`, `error_codes.dart`, `validation_failure.dart`, `error_localizer.dart`) and `lib/core/constants/app_constants.dart` (login/register/logout/refresh-token REST endpoints, a Dio-interceptor flag set) are a second, unreferenced error/network scaffold — zero imports anywhere in `lib/`. Leftover from the original boilerplate, not part of FLOW.
 
 ## State
 
-Notifier classes under `presentation/` (Riverpod `Notifier<State>`), plus one app-level notifier:
+Riverpod `Notifier<State>` classes that exist in the whole app — both app-level, under `core/`, generated via `riverpod_annotation`:
 
-| Notifier | State owned |
-|---|---|
-| `LoginNotifier` | `LoginState` |
-| `RegistrationNotifier` | `RegistrationState` |
-| `ProfileNotifier` | `ProfileState` |
-| `AuthSessionNotifier` | `AuthSessionState` (`AuthSessionStatus`: checking/authenticated/unauthenticated) |
-| `IncidentListNotifier` | `IncidentListState` |
-| `CreateIncidentNotifier` | `CreateIncidentState` |
-| `EditIncidentNotifier` | `EditIncidentState` |
-| `IncidentDetailsNotifier` | `IncidentDetailsState` |
-| `PatientDetailsNotifier` | `PatientDetailsState` |
-| `RecordActivityNotifier` | `RecordActivityState` |
-| `DashboardNotifier` | `DashboardState` |
-| `LocaleNotifier` (`lib/app/locale/`) | `Locale` (app-level, not a feature state class) |
+| Notifier | State owned | Location |
+|---|---|---|
+| `ReduceMotion` | `bool` (defaults `false`) | `lib/core/design/theme/reduce_motion_provider.dart` |
+| `ClockOverride` | `DateTime?` (defaults `null`; dev-flavor only) | `lib/core/time/clock_provider.dart` |
 
-`RouterRefreshNotifier` (`lib/app/router/`) is a plain `ChangeNotifier` used as `GoRouter`'s `refreshListenable`, not a Riverpod `Notifier<State>` — infrastructure, not feature state.
+No feature under `lib/features/` currently has a `<screen>_notifier.dart` / `<screen>_state.dart` pair — every feature screen is a `StatelessWidget` stub with no state management wired in yet.
+
+`RouterRefreshNotifier` (`lib/app/router/router_refresh_notifier.dart`) — plain `ChangeNotifier`, not a Riverpod `Notifier`; not currently referenced by `app_router.dart`'s `GoRouter` construction (no `refreshListenable:` argument is passed).
 
 ## Providers
 
-Two-file wiring per feature, `data/providers/` → `domain/providers/`, per the skill contract. Worked example from `patient`:
+No feature has reached the `data/` / `domain/` layers, so the skill's two-file `data/providers/` → `domain/providers/` wiring (§ Provider wiring) does not exist anywhere yet — there is nothing to quote a repository-to-usecase example from.
 
-`lib/features/patient/data/providers/patient_data_providers.dart`:
+What exists instead is a set of standalone `@riverpod`/`@Riverpod(keepAlive: true)` providers under `lib/core/`, several of which are deliberately left unimplemented at declaration time and overridden once in `main.dart` before `runApp`:
+
 ```dart
-final patientRepositoryProvider = Provider<PatientRepository>((ref) {
-  return PatientRepositoryImpl(
-    remoteDataSource: ref.read(patientRemoteDataSourceProvider),
+// lib/core/database/database_provider.dart
+@Riverpod(keepAlive: true)
+AppDatabase appDatabase(Ref ref) {
+  throw UnimplementedError(
+    'appDatabaseProvider must be overridden in main() before runApp.',
   );
-});
+}
 ```
 
-`lib/features/patient/domain/providers/patient_domain_providers.dart`:
 ```dart
-final getPatientsByWardUseCaseProvider =
-    Provider<GetPatientsByWardUseCase>((ref) {
-  return GetPatientsByWardUseCase(
-    ref.read(patientRepositoryProvider),
-  );
-});
+// lib/main.dart
+runApp(
+  ProviderScope(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
+      appDatabaseProvider.overrideWithValue(database),
+      databaseHealthyProvider.overrideWithValue(databaseIsHealthy),
+    ],
+    child: const App(),
+  ),
+);
 ```
 
-`auth` and `activity` follow the same direct-typed pattern. `incident` uses a variant: `data/providers/` exposes the concrete `incidentRepositoryImplProvider` (typed `IncidentRepositoryImpl`), and `domain/providers/incident_domain_provider.dart` re-exposes it as `incidentRepositoryProvider` (typed `IncidentRepository`) before wiring its usecases — same effect, one extra indirection.
+Other core providers: `sharedPreferencesProvider` (`core/preferences/shared_preferences_provider.dart`), `onboardingCompleteProvider` (`core/preferences/onboarding_provider.dart`, reads `sharedPreferencesProvider`), `reduceMotionProvider` (see § State), `clockProvider`/`clockOverrideProvider` (`core/time/clock_provider.dart`), `appRouterProvider` (`app/router/app_router.dart`, reads `databaseHealthyProvider` and `onboardingCompleteProvider` in its redirect callback).
 
 ## Localization
 
-- **Locales**: `en` (template), `fil`, `ceb` — from `lib/l10n/app_en.arb`, `app_fil.arb`, `app_ceb.arb`.
+- **Locales**: `en` only — `lib/l10n/app_en.arb` (`@@locale: "en"`) is the only `.arb` file in the repo.
 - **ARB directory**: `lib/l10n/` (`l10n.yaml`: `arb-dir: lib/l10n`, `template-arb-file: app_en.arb`).
-- **Generated output class**: `AppLocalizations`, written to `lib/l10n/generated/app_localizations.dart` (`output-dir: lib/l10n/generated`).
+- **Generated output class**: `AppLocalizations`, written to `lib/l10n/generated/app_localizations.dart` (`l10n.yaml`: `output-dir: lib/l10n/generated`, `output-class: AppLocalizations`).
 - **Regeneration command**: `flutter gen-l10n` (also runs automatically on `flutter pub get`/`flutter run` since `pubspec.yaml` sets `flutter: generate: true`).
-- `ceb` has no built-in Material/Cupertino localizations, so `lib/app/locale/unsupported_locale_fallback_delegates.dart` supplies `CebFallbackMaterialLocalizationsDelegate` / `CebFallbackCupertinoLocalizationsDelegate`, added after `AppLocalizations.localizationsDelegates` in `app.dart`.
+- Wired into `MaterialApp.router` in `lib/app/app.dart` via `AppLocalizations.localizationsDelegates` / `AppLocalizations.supportedLocales`.
 
 ## Platform
 
-**Packages using native capabilities**: `image_picker` (camera/gallery), `geolocator` (location), `mobile_scanner` (camera/QR), `flutter_secure_storage` (Keychain/Keystore).
+**Packages using native capabilities** (from `pubspec.yaml`), by actual wiring status:
 
-Wrapped by: `AppImagePicker` (`lib/core/utils/app_image_picker.dart`), `AppLocation` (`lib/core/utils/app_location.dart`, handles service-disabled/denied/denied-forever), `QrScannerPage` (`lib/core/scanner/`).
+| Package | Status |
+|---|---|
+| `shared_preferences` | wired — `lib/main.dart`, `core/preferences/shared_preferences_provider.dart` |
+| `path_provider` | wired — `core/database/app_database.dart` (locates the Drift `flow.db` file) |
+| `sqlite3_flutter_libs` | wired transitively — bundles native SQLite for `drift`/`sqlite3_flutter_libs`, no direct Dart import needed |
+| `permission_handler` | declared, only referenced from `core/utils/app_camera_permission.dart`, which itself is unreferenced (only used by the dead `core/ui_kit/playground/`) — effectively not wired into the live app |
+| `flutter_local_notifications` | declared, zero references in `lib/` — not yet integrated |
+| `timezone` | declared, zero references in `lib/` — not yet integrated |
+| `share_plus` | declared, zero references in `lib/` — not yet integrated |
 
 **Android** (`android/app/src/main/AndroidManifest.xml`):
-- `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`
 - `CAMERA`
+- `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`
 - `uses-feature android.hardware.camera` / `.camera.autofocus` — both `required="false"`
 
 **iOS** (`ios/Runner/Info.plist`):
-- `NSLocationWhenInUseUsageDescription` — "This app uses your location when creating an incident report."
-- `NSPhotoLibraryUsageDescription` — "This app needs access to your photos to attach an image to an incident report."
-- `NSCameraUsageDescription` — "MeCARE uses the camera to scan patient QR codes and to capture photos for records."
+- `NSLocationWhenInUseUsageDescription` — "This app uses your location to provide location-based features."
+- `NSPhotoLibraryUsageDescription` — "This app needs access to your photos to attach images."
+- `NSCameraUsageDescription` — "This app uses the camera to take photos and to scan QR codes."
+
+None of the current `pubspec.yaml` dependencies require camera, location, or photo-library access (no `camera`, `geolocator`, `image_picker`, or `mobile_scanner` package is declared) — these manifest/`Info.plist` entries appear to be leftover from the original boilerplate, consistent with the dead `core/ui_kit/`, `core/errors/`, and `core/constants/app_constants.dart` directories above. (`ios/Pods/` on disk still references `geolocator_apple`, `image_picker_ios`, `mobile_scanner`, `camera_avfoundation`, `flutter_secure_storage_darwin`, `package_info_plus` — a stale CocoaPods install from before those packages were removed from `pubspec.yaml`; not evidence they're in use.)
 
 ## Test Coverage
 
-`test/` has 6 files: 4 Notifier tests, 1 core-model test (`DateCreated`, not a feature domain model), and `ai_setup_test.dart` (checks AI-setup markdown frontmatter, not app code).
+**Notifiers** — 2 total, 2 tested:
+`ReduceMotion` (`test/core/design/theme/reduce_motion_provider_test.dart`), `ClockOverride` (`test/core/time/clock_test.dart`). No feature-level Notifiers exist (see § State).
 
-**Notifiers** — 12 total, 4 tested:
-- Tested: `LoginNotifier`, `RecordActivityNotifier`, `DashboardNotifier`, `PatientDetailsNotifier`
-- Untested: `RegistrationNotifier`, `ProfileNotifier`, `AuthSessionNotifier`, `IncidentListNotifier`, `CreateIncidentNotifier`, `EditIncidentNotifier`, `IncidentDetailsNotifier`, `LocaleNotifier`
+**UseCases** — 0 total. No `domain/usecases/` directory exists anywhere in `lib/features/`.
 
-**UseCases** — 15 total, 0 tested (all exercised only indirectly through the notifier tests above, via fake repositories):
-`LoginUseCase`, `RefreshTokenUseCase`, `RegisterUseCase`, `GetProfileUseCase`, `LogoutUseCase`, `GetIncidentsUseCase`, `GetIncidentDetailsUseCase`, `CreateIncidentUseCase`, `EditIncidentUseCase`, `DeleteIncidentUseCase`, `GetPatientsByWardUseCase`, `GetPatientDetailsUseCase`, `GetPatientActivityUseCase`, `CreateActivityUseCase`, `GetActivityTypesUseCase`
+**Repository implementations** — 0 total. No `data/repositories/` directory exists anywhere in `lib/features/`.
 
-**Repository implementations** — 4 total, 0 tested directly:
-`AuthRepositoryImpl`, `IncidentRepositoryImpl`, `PatientRepositoryImpl`, `ActivityRepositoryImpl` (tests substitute hand-written fakes implementing the domain interface instead of exercising these)
+**Domain models** — 0 total. No `domain/models/` directory exists anywhere in `lib/features/`.
 
-**Domain models** — 6 total, 0 with dedicated tests:
-`User`, `Incident`, `Patient`, `ActivityRecord`, `ActivityTypeOption`, `ActivityEntry`
+**UI components** — 17 total (`lib/core/design/components/`), 17 tested (one test file per component under `test/core/design/components/`): `back_button`, `check_row`, `choice_card`, `day_toggle`, `flow_frame_box`, `flow_slider`, `flow_text_button`, `flow_text_field`, `icon_choice_tile`, `info_card`, `pillar`, `primary_button`, `quick_add_chip`, `secondary_button`, `segmented_choice`, `setting_row`, `step_track`. 0 untested.
 
-**UI components** — 20 total (see § UI Kit Catalog), 0 with widget tests.
+Not counted above: the 16 dead `core/ui_kit/` component files have no tests (`test/` has zero references to `ui_kit`), but since that directory is unreferenced dead code, its absence of coverage doesn't affect the live app.
 
 ## Generated
 
-Generated 2026-09-02 from commit `64863c1`.
+Generated 2026-09-04 from commit `8f181b7`.
