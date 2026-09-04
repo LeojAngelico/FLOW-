@@ -1,0 +1,18 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Level badge, maximum level 99">
+  <defs>
+    <linearGradient id="tsunamiRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFC542"/>
+      <stop offset="100%" stop-color="#8B6BF2"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="38" fill="none" stroke="url(#tsunamiRing)" stroke-width="9"/>
+  <g>
+    <rect x="48" y="1" width="4" height="4" fill="#FFC542"/>
+    <rect x="44" y="5" width="4" height="4" fill="#FFC542"/>
+    <rect x="52" y="5" width="4" height="4" fill="#8B6BF2"/>
+    <rect x="48" y="5" width="4" height="4" fill="#FFF3D0"/>
+    <rect x="44" y="9" width="4" height="4" fill="#8B6BF2"/>
+    <rect x="52" y="9" width="4" height="4" fill="#FFC542"/>
+  </g>
+  <text x="50" y="58" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="16" fill="#0A1626">99</text>
+</svg>

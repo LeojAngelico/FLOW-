@@ -5,9 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'app_localizations_ceb.dart';
 import 'app_localizations_en.dart';
-import 'app_localizations_fil.dart';
 
 // ignore_for_file: type=lint
 
@@ -94,11 +92,7 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('ceb'),
-    Locale('en'),
-    Locale('fil'),
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
   /// App title, shown as the login header and OS task-switcher label
   ///
@@ -111,6 +105,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home'**
   String get navHome;
+
+  /// No description provided for @navProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get navProgress;
+
+  /// No description provided for @navAwards.
+  ///
+  /// In en, this message translates to:
+  /// **'Awards'**
+  String get navAwards;
 
   /// No description provided for @navProfile.
   ///
@@ -856,7 +862,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['ceb', 'en', 'fil'].contains(locale.languageCode);
+      <String>['en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -865,12 +871,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ceb':
-      return AppLocalizationsCeb();
     case 'en':
       return AppLocalizationsEn();
-    case 'fil':
-      return AppLocalizationsFil();
   }
 
   throw FlutterError(

@@ -1,0 +1,14 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Level badge, in progress">
+  <circle cx="50" cy="50" r="38" fill="none" stroke="#1C2B57" stroke-width="9" opacity="0.18"/>
+  <circle cx="50" cy="50" r="38" fill="none" stroke="#2FB6F0" stroke-width="9" stroke-linecap="round"
+          stroke-dasharray="167 239" transform="rotate(-90 50 50)"/>
+  <g fill="#FFC542">
+    <rect x="48" y="2" width="4" height="4"/>
+    <rect x="44" y="6" width="4" height="4"/>
+    <rect x="52" y="6" width="4" height="4"/>
+    <rect x="48" y="6" width="4" height="4" fill="#FFF3D0"/>
+    <rect x="44" y="10" width="4" height="4"/>
+    <rect x="52" y="10" width="4" height="4"/>
+  </g>
+  <text x="50" y="58" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="18" fill="#0A1626">37</text>
+</svg>

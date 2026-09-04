@@ -5,6 +5,8 @@
     "description": "App title, shown as the login header and OS task-switcher label"
   },
   "navHome": "Home",
+  "navProgress": "Progress",
+  "navAwards": "Awards",
   "navProfile": "Profile",
   "retry": "Retry",
   "cancel": "Cancel",

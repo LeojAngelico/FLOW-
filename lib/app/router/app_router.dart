@@ -1,245 +1,155 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../core/environment/app_environment.dart';
-import '../../core/face_capture/face_capture.dart';
-import '../../core/image_viewer/image_viewer.dart';
-import '../../core/qr_scanner/qr_scanner.dart';
-import '../../core/signature_pad/signature_pad.dart';
-import '../../core/ui_kit/playground/ui_playground_page.dart';
-
-import '../../features/auth/presentation/login/login_page.dart';
-import '../../features/auth/presentation/registration/registration_page.dart';
-import '../../features/auth/presentation/profile/profile_page.dart';
-import '../../features/auth/presentation/session/auth_session_notifier.dart';
-import '../../features/auth/presentation/session/auth_session_state.dart';
-import '../../features/auth/presentation/splash/splash_page.dart';
-
-import '../../features/home/presentation/home_page.dart';
-
+import '../../core/database/database_provider.dart';
+import '../../core/preferences/onboarding_provider.dart';
+import '../../features/gamification/presentation/achievement_detail_page.dart';
+import '../../features/gamification/presentation/awards_page.dart';
+import '../../features/hydration/presentation/add_water_page.dart';
+import '../../features/hydration/presentation/day_detail_page.dart';
+import '../../features/hydration/presentation/home_page.dart';
+import '../../features/hydration/presentation/progress_page.dart';
+import '../../features/hydration/presentation/target_settings_page.dart';
+import '../../features/onboarding/presentation/activity_page.dart';
+import '../../features/onboarding/presentation/basics_page.dart';
+import '../../features/onboarding/presentation/environment_page.dart';
+import '../../features/onboarding/presentation/recovery_page.dart';
+import '../../features/onboarding/presentation/reminders_page.dart';
+import '../../features/onboarding/presentation/splash_page.dart';
+import '../../features/onboarding/presentation/target_page.dart';
+import '../../features/onboarding/presentation/weight_page.dart';
+import '../../features/onboarding/presentation/welcome_page.dart';
+import '../../features/reminders/presentation/reminder_settings_page.dart';
+import '../../features/settings/presentation/about_page.dart';
+import '../../features/settings/presentation/general_settings_page.dart';
+import '../../features/settings/presentation/profile_page.dart';
+import '../../features/trivia/presentation/trivia_page.dart';
 import '../main_shell.dart';
-import 'router_refresh_notifier.dart';
+import 'app_redirect.dart';
 
-final appRouterProvider = Provider<GoRouter>((ref) {
-  final routerRefresh = RouterRefreshNotifier();
+part 'app_router.g.dart';
 
-  // Rebuild GoRouter's redirect logic whenever
-  // authentication state changes.
-  ref.listen<AuthSessionState>(authSessionNotifierProvider, (previous, next) {
-    routerRefresh.refresh();
-  });
-
-  ref.onDispose(() {
-    routerRefresh.dispose();
-  });
-
+@Riverpod(keepAlive: true)
+GoRouter appRouter(Ref ref) {
   return GoRouter(
-    initialLocation: '/splash',
-
-    refreshListenable: routerRefresh,
-
+    initialLocation: '/',
     redirect: (context, state) {
-      final authState = ref.read(authSessionNotifierProvider);
+      final databaseHealthy = ref.read(databaseHealthyProvider);
+      final onboardingComplete = ref.read(onboardingCompleteProvider);
 
-      final location = state.matchedLocation;
-
-      final isSplash = location == '/splash';
-
-      final isLogin = location == '/login';
-
-      final isRegistration = location == '/registration';
-
-      final isAuthRoute = isLogin || isRegistration;
-
-      // ------------------------------------------
-      // SESSION IS BEING CHECKED
-      // ------------------------------------------
-
-      if (authState.status == AuthSessionStatus.checking) {
-        if (!isSplash) {
-          return '/splash';
-        }
-
-        return null;
-      }
-
-      // ------------------------------------------
-      // USER IS AUTHENTICATED
-      // ------------------------------------------
-
-      if (authState.status == AuthSessionStatus.authenticated) {
-        // Authenticated users should not stay
-        // on splash/login/registration.
-        if (isSplash || isAuthRoute) {
-          return '/home';
-        }
-
-        return null;
-      }
-
-      // ------------------------------------------
-      // USER IS NOT AUTHENTICATED
-      // ------------------------------------------
-
-      if (authState.status == AuthSessionStatus.unauthenticated) {
-        // Allow login and registration pages.
-        if (isAuthRoute) {
-          return null;
-        }
-
-        // Anything else requires authentication.
-        return '/login';
-      }
-
-      return null;
+      return resolveRedirect(
+        databaseHealthy: databaseHealthy,
+        onboardingComplete: onboardingComplete,
+        location: state.matchedLocation,
+      );
     },
-
     routes: [
-      // ------------------------------------------
-      // UI KIT PLAYGROUND
-      // ------------------------------------------
-      //
-      // Visibility depends on flavor + build mode — see
-      // AppEnvironment.enableUiPlayground. Never available in prod.
-      if (AppEnvironment.current.enableUiPlayground)
-        GoRoute(
-          path: '/ui-playground',
-          builder: (context, state) {
-            return const UiPlaygroundPage();
-          },
-        ),
-
-      // ------------------------------------------
-      // QR SCANNER (core capability, full-screen)
-      // ------------------------------------------
-      //
-      // Opened with AppQrScanner.scan(context), which pushes this
-      // route and awaits the popped String. Available in every
-      // flavor — any feature may need to scan a code.
+      GoRoute(path: '/', builder: (context, state) => const SplashPage()),
       GoRoute(
-        path: AppQrScanner.routePath,
-        builder: (context, state) {
-          final config = state.extra as QrScannerConfig?;
-
-          return QrScannerPage(config: config ?? const QrScannerConfig());
-        },
+        path: '/onboarding/welcome',
+        builder: (context, state) => const WelcomePage(),
       ),
-
-      // ------------------------------------------
-      // FACE CAPTURE (core capability, full-screen)
-      // ------------------------------------------
-      //
-      // Opened with AppFaceCapture.capture(context), which pushes
-      // this route and awaits the popped FaceCaptureResult.
       GoRoute(
-        path: AppFaceCapture.routePath,
-        builder: (context, state) {
-          final config = state.extra as FaceCaptureConfig?;
-
-          return FaceCapturePage(config: config ?? const FaceCaptureConfig());
-        },
+        path: '/onboarding/basics',
+        builder: (context, state) => const BasicsPage(),
       ),
-
-      // ------------------------------------------
-      // IMAGE VIEWER (core capability, full-screen)
-      // ------------------------------------------
-      //
-      // Opened with AppImageViewer.show / .showGallery. Registering it
-      // as a route rather than a bespoke overlay is what makes the
-      // Android back gesture close it for free.
       GoRoute(
-        path: AppImageViewer.routePath,
-        builder: (context, state) {
-          final args = state.extra as AppImageViewerArgs?;
-
-          return ImageViewerPage(
-            args: args ?? const AppImageViewerArgs(images: []),
-          );
-        },
+        path: '/onboarding/weight',
+        builder: (context, state) => const WeightPage(),
       ),
-
-      // ------------------------------------------
-      // SIGNATURE PAD (core capability, full-screen)
-      // ------------------------------------------
-      //
-      // Opened with AppSignaturePad.show(context), which pushes this
-      // route and awaits the popped SignatureResult. Full-screen
-      // because a signature needs every pixel the device has.
       GoRoute(
-        path: AppSignaturePad.routePath,
-        builder: (context, state) {
-          final config = state.extra as SignaturePadConfig?;
-
-          return SignaturePadPage(config: config ?? const SignaturePadConfig());
-        },
+        path: '/onboarding/activity',
+        builder: (context, state) => const ActivityPage(),
       ),
-
-      // ------------------------------------------
-      // SPLASH
-      // ------------------------------------------
       GoRoute(
-        path: '/splash',
-        builder: (context, state) {
-          return const SplashPage();
-        },
+        path: '/onboarding/environment',
+        builder: (context, state) => const EnvironmentPage(),
       ),
-
-      // ------------------------------------------
-      // AUTH
-      // ------------------------------------------
       GoRoute(
-        path: '/login',
-        builder: (context, state) {
-          final message = state.uri.queryParameters['message'];
-
-          return LoginPage(message: message);
-        },
+        path: '/onboarding/target',
+        builder: (context, state) => const TargetPage(),
       ),
-
       GoRoute(
-        path: '/registration',
-        builder: (context, state) {
-          return const RegistrationPage();
-        },
+        path: '/onboarding/reminders',
+        builder: (context, state) => const RemindersPage(),
       ),
-
-      // ------------------------------------------
-      // MAIN APPLICATION
-      // ------------------------------------------
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return MainShell(navigationShell: navigationShell);
-        },
+        builder: (context, state, navigationShell) =>
+            MainShell(navigationShell: navigationShell),
         branches: [
-          // ----------------------------------------
-          // HOME
-          // ----------------------------------------
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/home',
-                builder: (context, state) {
-                  return const HomePage();
-                },
+                builder: (context, state) => const HomePage(),
               ),
             ],
           ),
-
-          // ----------------------------------------
-          // PROFILE
-          // ----------------------------------------
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/progress',
+                builder: (context, state) => const ProgressPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/awards',
+                builder: (context, state) => const AwardsPage(),
+              ),
+            ],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/profile',
-                builder: (context, state) {
-                  return const ProfilePage();
-                },
+                builder: (context, state) => const ProfilePage(),
               ),
             ],
           ),
         ],
       ),
+      GoRoute(
+        path: '/home/add',
+        builder: (context, state) => const AddWaterPage(),
+      ),
+      GoRoute(
+        path: '/home/trivia',
+        builder: (context, state) => const TriviaPage(),
+      ),
+      GoRoute(
+        path: '/progress/day/:date',
+        builder: (context, state) =>
+            DayDetailPage(date: state.pathParameters['date']!),
+      ),
+      GoRoute(
+        path: '/awards/:achievementId',
+        builder: (context, state) => AchievementDetailPage(
+          achievementId: state.pathParameters['achievementId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/profile/target',
+        builder: (context, state) => const TargetSettingsPage(),
+      ),
+      GoRoute(
+        path: '/profile/reminders',
+        builder: (context, state) => const ReminderSettingsPage(),
+      ),
+      GoRoute(
+        path: '/profile/settings',
+        builder: (context, state) => const GeneralSettingsPage(),
+      ),
+      GoRoute(
+        path: '/profile/settings/about',
+        builder: (context, state) => const AboutPage(),
+      ),
+      GoRoute(
+        path: '/recovery',
+        builder: (context, state) => const RecoveryPage(),
+      ),
     ],
   );
-});
+}
