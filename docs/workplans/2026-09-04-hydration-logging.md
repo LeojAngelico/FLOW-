@@ -1,7 +1,7 @@
 # Workplan: Hydration logging (APP-01 core loop + APP-02 Add Water)
 
-Status: presentation
-Reference feature: **none complete — see § Reference feature** | Last agent: implementer (presentation)
+Status: tests
+Reference feature: **none complete — see § Reference feature** | Last agent: flutter-unit-tester
 
 ---
 
@@ -374,35 +374,35 @@ component sub-list as its own three items.)*
       boilerplate keys (`qrScanner*`, `faceCapture*`, `login*`) in that
       file; they belong to a separate cleanup.
 
-### Tests (10 new)
+### Tests (11 new)
 
-- [ ] `test/features/hydration/domain/usecases/log_water_test.dart` — the
+- [x] `test/features/hydration/domain/usecases/log_water_test.dart` — the
       boundary table: 49 / 50 / 2000 / 2001, 0, negative, and a fake
       repository asserting `localDate` comes from the injected `Clock`.
-- [ ] `test/features/hydration/domain/usecases/get_today_hydration_test.dart`
+- [x] `test/features/hydration/domain/usecases/get_today_hydration_test.dart`
       — zero-entry day falls back to the profile target; day row wins once
       it exists.
-- [ ] `test/features/hydration/domain/models/today_hydration_test.dart` —
+- [x] `test/features/hydration/domain/models/today_hydration_test.dart` —
       `remainingMl` floors at 0; `displayFraction` caps at 1.0 while
       `progressFraction` does not.
-- [ ] `test/features/hydration/data/repositories/hydration_repository_impl_test.dart`
+- [x] `test/features/hydration/data/repositories/hydration_repository_impl_test.dart`
       — against an in-memory `AppDatabase` (`NativeDatabase.memory()`) with
       a seeded profile: first entry creates the day row and snapshots
       `targetMl`; a later profile-target change does not rewrite it
       (`BR-17`); `goalCompleted`/`goalCompletedAt`/`status` transition
       correctly; the deferred FK commits.
-- [ ] `test/features/hydration/presentation/home/home_notifier_test.dart` —
+- [x] `test/features/hydration/presentation/home/home_notifier_test.dart` —
       debounce collapses a double-tap to one write; `StorageFailure`
       surfaces without mutating the total.
-- [ ] `test/features/hydration/presentation/add_water/add_water_notifier_test.dart`
+- [x] `test/features/hydration/presentation/add_water/add_water_notifier_test.dart`
       — stepper clamps; the >1,000 ml gate blocks the first submit and
       passes the second.
-- [ ] `test/core/time/local_date_test.dart` — DST forward/backward days and
+- [x] `test/core/time/local_date_test.dart` — DST forward/backward days and
       a timezone change (`BR-16`).
-- [ ] `test/core/utils/volume_format_test.dart` — 0, 999, 1000, 1250, 2400.
-- [ ] `test/core/design/components/hydration_glass_test.dart` — fill height
+- [x] `test/core/utils/volume_format_test.dart` — 0, 999, 1000, 1250, 2400.
+- [x] `test/core/design/components/hydration_glass_test.dart` — fill height
       at 0 / 50% / 100% / 150%; instant jump under `reduceMotion`.
-- [ ] `test/core/design/components/log_row_test.dart`,
+- [x] `test/core/design/components/log_row_test.dart`,
       `stepper_button_test.dart` — the repo's standing rule is one test
       file per component (18/18 currently covered; do not regress that).
 
@@ -879,12 +879,49 @@ to `app_en.arb`) will not resolve until both generators run.
 — a final generate → analyze → format pass is still needed before this
 feature is gate-clean.
 
+**37. Two defects fixed in already-drafted test files (test-only; no `lib/`
+change), plus the file plan's own count corrected.** All eleven files under
+§ Tests existed on disk before this dispatch, already substantially
+written and matching this repo's fake-repository/`ProviderContainer`
+house style — apparently drafted in an earlier, uncommitted session (they
+showed up as untracked in `git status`, workplan checkboxes still
+unticked). Read every one against its production source and the plan's
+own bullet before trusting it, per this agent's own instructions, rather
+than assuming "exists" means "correct." Two were not:
+- `hydration_repository_impl_test.dart` failed to compile:
+  `package:drift/drift.dart` and `package:matcher` (re-exported through
+  `flutter_test`) both export `isNull`/`isNotNull`, and Dart's compiler
+  refuses the ambiguous import rather than picking one. Fixed with
+  `import 'package:drift/drift.dart' hide isNull, isNotNull;` — a
+  test-only import fix, not a rewrite.
+- `home_notifier_test.dart` had two tests fail at runtime with "Cannot
+  use the Ref of homeProvider after it has been disposed": `homeProvider`
+  is plain `@riverpod` (autoDispose), and a bare `container.read(...)`
+  does not hold a listener the way `home_page.dart`'s `ref.watch(...)`
+  does in production. The two failing tests are the ones that insert a
+  real `Future.delayed` gap between two `quickAdd` calls (to prove the
+  debounce genuinely measures elapsed time) — long enough for Riverpod to
+  tear the provider down between calls, which a same-microtask
+  double-tap test never hits. Fixed by adding
+  `container.listen(homeProvider, (previous, next) {})` in `setUp`,
+  mirroring what the real widget's watch does — not a widening of what
+  the test asserts. **Not a production defect**: `home_page.dart` always
+  watches `homeProvider`, so this teardown-between-calls scenario cannot
+  occur on a real screen; it is purely an artifact of driving the
+  notifier directly through a bare `ProviderContainer.read()`.
+
+Also: the file plan's own header still read "Tests (10 new)" while
+listing eleven bullets (the log_row/stepper_button pair is one bullet
+covering two files) — corrected to "Tests (11 new)" to match the
+"Tests 11" already stated in the file plan's own layer-count line, not a
+new decision, just a copy-paste mismatch closed here.
+
 ---
 
 ## Gate results
 
-- analyze:
-- tests:
+- analyze: clean (`flutter analyze` — 16 pre-existing info-level lints in `test/`, e.g. `deprecated_member_use` on `hasFlag`/`unnecessary_import`, consistent with the same lints already present in untouched sibling component tests; zero errors, zero warnings)
+- tests: 251/251 passing (`flutter test`), including all 95 under `test/features/hydration/` + the 6 new/updated `test/core/` files
 - localization:
 - platform:
 - security:
