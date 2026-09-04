@@ -3,33 +3,37 @@ name: flutter-localization
 description: Make Flutter features localization-ready. Use when adding screens, user-facing strings, validation/errors, dates, numbers, currency, pluralization, or locale-sensitive UI.
 ---
 
-# Localization Workflow
+# Localization
 
-Do not hardcode user-facing strings in widgets.
+For the configured locales, the arb directory, the generated class and
+the regeneration command, read `docs/PROJECT_MAP.md` § Localization.
 
-Use the project's existing Flutter localization approach.
+## Rule
 
-When adding a feature:
+No user-facing string is hardcoded in a widget. Not a label, not a
+button, not a dialog, not a validation message, not an error, not an
+empty state, not a notification.
 
-1. Identify every new user-facing string.
-2. Add it to localization resources.
-3. Regenerate generated localization code when required.
-4. Use localized accessors in UI.
-5. Check default locale behavior.
-6. Consider longer translations and text expansion.
+## When adding a feature
 
-Localize:
-- labels
-- buttons
-- dialogs
-- validation
-- errors
-- empty states
-- notifications
-- plural forms
+1. List every new user-facing string.
+2. Add each to the template arb file, then to every other locale the
+   map lists. A key present in one locale and missing from another is a
+   runtime fallback, not a translation.
+3. Regenerate using the command in the map.
+4. Reference strings through the generated accessor.
+5. Check behaviour in the default locale.
 
-Use locale-aware formatting for dates, times, numbers, currency, and measurements.
+## Formatting
 
-Avoid concatenating sentence fragments that make translation unnatural.
+Use locale-aware formatting for dates, times, numbers and currency.
+Never assemble a sentence from concatenated fragments — word order
+differs between languages and the result cannot be translated well.
 
-Design layouts to survive longer translated strings and larger text sizes.
+Use plural forms rather than an if statement on a count.
+
+## Layout
+
+Translated strings are frequently longer than the original. Design so
+that a longer string wraps or truncates deliberately rather than
+overflowing, and verify with the largest text-scale setting.

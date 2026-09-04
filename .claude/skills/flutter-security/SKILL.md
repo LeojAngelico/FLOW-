@@ -5,6 +5,9 @@ description: Perform secure-by-default reviews and implementations for Flutter f
 
 # Security Review
 
+For where this project stores credentials and how it maps errors, read
+`docs/PROJECT_MAP.md` § Network Layer.
+
 For every feature, ask:
 
 - What data is sensitive?
@@ -19,11 +22,7 @@ For every feature, ask:
 
 ## Rules
 
-Never hardcode secrets.
-
 Use secure storage for sensitive credentials/tokens.
-
-Use HTTPS/TLS.
 
 Treat user input, API responses, files, deep links, and notification payloads as untrusted.
 
@@ -32,5 +31,3 @@ Do not expose sensitive information unnecessarily through logs, analytics, scree
 Client-side checks are not authorization.
 
 Clearly flag controls that require backend/infrastructure support.
-
-Never claim an app is hack-proof.

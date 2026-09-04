@@ -5,6 +5,9 @@ description: Debug and review Flutter code using root-cause analysis and focused
 
 # Debugging
 
+Before tracing a flow, read `.claude/skills/flutter-architecture-map/SKILL.md`
+to identify which layer the symptom belongs to.
+
 Do not immediately rewrite.
 
 Use:
@@ -29,7 +32,3 @@ Separate:
 8. testability
 9. performance
 10. style
-
-Do not claim a build/test passed unless it was actually run.
-
-Avoid unrelated refactoring.
