@@ -4,6 +4,7 @@ import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-02. Outline only, no fill, no depth — deliberately 4dp shorter
 /// than CMP-01's 60dp footprint so it visibly sits lower in the
@@ -44,11 +45,12 @@ class _SecondaryButtonState extends State<SecondaryButton> {
       labelColor = colors.textPrimary;
     }
 
-    return GestureDetector(
-      onTapDown: isDisabled ? null : (_) => setState(() => _pressed = true),
-      onTapCancel: isDisabled ? null : () => setState(() => _pressed = false),
-      onTapUp: isDisabled ? null : (_) => setState(() => _pressed = false),
-      onTap: isDisabled ? null : widget.onPressed,
+    return FlowTappable(
+      enabled: !isDisabled,
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTap: widget.onPressed,
       child: Container(
         height: 52,
         padding: const EdgeInsets.symmetric(horizontal: FlowSpacing.lg),

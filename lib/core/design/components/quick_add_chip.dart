@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-04. 56dp tall, a dedicated 10px radius — NOT radius.pill. The
 /// written design-system doc reserved radius.pill for this component,
@@ -30,8 +31,9 @@ class QuickAddChip extends StatelessWidget {
     final labelColor = colors.textPrimary;
     final borderWidth = selected ? 3.0 : 2.0;
 
-    return GestureDetector(
+    return FlowTappable(
       onTap: onTap,
+      selected: selected,
       child: Container(
         key: const ValueKey('quick-add-chip'),
         height: 56,

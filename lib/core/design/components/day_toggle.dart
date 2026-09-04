@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../tokens/flow_colors.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-15. 40dp circle, single-letter day label. On = brand.primary
 /// fill + 2dp frame.ink border + onBrandFill navy label (fixed in both
@@ -25,8 +26,9 @@ class DayToggle extends StatelessWidget {
     final colors = Theme.of(context).extension<FlowColors>()!;
     final typography = Theme.of(context).extension<FlowTypography>()!;
 
-    return GestureDetector(
+    return FlowTappable(
       onTap: onTap,
+      selected: selected,
       child: Container(
         width: 40,
         height: 40,

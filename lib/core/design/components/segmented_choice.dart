@@ -4,6 +4,7 @@ import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
 import '../tokens/flow_typography.dart';
 import 'flow_frame_box.dart';
+import 'flow_tappable.dart';
 
 /// CMP-05. Two verified variants: `/Unit` (2 segments, segmentHeight 48
 /// -> 56dp shell) and `/Sex` (3 segments, segmentHeight 56 -> 64dp
@@ -55,8 +56,9 @@ class SegmentedChoice<T> extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: GestureDetector(
+                child: FlowTappable(
                   onTap: () => onChanged(option),
+                  selected: option == selected,
                   child: option == selected
                       ? FlowFrameBox(
                           fill: colors.brandPrimary,

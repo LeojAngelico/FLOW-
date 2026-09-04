@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/core/design/components/primary_button.dart';
@@ -63,6 +65,28 @@ void main() {
     expect(find.text('CONTINUE'), findsNothing);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
+
+  testWidgets(
+    'exposes button semantics; label comes from the visible Text when not '
+    'loading, and from an explicit Semantics label (not a duplicate) while '
+    'loading replaces that Text with a bare spinner',
+    (tester) async {
+      await pumpFlowWidget(
+        tester,
+        PrimaryButton(label: 'Continue', onPressed: () {}),
+      );
+      var data = tester.getSemantics(find.byType(PrimaryButton));
+      expect(data.hasFlag(SemanticsFlag.isButton), isTrue);
+      expect(data.label, 'CONTINUE');
+
+      await pumpFlowWidget(
+        tester,
+        PrimaryButton(label: 'Continue', onPressed: () {}, isLoading: true),
+      );
+      data = tester.getSemantics(find.byType(PrimaryButton));
+      expect(data.label, 'Continue');
+    },
+  );
 
   testWidgets('renders a trailing icon when trailingIcon is given', (
     tester,

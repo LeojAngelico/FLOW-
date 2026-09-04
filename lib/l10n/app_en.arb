@@ -12,6 +12,7 @@
   "cancel": "Cancel",
   "edit": "Edit",
   "delete": "Delete",
+  "back": "Back",
   "emailLabel": "Email",
   "passwordLabel": "Password",
   "firstNameLabel": "First Name",

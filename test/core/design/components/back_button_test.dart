@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,5 +35,25 @@ void main() {
 
     await tester.tap(find.byType(FlowBackButton));
     expect(tapped, isTrue);
+  });
+
+  testWidgets('exposes button semantics with an accessible "Back" label '
+      '(icon-only, no visible text a screen reader could fall back on)', (
+    tester,
+  ) async {
+    await pumpFlowWidget(tester, FlowBackButton(onPressed: () {}));
+
+    final data = tester.getSemantics(find.byType(FlowBackButton));
+    expect(data.hasFlag(SemanticsFlag.isButton), isTrue);
+    expect(data.label, 'Back');
+  });
+
+  testWidgets('is reported as disabled semantics when onPressed is null', (
+    tester,
+  ) async {
+    await pumpFlowWidget(tester, const FlowBackButton(onPressed: null));
+
+    final data = tester.getSemantics(find.byType(FlowBackButton));
+    expect(data.hasFlag(SemanticsFlag.isEnabled), isFalse);
   });
 }

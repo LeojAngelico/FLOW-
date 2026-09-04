@@ -7,6 +7,7 @@ import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-14. 56dp row, opens a native time picker or interval sheet
 /// (wiring is the caller's job via [onTap]). Carries the full pixel
@@ -30,7 +31,7 @@ class SettingRow extends StatelessWidget {
     final colors = Theme.of(context).extension<FlowColors>()!;
     final typography = Theme.of(context).extension<FlowTypography>()!;
 
-    return GestureDetector(
+    return FlowTappable(
       onTap: onTap,
       child: Container(
         height: 56,

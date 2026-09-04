@@ -4,6 +4,7 @@ import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-07. 2x2 grid tile (ONB-06), built at 104dp (Figma's own note:
 /// "min 96dp tall per 05 ONB-06; built at 104dp"). Selected = tinted
@@ -27,8 +28,9 @@ class IconChoiceTile extends StatelessWidget {
     final colors = Theme.of(context).extension<FlowColors>()!;
     final typography = Theme.of(context).extension<FlowTypography>()!;
 
-    return GestureDetector(
+    return FlowTappable(
       onTap: onTap,
+      selected: selected,
       child: Container(
         height: 104,
         padding: const EdgeInsets.symmetric(vertical: FlowSpacing.md),
