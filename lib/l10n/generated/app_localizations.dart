@@ -855,6 +855,135 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The photo could not be captured. Please try again.'**
   String get errorCaptureFailed;
+
+  /// APP-01 dashboard, CPY-099 — header above the hydration summary once at least one entry exists today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s goal'**
+  String get hydrationTodaysGoal;
+
+  /// APP-01 dashboard, CPY-097 — replaces hydrationTodaysGoal as the header while today has zero entries.
+  ///
+  /// In en, this message translates to:
+  /// **'A fresh day'**
+  String get hydrationFreshDay;
+
+  /// APP-01 dashboard, CPY-101 — shown under the numbers while today has zero entries.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an amount to log your first drink'**
+  String get hydrationEmptyHint;
+
+  /// APP-01 dashboard, CPY-092 — shown under today's total, e.g. 'of 2 L'.
+  ///
+  /// In en, this message translates to:
+  /// **'of {target}'**
+  String hydrationOfTarget(String target);
+
+  /// APP-01 dashboard, CPY-093 — remaining ml/L until today's target; shown instead of hydrationGoalComplete before the goal is met.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} to go'**
+  String hydrationRemainingToGo(String amount);
+
+  /// APP-01 dashboard, CPY-094 — shown instead of hydrationRemainingToGo once totalMl >= targetMl.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal complete'**
+  String get hydrationGoalComplete;
+
+  /// APP-01 dashboard, CPY-100 — navigates to /home/add for a custom amount.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add water'**
+  String get hydrationAddWaterCta;
+
+  /// APP-01 dashboard, CPY-106 — transient feedback shown near the summary right after a successful log.
+  ///
+  /// In en, this message translates to:
+  /// **'+{amount}'**
+  String hydrationJustLogged(String amount);
+
+  /// APP-01 dashboard, CPY-109 — header above the quick-add chip row.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick add'**
+  String get quickAdd;
+
+  /// APP-01 dashboard, CPY-110 — header above today's entries list.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s logs'**
+  String get todaysLogs;
+
+  /// APP-02, CPY-102 — /home/add screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Water'**
+  String get addWaterTitle;
+
+  /// APP-02, CPY-103 — the custom-amount screen's submit CTA, and the large-amount confirm dialog's confirm action.
+  ///
+  /// In en, this message translates to:
+  /// **'Log water'**
+  String get logWaterButton;
+
+  /// APP-02, CPY-104 — confirm dialog shown before logging a custom amount above 1,000ml (FR-024).
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s a large amount. Log {amount}?'**
+  String largeAmountConfirmMessage(String amount);
+
+  /// APP-02, CPY-108 — discard-on-back confirm dialog title, shown once the amount has changed from 0.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard this amount?'**
+  String get addWaterDiscardTitle;
+
+  /// APP-02 — the destructive action on the discard-on-back confirm dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// APP-02 — unit caption under the custom-amount stepper/text field. Not a CPY-* code in the copy spec; added because FlowTextField carries no built-in unit affordance and CLAUDE.md forbids a hardcoded user-facing string.
+  ///
+  /// In en, this message translates to:
+  /// **'ml'**
+  String get hydrationAmountUnitLabel;
+
+  /// APP-01 accessibility label merging the hydration summary (glass + all four numbers) into one semantics node, per FR-030/FR-031. CMP-47 HydrationGlass excludes itself from semantics; hydration_summary.dart reads this instead of letting a screen reader walk each number individually.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s progress: {total} of {target}, {percent} percent, {remaining} to go'**
+  String hydrationSummarySemantics(
+    String total,
+    String target,
+    int percent,
+    String remaining,
+  );
+
+  /// Same as hydrationSummarySemantics, once the goal is met (FR-033) — replaces the remaining-ml clause with completion.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s progress: {total} of {target}, {percent} percent, goal complete'**
+  String hydrationSummarySemanticsComplete(
+    String total,
+    String target,
+    int percent,
+  );
+
+  /// APP-01 accessibility label for each QuickAddChip on /home — overrides CMP-04's own visible-text-derived label so a screen reader announces the action ('Add 250 ml'), not just the amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {amount}'**
+  String quickAddChipSemantics(String amount);
+
+  /// APP-01/APP-02 — shown inline (never replacing the displayed total) when a hydration read or write fails with a StorageFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save that. Please try again.'**
+  String get errorHydrationStorage;
 }
 
 class _AppLocalizationsDelegate

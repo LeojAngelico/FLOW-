@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../l10n/generated/app_localizations.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class ProgressPage extends StatelessWidget {
+  const ProgressPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(loc.navHome)),
+      appBar: AppBar(title: Text(loc.navProgress)),
       body: const SizedBox(),
     );
   }
