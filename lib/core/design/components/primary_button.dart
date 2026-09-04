@@ -7,9 +7,12 @@ import '../tokens/flow_typography.dart';
 import 'flow_frame_box.dart';
 
 /// CMP-01. Primary CTA. 56dp tall + 4dp solid frame/depth offset (60dp
-/// total layout height). Label is text/primary navy on brand/primary —
-/// never onPrimary white, which fails WCAG 1.4.3 at 2.32:1. Pressed
-/// collapses the depth offset; that collapse IS the tap affordance.
+/// total layout height). Label is onBrandFill (fixed navy, both themes)
+/// on brand/primary — never onPrimary white, which fails WCAG 1.4.3 at
+/// 2.32:1, and never textPrimary, which flips to near-white in dark mode
+/// and reproduces that same failure against the theme-invariant fill.
+/// Pressed collapses the depth offset; that collapse IS the tap
+/// affordance.
 class PrimaryButton extends StatefulWidget {
   const PrimaryButton({
     required this.label,
@@ -54,7 +57,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           : widget.isMilestone
           ? colors.achievement
           : colors.brandPrimary;
-      labelColor = colors.textPrimary;
+      labelColor = colors.onBrandFill;
       frameColor = colors.frameInk;
     }
 

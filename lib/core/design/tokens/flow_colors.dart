@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 
 /// Every color token from 06-design-system.md §2, verified against the
 /// Figma file's bound variables (see the foundation design spec, Section
-/// 6). `panelDeep`, `trackDark`, and `canvasGame` are genuinely
-/// theme-dependent — a correction found during that verification, not
-/// present in the original written doc.
+/// 6). `panelDeep`, `trackDark`, `canvasGame`, and `frameInk` are
+/// genuinely theme-dependent — a correction found during that
+/// verification, not present in the original written doc. `frameInk`'s
+/// dark value was added after launch (final-review follow-up): the
+/// light-theme ink, reused unchanged, sat at ~1.03:1 against dark-theme
+/// backgrounds/surfaces — functionally invisible. `onBrandFill` was
+/// added the same pass: it is fixed navy in both themes because
+/// `brandPrimary`/`brandPrimaryActive`/`achievement` (the fills it labels)
+/// do not change between themes, so the label color that sits on them
+/// must not either — using the theme-flipping `textPrimary` there (as
+/// `PrimaryButton` and `DayToggle` did) reproduced the exact 2.32:1-class
+/// failure `brandPrimaryTextSafe`'s doc comment already warns about, but
+/// only in dark mode, since `textPrimary` turns near-white there.
 class FlowColors extends ThemeExtension<FlowColors> {
   const FlowColors({
     required this.brandPrimary,
@@ -12,6 +22,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
     required this.brandPrimaryPressed,
     required this.brandPrimaryActive,
     required this.brandSecondary,
+    required this.onBrandFill,
     required this.xp,
     required this.achievement,
     required this.reward,
@@ -53,6 +64,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
   final Color brandPrimaryPressed;
   final Color brandPrimaryActive;
   final Color brandSecondary;
+  final Color onBrandFill;
   final Color xp;
   final Color achievement;
   final Color reward;
@@ -96,6 +108,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
     brandPrimaryPressed: Color(0xFF085A82),
     brandPrimaryActive: Color(0xFF1C9AD1),
     brandSecondary: Color(0xFF8B6BF2),
+    onBrandFill: Color(0xFF101A2E),
     xp: Color(0xFF8BD450),
     achievement: Color(0xFFFFC542),
     reward: Color(0xFFFF7A59),
@@ -138,6 +151,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
     brandPrimaryPressed: Color(0xFF085A82),
     brandPrimaryActive: Color(0xFF1C9AD1),
     brandSecondary: Color(0xFFA488FF),
+    onBrandFill: Color(0xFF101A2E),
     xp: Color(0xFF8BD450),
     achievement: Color(0xFFFFC542),
     reward: Color(0xFFFF7A59),
@@ -167,7 +181,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
     panelDeep: Color(0xFF06405E),
     panelDeepInk: Color(0xFFFFFFFF),
     panelDeepAccent: Color(0xFF7FDBFA),
-    frameInk: Color(0xFF0B1E36),
+    frameInk: Color(0xFF5C71AD),
     frameDepth: Color(0xFF0A3E5C),
     frameBevel: Color(0x595FCBF5),
     particle: Color(0x4D7FDBFA),
@@ -181,6 +195,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
     Color? brandPrimaryPressed,
     Color? brandPrimaryActive,
     Color? brandSecondary,
+    Color? onBrandFill,
     Color? xp,
     Color? achievement,
     Color? reward,
@@ -222,6 +237,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
       brandPrimaryPressed: brandPrimaryPressed ?? this.brandPrimaryPressed,
       brandPrimaryActive: brandPrimaryActive ?? this.brandPrimaryActive,
       brandSecondary: brandSecondary ?? this.brandSecondary,
+      onBrandFill: onBrandFill ?? this.onBrandFill,
       xp: xp ?? this.xp,
       achievement: achievement ?? this.achievement,
       reward: reward ?? this.reward,
@@ -273,6 +289,7 @@ class FlowColors extends ThemeExtension<FlowColors> {
       brandPrimaryPressed: c(brandPrimaryPressed, other.brandPrimaryPressed),
       brandPrimaryActive: c(brandPrimaryActive, other.brandPrimaryActive),
       brandSecondary: c(brandSecondary, other.brandSecondary),
+      onBrandFill: c(onBrandFill, other.onBrandFill),
       xp: c(xp, other.xp),
       achievement: c(achievement, other.achievement),
       reward: c(reward, other.reward),

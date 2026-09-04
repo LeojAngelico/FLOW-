@@ -35,9 +35,24 @@ void main() {
     },
   );
 
-  test('frame tokens are theme-independent', () {
-    expect(FlowColors.light.frameInk, FlowColors.dark.frameInk);
+  test('frameDepth is theme-independent', () {
     expect(FlowColors.light.frameDepth, FlowColors.dark.frameDepth);
+  });
+
+  test('frameInk is theme-dependent: the light value is ~1.03:1 against '
+      'dark backgrounds, so dark mode gets its own lighter value '
+      '(final-review follow-up)', () {
+    expect(FlowColors.light.frameInk, const Color(0xFF0B1E36));
+    expect(FlowColors.dark.frameInk, const Color(0xFF5C71AD));
+    expect(FlowColors.light.frameInk, isNot(FlowColors.dark.frameInk));
+  });
+
+  test('onBrandFill is fixed navy in both themes, because the fills it '
+      'labels (brandPrimary, brandPrimaryActive, achievement) do not '
+      'change between themes either (final-review follow-up)', () {
+    expect(FlowColors.light.onBrandFill, const Color(0xFF101A2E));
+    expect(FlowColors.dark.onBrandFill, const Color(0xFF101A2E));
+    expect(FlowColors.light.onBrandFill, FlowColors.dark.onBrandFill);
   });
 
   test('copyWith overrides only the requested field', () {

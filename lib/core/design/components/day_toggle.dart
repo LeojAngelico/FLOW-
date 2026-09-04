@@ -4,7 +4,10 @@ import '../tokens/flow_colors.dart';
 import '../tokens/flow_typography.dart';
 
 /// CMP-15. 40dp circle, single-letter day label. On = brand.primary
-/// fill + 2dp frame.ink border + navy label.
+/// fill + 2dp frame.ink border + onBrandFill navy label (fixed in both
+/// themes — textPrimary would flip to near-white in dark mode against
+/// this theme-invariant fill and fail WCAG 1.4.3, as PrimaryButton's
+/// doc comment explains).
 class DayToggle extends StatelessWidget {
   const DayToggle({
     required this.dayLetter,
@@ -36,7 +39,7 @@ class DayToggle extends StatelessWidget {
         child: Text(
           dayLetter.toUpperCase(),
           style: typography.labelGame.copyWith(
-            color: selected ? colors.textPrimary : colors.textSecondary,
+            color: selected ? colors.onBrandFill : colors.textSecondary,
           ),
         ),
       ),

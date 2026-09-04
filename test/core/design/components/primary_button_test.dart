@@ -127,4 +127,21 @@ void main() {
       expect(decoration.color, FlowColors.light.achievement);
     },
   );
+
+  testWidgets(
+    'label uses onBrandFill (fixed navy) in dark mode, not textPrimary '
+    '(which flips to near-white and fails WCAG 1.4.3 against the '
+    'theme-invariant brandPrimary fill)',
+    (tester) async {
+      await pumpFlowWidget(
+        tester,
+        PrimaryButton(label: 'Continue', onPressed: () {}),
+        brightness: Brightness.dark,
+      );
+
+      final text = tester.widget<Text>(find.text('CONTINUE'));
+      expect(text.style!.color, FlowColors.dark.onBrandFill);
+      expect(text.style!.color, isNot(FlowColors.dark.textPrimary));
+    },
+  );
 }
