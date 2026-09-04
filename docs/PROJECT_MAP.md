@@ -83,6 +83,7 @@ The app's live component library is `lib/core/design/components/` — a flat dir
 | `day_toggle.dart` | `DayToggle` |
 | `flow_frame_box.dart` | `FlowFrameBox` |
 | `flow_slider.dart` | `FlowSlider` |
+| `flow_tappable.dart` | `FlowTappable` |
 | `flow_text_button.dart` | `FlowTextButton` |
 | `flow_text_field.dart` | `FlowTextField` |
 | `icon_choice_tile.dart` | `IconChoiceTile` |
@@ -95,7 +96,9 @@ The app's live component library is `lib/core/design/components/` — a flat dir
 | `setting_row.dart` | `SettingRow` |
 | `step_track.dart` | `StepTrack` |
 
-17 components, one class per file. None of these components are imported by any feature page yet (all feature screens are still unstyled `Scaffold`/`StatelessWidget` stubs); only `flow_theme.dart` (colors/typography) is wired into `app.dart`.
+18 components, one class per file. `FlowTappable` is a shared tap-handling + `Semantics(button: true, ...)` accessibility wrapper (same flat category as the `FlowFrameBox` structural primitive — not a token, not the barrel, not a playground page). It is used by 11 of the other components: `back_button.dart`, `check_row.dart`, `choice_card.dart`, `day_toggle.dart`, `flow_text_button.dart`, `icon_choice_tile.dart`, `primary_button.dart`, `quick_add_chip.dart`, `secondary_button.dart`, `segmented_choice.dart`, `setting_row.dart`.
+
+None of these components are imported by any feature page yet (all feature screens are still unstyled `Scaffold`/`StatelessWidget` stubs); only `flow_theme.dart` (colors/typography) is wired into `app.dart`.
 
 `lib/core/ui_kit/` (the previously-documented second, dead component library) no longer exists — removed in commit `027452b`.
 
@@ -177,6 +180,7 @@ Other core providers: `sharedPreferencesProvider` (`core/preferences/shared_pref
 - **Generated output class**: `AppLocalizations`, written to `lib/l10n/generated/app_localizations.dart` (`l10n.yaml`: `output-dir: lib/l10n/generated`, `output-class: AppLocalizations`).
 - **Regeneration command**: `flutter gen-l10n` (also runs automatically on `flutter pub get`/`flutter run` since `pubspec.yaml` sets `flutter: generate: true`).
 - Wired into `MaterialApp.router` in `lib/app/app.dart` via `AppLocalizations.localizationsDelegates` / `AppLocalizations.supportedLocales`.
+- `app_en.arb` now includes a `back` key ("Back"), alongside the existing `retry`/`cancel`/`edit`/`delete` short action strings.
 
 ## Platform
 
@@ -215,10 +219,10 @@ None of the current `pubspec.yaml` dependencies require camera, location, or pho
 
 **Domain models** — 0 total. No `domain/models/` directory exists anywhere in `lib/features/`.
 
-**UI components** — 17 total (`lib/core/design/components/`), 17 tested (one test file per component under `test/core/design/components/`): `back_button`, `check_row`, `choice_card`, `day_toggle`, `flow_frame_box`, `flow_slider`, `flow_text_button`, `flow_text_field`, `icon_choice_tile`, `info_card`, `pillar`, `primary_button`, `quick_add_chip`, `secondary_button`, `segmented_choice`, `setting_row`, `step_track`. 0 untested.
+**UI components** — 18 total (`lib/core/design/components/`), 18 tested (one test file per component under `test/core/design/components/`): `back_button`, `check_row`, `choice_card`, `day_toggle`, `flow_frame_box`, `flow_slider`, `flow_tappable`, `flow_text_button`, `flow_text_field`, `icon_choice_tile`, `info_card`, `pillar`, `primary_button`, `quick_add_chip`, `secondary_button`, `segmented_choice`, `setting_row`, `step_track`. 0 untested — `flow_tappable_test.dart` now covers the new component.
 
 The dead `core/ui_kit/` component files and their tests no longer exist — `test/` has zero remaining references to `ui_kit`.
 
 ## Generated
 
-Generated 2026-09-04 from commit `027452b`.
+Generated 2026-09-04 from commit `ac7657b`.
