@@ -3,27 +3,43 @@ name: flutter-platform-permissions
 description: Review and implement Android/iOS platform capabilities and permissions for Flutter features. Use for camera, microphone, location, photos, files, notifications, Bluetooth, biometrics, contacts, background work, deep links, sensors, and other native capabilities.
 ---
 
-# Android + iOS Platform Workflow
+# Platform Capabilities and Permissions
 
-Every platform-dependent feature must be evaluated for both Android and iOS.
+For the packages this project uses for native capabilities and the
+permissions actually declared for each platform, read
+`docs/PROJECT_MAP.md` § Platform.
 
-Check:
+## Rule
 
-1. Flutter API/package support
-2. Android configuration
-3. iOS configuration
-4. permission declarations
-5. runtime permission flow
-6. denied/permanently denied/restricted states
-7. permission changes after returning from Settings
-8. unavailable hardware
-9. app lifecycle
-10. simulator/emulator limitations
+Every platform-dependent feature is evaluated for **both** Android and
+iOS before it is considered complete. Android and iOS permission
+behaviour is not equivalent, and assuming it is produces a feature that
+works on one platform and fails silently on the other.
 
-Do not request permissions unnecessarily.
+## For each capability
 
-Request permissions in context and handle failure gracefully.
+1. Confirm the Flutter package supports what is needed on both
+   platforms.
+2. Add the Android manifest declaration.
+3. Add the iOS usage-description key, with a string a reviewer will
+   accept — it is shown to the user.
+4. Implement the runtime request in context, at the moment the
+   capability is needed, not at launch.
+5. Handle denied, permanently denied and restricted separately. They
+   need different UI: retry, send to Settings, and explain.
+6. Handle the permission changing while the app is backgrounded and the
+   user returns from Settings.
+7. Handle hardware that is absent or unavailable.
+8. Consider what happens across app lifecycle transitions.
+9. Remember that emulators and simulators do not faithfully reproduce
+   permission or hardware behaviour. State plainly that device testing
+   is required, and leave it to the developer.
 
-When adding a package, inspect its Android/iOS native setup and permission requirements before considering the feature complete.
+## Restraint
 
-Do not assume Android and iOS permission behavior is equivalent.
+Do not request a permission the feature does not need, and do not
+request it earlier than needed. Each unnecessary prompt costs trust and
+grants.
+
+When adding a package, inspect its native setup and the permissions it
+pulls in before treating the feature as done.
