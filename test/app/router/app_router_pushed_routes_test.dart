@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flow/app/router/app_router.dart';
 import 'package:flow/core/database/database_provider.dart';
+import 'package:flow/core/design/theme/flow_theme.dart';
 import 'package:flow/core/preferences/onboarding_provider.dart';
 import 'package:flow/l10n/generated/app_localizations.dart';
 
@@ -24,6 +25,7 @@ void main() {
             router = ref.watch(appRouterProvider);
             return MaterialApp.router(
               routerConfig: router,
+              theme: FlowTheme.light,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
             );

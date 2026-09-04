@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/app/router/app_router.dart';
 import 'package:flow/core/database/database_provider.dart';
+import 'package:flow/core/design/theme/flow_theme.dart';
 import 'package:flow/core/preferences/onboarding_provider.dart';
 import 'package:flow/l10n/generated/app_localizations.dart';
 
@@ -19,6 +20,7 @@ void main() {
         child: Consumer(
           builder: (context, ref, _) => MaterialApp.router(
             routerConfig: ref.watch(appRouterProvider),
+            theme: FlowTheme.light,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           ),
@@ -45,6 +47,7 @@ void main() {
         child: Consumer(
           builder: (context, ref, _) => MaterialApp.router(
             routerConfig: ref.watch(appRouterProvider),
+            theme: FlowTheme.light,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           ),
@@ -53,7 +56,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(NavigationDestination, 'Progress'));
+    await tester.tap(find.text('Progress'));
     await tester.pumpAndSettle();
 
     expect(find.widgetWithText(AppBar, 'Progress'), findsOneWidget);
