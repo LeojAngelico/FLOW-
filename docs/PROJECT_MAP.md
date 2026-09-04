@@ -25,18 +25,19 @@ Base Android `applicationId` / iOS `PRODUCT_BUNDLE_IDENTIFIER`: `oiracam.flow.bl
 
 ## Features
 
-Nine directories under `lib/features/`, each with `presentation/` only — no feature currently has `data/` or `domain/`, and no feature has a `widgets/` subdirectory. Every screen below is a stub (`Scaffold` with an empty/placeholder body; no Notifier, no business logic wired in yet).
+Seven directories under `lib/features/`, each with `presentation/` only — no feature currently has `data/` or `domain/` anywhere in the repo, and no feature has a `widgets/` subdirectory. Every screen below is a stub (`Scaffold`/`StatelessWidget` with an empty/placeholder body; no Notifier, no business logic wired in yet).
 
 | Feature | Screens |
 |---|---|
 | `gamification` | `awards_page`, `achievement_detail_page` |
-| `home` | `home_page` — **dead code**: declares its own `HomePage`, but nothing imports it (the router's `/home` route uses `hydration`'s `HomePage` instead); only reference in the whole repo is a doc file (`docs/guide/ui-kit.md`) |
+| `home` | `home_page` — **dead code**: declares its own `HomePage`, but nothing imports it (the router's `/home` route uses `hydration`'s `HomePage` instead); only other reference in the repo is `docs/guide/ui-kit.md` |
 | `hydration` | `home_page`, `add_water_page`, `progress_page`, `day_detail_page`, `target_settings_page` |
 | `onboarding` | `splash_page`, `welcome_page`, `basics_page`, `weight_page`, `activity_page`, `environment_page`, `target_page`, `reminders_page`, `recovery_page` |
-| `profile` | *(no directory — `settings` owns `profile_page`; there is no `lib/features/profile/`)* |
 | `reminders` | `reminder_settings_page` |
 | `settings` | `profile_page`, `general_settings_page`, `about_page` |
 | `trivia` | `trivia_page` |
+
+There is no `lib/features/profile/` — `settings` owns `profile_page`.
 
 ## Routes
 
@@ -66,13 +67,13 @@ From `lib/app/router/app_router.dart` (`GoRouter`, `initialLocation: '/'`):
 | `/profile/settings/about` | `AboutPage` |
 | `/recovery` | `RecoveryPage` |
 
-`/home`, `/progress`, `/awards`, `/profile` are grouped under a `StatefulShellRoute.indexedStack` (`MainShell`, `lib/app/main_shell.dart`) — a 4-tab bottom `NavigationBar`.
+`/home`, `/progress`, `/awards`, `/profile` are grouped under a `StatefulShellRoute.indexedStack` (`MainShell`, `lib/app/main_shell.dart`) — a 4-tab bottom nav (`FlowBottomNav`, `lib/app/flow_bottom_nav.dart`).
 
 Redirect logic (`lib/app/router/app_redirect.dart`, pure function `resolveRedirect`): `!databaseHealthy` → `/recovery`; `!onboardingComplete` and not under `/onboarding` → `/onboarding/welcome`; `onboardingComplete` and (under `/onboarding` or at `/`) → `/home`.
 
 ## UI Kit Catalog
 
-The app's live component library is `lib/core/design/components/` (no barrel file; imported directly per component). Token files and private (`_`-prefixed) helper classes are excluded.
+The app's live component library is `lib/core/design/components/` — a flat directory, no category subdirectories, no barrel file (each component is imported directly). Token files and private (`_`-prefixed) helper classes are excluded.
 
 | File | Public class |
 |---|---|
@@ -94,9 +95,9 @@ The app's live component library is `lib/core/design/components/` (no barrel fil
 | `setting_row.dart` | `SettingRow` |
 | `step_track.dart` | `StepTrack` |
 
-17 components, one class per file. None of these components are imported by any feature page yet (all feature screens are still unstyled `Scaffold` stubs); only `flow_theme.dart` (colors/typography) is wired into `app.dart`.
+17 components, one class per file. None of these components are imported by any feature page yet (all feature screens are still unstyled `Scaffold`/`StatelessWidget` stubs); only `flow_theme.dart` (colors/typography) is wired into `app.dart`.
 
-**Dead code**: `lib/core/ui_kit/` is a second, entirely separate component library (categories `buttons/`, `inputs/`, `surfaces/`, `indicators/`, `feedback/`, `dialogs/`, plus its own `tokens/`, a barrel `ui_kit.dart`, and `playground/ui_playground_page.dart`) — 16 component files declaring `AppButton`, `AppTextField`, `AppPasswordField`, `AppAvatar`, `AppBottomSheet`/`AppBottomSheetAction`, `AppCard`, `AppChip`, `AppBadge`, `AppEnvironmentBadge`, `AppLoadingIndicator`, `AppErrorState`, `AppEmptyState`, `AppSnackbar`, `AppDialog`, `AppLoadingDialog`, `AppConfirmationDialog`. Nothing under `lib/` or `test/` imports `core/ui_kit/` — confirmed unreferenced. It appears to be a leftover from the original (non-FLOW) boilerplate this project was cloned from, not part of the current app.
+`lib/core/ui_kit/` (the previously-documented second, dead component library) no longer exists — removed in commit `027452b`.
 
 ## Design Tokens
 
@@ -107,11 +108,11 @@ Live tokens, `lib/core/design/tokens/` (consumed by `FlowTheme` in `lib/core/des
 | `FlowColors` (`ThemeExtension`) | Brand/role colors, `light`/`dark` variants: brand primary/secondary, xp/achievement/reward/streak accents, background/surface/border/text roles, success/error/warning/info + their surface tints, and a "pixel game" panel/frame/particle palette |
 | `FlowTypography` (`ThemeExtension`) | Type scale in two families (`Inter`, `Press Start 2P`): numeric hero/large, pixel display/hero/title/unit, game label/button, display L/M, headline, title L/M, body L/M, label, caption, button |
 | `FlowSpacing` | 4dp-base scale: `xs2`(2) `xs`(4) `sm`(8) `smMd`(12) `md`(16) `mdLg`(20) `lg`(24) `xl3`(32) `xl4`(40) `xl5`(48) `xl6`(64) |
-| `FlowRadius` | Corner radii: `sm`(8) `md`(12) `lg`(16) `xl`(24) `pill`(999, currently unused) `quickAddChip`(10) |
+| `FlowRadius` | Corner radii: `sm`(8) `md`(12) `lg`(16) `xl`(24) `pill`(999, currently unused) `quickAddChip`(10) `navBar`(32, the floating tab bar) |
 | `FlowElevation` | Light-mode shadow levels 1–3 (`BoxShadow` lists); dark mode uses surface-color steps instead, handled in `FlowTheme` directly |
 | `FlowMotion` | Durations `instant`(100ms) `fast`(180ms) `base`(280ms) `slow`(450ms) `celebrate`(650ms) `page`(300ms) + matching curves |
 
-**Dead code**: `lib/core/ui_kit/tokens/` declares a second, parallel token set (`AppColors`, `AppSpacing`, `AppRadius`, `AppSizing`, `AppMotion`) used only by the unreferenced `core/ui_kit/` directory above — not part of the live theme.
+`lib/core/ui_kit/tokens/` (the previously-documented second, dead token set — `AppColors`/`AppSpacing`/`AppRadius`/`AppSizing`/`AppMotion`) no longer exists — removed in commit `027452b`.
 
 ## Network Layer
 
@@ -120,20 +121,22 @@ Live tokens, `lib/core/design/tokens/` (consumed by `FlowTheme` in `lib/core/des
 - **Local error/result convention** (`lib/core/result/`): `sealed class Result<T>` (`Ok<T>` / `Err<T>`) and `sealed class Failure` with `ValidationFailure`, `StorageFailure`, `PermissionFailure`, `UnknownFailure` — intended for the Repository → UseCase → Notifier boundary described in the skill, but not yet consumed anywhere (no feature has reached that layer).
 - **Persistence**: local only — Drift/SQLite (`lib/core/database/`) for structured data, `shared_preferences` for flags (e.g. onboarding-complete). No credential/token storage exists (no auth in this app).
 
-**Dead code**: `lib/core/errors/` (`Failure`/`NetworkFailure`/`ServerFailure`/`UnauthorizedFailure`/`AuthenticationFailure`, `error_codes.dart`, `validation_failure.dart`, `error_localizer.dart`) and `lib/core/constants/app_constants.dart` (login/register/logout/refresh-token REST endpoints, a Dio-interceptor flag set) are a second, unreferenced error/network scaffold — zero imports anywhere in `lib/`. Leftover from the original boilerplate, not part of FLOW.
+**Dead code, still present** (not touched by commit `027452b`, unlike `core/ui_kit/`): `lib/core/errors/` (`Failure`/`NetworkFailure`/`ServerFailure`/`UnauthorizedFailure`/`AuthenticationFailure`/`ErrorCodes`/`ValidationFailure`), `lib/core/localization/error_localizer.dart` (`ErrorLocalizer`), and `lib/core/constants/app_constants.dart` (login/register/logout/refresh-token REST endpoints, a Dio-interceptor flag set) are a second, unreferenced error/network scaffold. Confirmed zero imports from anywhere else in `lib/` or `test/` — these three only reference each other. Leftover from the original (non-FLOW) boilerplate.
 
 ## State
 
-Riverpod `Notifier<State>` classes that exist in the whole app — both app-level, under `core/`, generated via `riverpod_annotation`:
+Riverpod `Notifier<State>` classes that exist in the whole app, generated via `riverpod_annotation`:
 
 | Notifier | State owned | Location |
 |---|---|---|
 | `ReduceMotion` | `bool` (defaults `false`) | `lib/core/design/theme/reduce_motion_provider.dart` |
-| `ClockOverride` | `DateTime?` (defaults `null`; dev-flavor only) | `lib/core/time/clock_provider.dart` |
+| `ClockOverride` | `DateTime?` (defaults `null`; only consulted in the dev flavor) | `lib/core/time/clock_provider.dart` |
 
 No feature under `lib/features/` currently has a `<screen>_notifier.dart` / `<screen>_state.dart` pair — every feature screen is a `StatelessWidget` stub with no state management wired in yet.
 
 `RouterRefreshNotifier` (`lib/app/router/router_refresh_notifier.dart`) — plain `ChangeNotifier`, not a Riverpod `Notifier`; not currently referenced by `app_router.dart`'s `GoRouter` construction (no `refreshListenable:` argument is passed).
+
+`AppDatabase extends _$AppDatabase` (`lib/core/database/app_database.dart`) is Drift-generated table/query code, not a Riverpod Notifier — excluded from the table above.
 
 ## Providers
 
@@ -183,8 +186,8 @@ Other core providers: `sharedPreferencesProvider` (`core/preferences/shared_pref
 |---|---|
 | `shared_preferences` | wired — `lib/main.dart`, `core/preferences/shared_preferences_provider.dart` |
 | `path_provider` | wired — `core/database/app_database.dart` (locates the Drift `flow.db` file) |
-| `sqlite3_flutter_libs` | wired transitively — bundles native SQLite for `drift`/`sqlite3_flutter_libs`, no direct Dart import needed |
-| `permission_handler` | declared, only referenced from `core/utils/app_camera_permission.dart`, which itself is unreferenced (only used by the dead `core/ui_kit/playground/`) — effectively not wired into the live app |
+| `sqlite3_flutter_libs` | wired transitively — bundles native SQLite for `drift`, no direct Dart import needed |
+| `permission_handler` | declared, zero references anywhere in `lib/` — not wired into the live app (`core/utils/app_camera_permission.dart`, its previous only caller, was removed in commit `027452b`) |
 | `flutter_local_notifications` | declared, zero references in `lib/` — not yet integrated |
 | `timezone` | declared, zero references in `lib/` — not yet integrated |
 | `share_plus` | declared, zero references in `lib/` — not yet integrated |
@@ -192,14 +195,14 @@ Other core providers: `sharedPreferencesProvider` (`core/preferences/shared_pref
 **Android** (`android/app/src/main/AndroidManifest.xml`):
 - `CAMERA`
 - `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`
-- `uses-feature android.hardware.camera` / `.camera.autofocus` — both `required="false"`
+- `uses-feature android.hardware.camera` — `required="false"`
 
 **iOS** (`ios/Runner/Info.plist`):
 - `NSLocationWhenInUseUsageDescription` — "This app uses your location to provide location-based features."
 - `NSPhotoLibraryUsageDescription` — "This app needs access to your photos to attach images."
 - `NSCameraUsageDescription` — "This app uses the camera to take photos and to scan QR codes."
 
-None of the current `pubspec.yaml` dependencies require camera, location, or photo-library access (no `camera`, `geolocator`, `image_picker`, or `mobile_scanner` package is declared) — these manifest/`Info.plist` entries appear to be leftover from the original boilerplate, consistent with the dead `core/ui_kit/`, `core/errors/`, and `core/constants/app_constants.dart` directories above. (`ios/Pods/` on disk still references `geolocator_apple`, `image_picker_ios`, `mobile_scanner`, `camera_avfoundation`, `flutter_secure_storage_darwin`, `package_info_plus` — a stale CocoaPods install from before those packages were removed from `pubspec.yaml`; not evidence they're in use.)
+None of the current `pubspec.yaml` dependencies require camera, location, or photo-library access (no `camera`, `geolocator`, `image_picker`, or `mobile_scanner` package is declared) and no permission is requested anywhere in `lib/` (`permission_handler` is unreferenced, see above) — these manifest/`Info.plist` entries, and their comments referencing a "Core QR Scanner" that does not exist in this repo, appear to be leftover from the original boilerplate. The Android manifest comment and the iOS usage strings were not touched by commit `027452b` and remain stale.
 
 ## Test Coverage
 
@@ -214,8 +217,8 @@ None of the current `pubspec.yaml` dependencies require camera, location, or pho
 
 **UI components** — 17 total (`lib/core/design/components/`), 17 tested (one test file per component under `test/core/design/components/`): `back_button`, `check_row`, `choice_card`, `day_toggle`, `flow_frame_box`, `flow_slider`, `flow_text_button`, `flow_text_field`, `icon_choice_tile`, `info_card`, `pillar`, `primary_button`, `quick_add_chip`, `secondary_button`, `segmented_choice`, `setting_row`, `step_track`. 0 untested.
 
-Not counted above: the 16 dead `core/ui_kit/` component files have no tests (`test/` has zero references to `ui_kit`), but since that directory is unreferenced dead code, its absence of coverage doesn't affect the live app.
+The dead `core/ui_kit/` component files and their tests no longer exist — `test/` has zero remaining references to `ui_kit`.
 
 ## Generated
 
-Generated 2026-09-04 from commit `8f181b7`.
+Generated 2026-09-04 from commit `027452b`.
