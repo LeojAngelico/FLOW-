@@ -5,6 +5,7 @@ import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-06. Activity-level row (ONB-05). Min height 76dp. The leading
 /// pixel bar-meter (1-5 bars filled) ties the choice to "player stat"
@@ -32,8 +33,9 @@ class ChoiceCard extends StatelessWidget {
     final colors = Theme.of(context).extension<FlowColors>()!;
     final typography = Theme.of(context).extension<FlowTypography>()!;
 
-    return GestureDetector(
+    return FlowTappable(
       onTap: onTap,
+      selected: selected,
       child: Container(
         constraints: const BoxConstraints(minHeight: 76),
         padding: const EdgeInsets.symmetric(

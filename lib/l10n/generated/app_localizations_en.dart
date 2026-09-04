@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
+  String get back => 'Back';
+
+  @override
   String get emailLabel => 'Email';
 
   @override

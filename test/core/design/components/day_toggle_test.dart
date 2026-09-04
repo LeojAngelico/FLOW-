@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/core/design/components/day_toggle.dart';
+import 'package:flow/core/design/tokens/flow_colors.dart';
 
 import '../../../support/pump_flow_widget.dart';
 
@@ -41,5 +42,19 @@ void main() {
     );
 
     expect(find.text('M'), findsOneWidget);
+  });
+
+  testWidgets('selected label uses onBrandFill (fixed navy) in dark mode, not '
+      'textPrimary (which flips to near-white and fails WCAG 1.4.3 '
+      'against the theme-invariant brandPrimary fill)', (tester) async {
+    await pumpFlowWidget(
+      tester,
+      DayToggle(dayLetter: 'M', selected: true, onTap: () {}),
+      brightness: Brightness.dark,
+    );
+
+    final text = tester.widget<Text>(find.text('M'));
+    expect(text.style!.color, FlowColors.dark.onBrandFill);
+    expect(text.style!.color, isNot(FlowColors.dark.textPrimary));
   });
 }

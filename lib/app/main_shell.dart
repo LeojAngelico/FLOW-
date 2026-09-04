@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../l10n/generated/app_localizations.dart';
+import 'flow_bottom_nav.dart';
 
 /// The 4-tab root shell (Home/Progress/Awards/Profile), backed by a
 /// `StatefulShellRoute.indexedStack` so each tab keeps its own
@@ -17,8 +18,8 @@ class MainShell extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
+      bottomNavigationBar: FlowBottomNav(
+        currentIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) {
           navigationShell.goBranch(
             index,
@@ -26,20 +27,20 @@ class MainShell extends StatelessWidget {
           );
         },
         destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_rounded),
+          FlowNavDestination(
+            iconAsset: 'assets/icons/onboarding/icon-home.svg',
             label: loc.navHome,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.show_chart_rounded),
+          FlowNavDestination(
+            iconAsset: 'assets/icons/onboarding/icon-chart.svg',
             label: loc.navProgress,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.emoji_events_rounded),
+          FlowNavDestination(
+            iconAsset: 'assets/icons/onboarding/icon-trophy-nav.svg',
             label: loc.navAwards,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_rounded),
+          FlowNavDestination(
+            iconAsset: 'assets/icons/onboarding/icon-person.svg',
             label: loc.navProfile,
           ),
         ],

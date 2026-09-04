@@ -5,11 +5,21 @@ import '../tokens/flow_radius.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
 import 'flow_frame_box.dart';
+import 'flow_tappable.dart';
 
 /// CMP-01. Primary CTA. 56dp tall + 4dp solid frame/depth offset (60dp
-/// total layout height). Label is text/primary navy on brand/primary —
-/// never onPrimary white, which fails WCAG 1.4.3 at 2.32:1. Pressed
-/// collapses the depth offset; that collapse IS the tap affordance.
+/// total layout height). Label is onBrandFill (fixed navy, both themes)
+/// on brand/primary — never onPrimary white, which fails WCAG 1.4.3 at
+/// 2.32:1, and never textPrimary, which flips to near-white in dark mode
+/// and reproduces that same failure against the theme-invariant fill.
+/// Pressed collapses the depth offset; that collapse IS the tap
+/// affordance. `FlowTappable`'s `label` is set only while loading:
+/// `Semantics.label` concatenates with (not replaces) a merged
+/// descendant `Text`'s own label, so passing it whenever the visible
+/// label `Text` is also present would announce "Continue\nContinue".
+/// While loading, that `Text` is replaced by a bare spinner, so an
+/// explicit label is the only way to keep the accessible name correct
+/// (final-review a11y follow-up).
 class PrimaryButton extends StatefulWidget {
   const PrimaryButton({
     required this.label,
@@ -54,15 +64,17 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           : widget.isMilestone
           ? colors.achievement
           : colors.brandPrimary;
-      labelColor = colors.textPrimary;
+      labelColor = colors.onBrandFill;
       frameColor = colors.frameInk;
     }
 
-    return GestureDetector(
-      onTapDown: _isDisabled ? null : (_) => setState(() => _pressed = true),
-      onTapCancel: _isDisabled ? null : () => setState(() => _pressed = false),
-      onTapUp: _isDisabled ? null : (_) => setState(() => _pressed = false),
-      onTap: _isDisabled ? null : widget.onPressed,
+    return FlowTappable(
+      enabled: !_isDisabled,
+      label: widget.isLoading ? widget.label : null,
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTap: widget.onPressed,
       child: FlowFrameBox(
         fill: fill,
         frameInk: frameColor,

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/core/design/components/primary_button.dart';
@@ -64,6 +66,28 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
+  testWidgets(
+    'exposes button semantics; label comes from the visible Text when not '
+    'loading, and from an explicit Semantics label (not a duplicate) while '
+    'loading replaces that Text with a bare spinner',
+    (tester) async {
+      await pumpFlowWidget(
+        tester,
+        PrimaryButton(label: 'Continue', onPressed: () {}),
+      );
+      var data = tester.getSemantics(find.byType(PrimaryButton));
+      expect(data.hasFlag(SemanticsFlag.isButton), isTrue);
+      expect(data.label, 'CONTINUE');
+
+      await pumpFlowWidget(
+        tester,
+        PrimaryButton(label: 'Continue', onPressed: () {}, isLoading: true),
+      );
+      data = tester.getSemantics(find.byType(PrimaryButton));
+      expect(data.label, 'Continue');
+    },
+  );
+
   testWidgets('renders a trailing icon when trailingIcon is given', (
     tester,
   ) async {
@@ -125,6 +149,23 @@ void main() {
       );
       final decoration = container.decoration! as BoxDecoration;
       expect(decoration.color, FlowColors.light.achievement);
+    },
+  );
+
+  testWidgets(
+    'label uses onBrandFill (fixed navy) in dark mode, not textPrimary '
+    '(which flips to near-white and fails WCAG 1.4.3 against the '
+    'theme-invariant brandPrimary fill)',
+    (tester) async {
+      await pumpFlowWidget(
+        tester,
+        PrimaryButton(label: 'Continue', onPressed: () {}),
+        brightness: Brightness.dark,
+      );
+
+      final text = tester.widget<Text>(find.text('CONTINUE'));
+      expect(text.style!.color, FlowColors.dark.onBrandFill);
+      expect(text.style!.color, isNot(FlowColors.dark.textPrimary));
     },
   );
 }

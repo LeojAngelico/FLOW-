@@ -788,6 +788,485 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
   }
 }
 
+class $DailyHydrationTable extends DailyHydration
+    with TableInfo<$DailyHydrationTable, DailyHydrationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DailyHydrationTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localDateMeta = const VerificationMeta(
+    'localDate',
+  );
+  @override
+  late final GeneratedColumn<String> localDate = GeneratedColumn<String>(
+    'local_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalMlMeta = const VerificationMeta(
+    'totalMl',
+  );
+  @override
+  late final GeneratedColumn<int> totalMl = GeneratedColumn<int>(
+    'total_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _targetMlMeta = const VerificationMeta(
+    'targetMl',
+  );
+  @override
+  late final GeneratedColumn<int> targetMl = GeneratedColumn<int>(
+    'target_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL CHECK (target_ml BETWEEN 500 AND 4000)',
+  );
+  static const VerificationMeta _goalCompletedMeta = const VerificationMeta(
+    'goalCompleted',
+  );
+  @override
+  late final GeneratedColumn<bool> goalCompleted = GeneratedColumn<bool>(
+    'goal_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("goal_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _goalCompletedAtMeta = const VerificationMeta(
+    'goalCompletedAt',
+  );
+  @override
+  late final GeneratedColumn<int> goalCompletedAt = GeneratedColumn<int>(
+    'goal_completed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _entryCountMeta = const VerificationMeta(
+    'entryCount',
+  );
+  @override
+  late final GeneratedColumn<int> entryCount = GeneratedColumn<int>(
+    'entry_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('noData'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    localDate,
+    totalMl,
+    targetMl,
+    goalCompleted,
+    goalCompletedAt,
+    entryCount,
+    status,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'daily_hydration';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DailyHydrationData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_date')) {
+      context.handle(
+        _localDateMeta,
+        localDate.isAcceptableOrUnknown(data['local_date']!, _localDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_localDateMeta);
+    }
+    if (data.containsKey('total_ml')) {
+      context.handle(
+        _totalMlMeta,
+        totalMl.isAcceptableOrUnknown(data['total_ml']!, _totalMlMeta),
+      );
+    }
+    if (data.containsKey('target_ml')) {
+      context.handle(
+        _targetMlMeta,
+        targetMl.isAcceptableOrUnknown(data['target_ml']!, _targetMlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_targetMlMeta);
+    }
+    if (data.containsKey('goal_completed')) {
+      context.handle(
+        _goalCompletedMeta,
+        goalCompleted.isAcceptableOrUnknown(
+          data['goal_completed']!,
+          _goalCompletedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('goal_completed_at')) {
+      context.handle(
+        _goalCompletedAtMeta,
+        goalCompletedAt.isAcceptableOrUnknown(
+          data['goal_completed_at']!,
+          _goalCompletedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('entry_count')) {
+      context.handle(
+        _entryCountMeta,
+        entryCount.isAcceptableOrUnknown(data['entry_count']!, _entryCountMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localDate};
+  @override
+  DailyHydrationData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DailyHydrationData(
+      localDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_date'],
+      )!,
+      totalMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_ml'],
+      )!,
+      targetMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_ml'],
+      )!,
+      goalCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}goal_completed'],
+      )!,
+      goalCompletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}goal_completed_at'],
+      ),
+      entryCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}entry_count'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+    );
+  }
+
+  @override
+  $DailyHydrationTable createAlias(String alias) {
+    return $DailyHydrationTable(attachedDatabase, alias);
+  }
+}
+
+class DailyHydrationData extends DataClass
+    implements Insertable<DailyHydrationData> {
+  final String localDate;
+  final int totalMl;
+  final int targetMl;
+  final bool goalCompleted;
+  final int? goalCompletedAt;
+  final int entryCount;
+  final String status;
+  const DailyHydrationData({
+    required this.localDate,
+    required this.totalMl,
+    required this.targetMl,
+    required this.goalCompleted,
+    this.goalCompletedAt,
+    required this.entryCount,
+    required this.status,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_date'] = Variable<String>(localDate);
+    map['total_ml'] = Variable<int>(totalMl);
+    map['target_ml'] = Variable<int>(targetMl);
+    map['goal_completed'] = Variable<bool>(goalCompleted);
+    if (!nullToAbsent || goalCompletedAt != null) {
+      map['goal_completed_at'] = Variable<int>(goalCompletedAt);
+    }
+    map['entry_count'] = Variable<int>(entryCount);
+    map['status'] = Variable<String>(status);
+    return map;
+  }
+
+  DailyHydrationCompanion toCompanion(bool nullToAbsent) {
+    return DailyHydrationCompanion(
+      localDate: Value(localDate),
+      totalMl: Value(totalMl),
+      targetMl: Value(targetMl),
+      goalCompleted: Value(goalCompleted),
+      goalCompletedAt: goalCompletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(goalCompletedAt),
+      entryCount: Value(entryCount),
+      status: Value(status),
+    );
+  }
+
+  factory DailyHydrationData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DailyHydrationData(
+      localDate: serializer.fromJson<String>(json['localDate']),
+      totalMl: serializer.fromJson<int>(json['totalMl']),
+      targetMl: serializer.fromJson<int>(json['targetMl']),
+      goalCompleted: serializer.fromJson<bool>(json['goalCompleted']),
+      goalCompletedAt: serializer.fromJson<int?>(json['goalCompletedAt']),
+      entryCount: serializer.fromJson<int>(json['entryCount']),
+      status: serializer.fromJson<String>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localDate': serializer.toJson<String>(localDate),
+      'totalMl': serializer.toJson<int>(totalMl),
+      'targetMl': serializer.toJson<int>(targetMl),
+      'goalCompleted': serializer.toJson<bool>(goalCompleted),
+      'goalCompletedAt': serializer.toJson<int?>(goalCompletedAt),
+      'entryCount': serializer.toJson<int>(entryCount),
+      'status': serializer.toJson<String>(status),
+    };
+  }
+
+  DailyHydrationData copyWith({
+    String? localDate,
+    int? totalMl,
+    int? targetMl,
+    bool? goalCompleted,
+    Value<int?> goalCompletedAt = const Value.absent(),
+    int? entryCount,
+    String? status,
+  }) => DailyHydrationData(
+    localDate: localDate ?? this.localDate,
+    totalMl: totalMl ?? this.totalMl,
+    targetMl: targetMl ?? this.targetMl,
+    goalCompleted: goalCompleted ?? this.goalCompleted,
+    goalCompletedAt: goalCompletedAt.present
+        ? goalCompletedAt.value
+        : this.goalCompletedAt,
+    entryCount: entryCount ?? this.entryCount,
+    status: status ?? this.status,
+  );
+  DailyHydrationData copyWithCompanion(DailyHydrationCompanion data) {
+    return DailyHydrationData(
+      localDate: data.localDate.present ? data.localDate.value : this.localDate,
+      totalMl: data.totalMl.present ? data.totalMl.value : this.totalMl,
+      targetMl: data.targetMl.present ? data.targetMl.value : this.targetMl,
+      goalCompleted: data.goalCompleted.present
+          ? data.goalCompleted.value
+          : this.goalCompleted,
+      goalCompletedAt: data.goalCompletedAt.present
+          ? data.goalCompletedAt.value
+          : this.goalCompletedAt,
+      entryCount: data.entryCount.present
+          ? data.entryCount.value
+          : this.entryCount,
+      status: data.status.present ? data.status.value : this.status,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DailyHydrationData(')
+          ..write('localDate: $localDate, ')
+          ..write('totalMl: $totalMl, ')
+          ..write('targetMl: $targetMl, ')
+          ..write('goalCompleted: $goalCompleted, ')
+          ..write('goalCompletedAt: $goalCompletedAt, ')
+          ..write('entryCount: $entryCount, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    localDate,
+    totalMl,
+    targetMl,
+    goalCompleted,
+    goalCompletedAt,
+    entryCount,
+    status,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DailyHydrationData &&
+          other.localDate == this.localDate &&
+          other.totalMl == this.totalMl &&
+          other.targetMl == this.targetMl &&
+          other.goalCompleted == this.goalCompleted &&
+          other.goalCompletedAt == this.goalCompletedAt &&
+          other.entryCount == this.entryCount &&
+          other.status == this.status);
+}
+
+class DailyHydrationCompanion extends UpdateCompanion<DailyHydrationData> {
+  final Value<String> localDate;
+  final Value<int> totalMl;
+  final Value<int> targetMl;
+  final Value<bool> goalCompleted;
+  final Value<int?> goalCompletedAt;
+  final Value<int> entryCount;
+  final Value<String> status;
+  final Value<int> rowid;
+  const DailyHydrationCompanion({
+    this.localDate = const Value.absent(),
+    this.totalMl = const Value.absent(),
+    this.targetMl = const Value.absent(),
+    this.goalCompleted = const Value.absent(),
+    this.goalCompletedAt = const Value.absent(),
+    this.entryCount = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DailyHydrationCompanion.insert({
+    required String localDate,
+    this.totalMl = const Value.absent(),
+    required int targetMl,
+    this.goalCompleted = const Value.absent(),
+    this.goalCompletedAt = const Value.absent(),
+    this.entryCount = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : localDate = Value(localDate),
+       targetMl = Value(targetMl);
+  static Insertable<DailyHydrationData> custom({
+    Expression<String>? localDate,
+    Expression<int>? totalMl,
+    Expression<int>? targetMl,
+    Expression<bool>? goalCompleted,
+    Expression<int>? goalCompletedAt,
+    Expression<int>? entryCount,
+    Expression<String>? status,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (localDate != null) 'local_date': localDate,
+      if (totalMl != null) 'total_ml': totalMl,
+      if (targetMl != null) 'target_ml': targetMl,
+      if (goalCompleted != null) 'goal_completed': goalCompleted,
+      if (goalCompletedAt != null) 'goal_completed_at': goalCompletedAt,
+      if (entryCount != null) 'entry_count': entryCount,
+      if (status != null) 'status': status,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DailyHydrationCompanion copyWith({
+    Value<String>? localDate,
+    Value<int>? totalMl,
+    Value<int>? targetMl,
+    Value<bool>? goalCompleted,
+    Value<int?>? goalCompletedAt,
+    Value<int>? entryCount,
+    Value<String>? status,
+    Value<int>? rowid,
+  }) {
+    return DailyHydrationCompanion(
+      localDate: localDate ?? this.localDate,
+      totalMl: totalMl ?? this.totalMl,
+      targetMl: targetMl ?? this.targetMl,
+      goalCompleted: goalCompleted ?? this.goalCompleted,
+      goalCompletedAt: goalCompletedAt ?? this.goalCompletedAt,
+      entryCount: entryCount ?? this.entryCount,
+      status: status ?? this.status,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localDate.present) {
+      map['local_date'] = Variable<String>(localDate.value);
+    }
+    if (totalMl.present) {
+      map['total_ml'] = Variable<int>(totalMl.value);
+    }
+    if (targetMl.present) {
+      map['target_ml'] = Variable<int>(targetMl.value);
+    }
+    if (goalCompleted.present) {
+      map['goal_completed'] = Variable<bool>(goalCompleted.value);
+    }
+    if (goalCompletedAt.present) {
+      map['goal_completed_at'] = Variable<int>(goalCompletedAt.value);
+    }
+    if (entryCount.present) {
+      map['entry_count'] = Variable<int>(entryCount.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DailyHydrationCompanion(')
+          ..write('localDate: $localDate, ')
+          ..write('totalMl: $totalMl, ')
+          ..write('targetMl: $targetMl, ')
+          ..write('goalCompleted: $goalCompleted, ')
+          ..write('goalCompletedAt: $goalCompletedAt, ')
+          ..write('entryCount: $entryCount, ')
+          ..write('status: $status, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $HydrationEntriesTable extends HydrationEntries
     with TableInfo<$HydrationEntriesTable, HydrationEntry> {
   @override
@@ -836,6 +1315,9 @@ class $HydrationEntriesTable extends HydrationEntries
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES daily_hydration (local_date) ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED',
+    ),
   );
   static const VerificationMeta _sourceMeta = const VerificationMeta('source');
   @override
@@ -1193,483 +1675,6 @@ class HydrationEntriesCompanion extends UpdateCompanion<HydrationEntry> {
           ..write('localDate: $localDate, ')
           ..write('source: $source, ')
           ..write('createdAt: $createdAt, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $DailyHydrationTable extends DailyHydration
-    with TableInfo<$DailyHydrationTable, DailyHydrationData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $DailyHydrationTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _dateMeta = const VerificationMeta('date');
-  @override
-  late final GeneratedColumn<String> date = GeneratedColumn<String>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _totalMlMeta = const VerificationMeta(
-    'totalMl',
-  );
-  @override
-  late final GeneratedColumn<int> totalMl = GeneratedColumn<int>(
-    'total_ml',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _targetMlMeta = const VerificationMeta(
-    'targetMl',
-  );
-  @override
-  late final GeneratedColumn<int> targetMl = GeneratedColumn<int>(
-    'target_ml',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    $customConstraints: 'NOT NULL CHECK (target_ml BETWEEN 500 AND 4000)',
-  );
-  static const VerificationMeta _goalCompletedMeta = const VerificationMeta(
-    'goalCompleted',
-  );
-  @override
-  late final GeneratedColumn<bool> goalCompleted = GeneratedColumn<bool>(
-    'goal_completed',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("goal_completed" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _goalCompletedAtMeta = const VerificationMeta(
-    'goalCompletedAt',
-  );
-  @override
-  late final GeneratedColumn<int> goalCompletedAt = GeneratedColumn<int>(
-    'goal_completed_at',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _entryCountMeta = const VerificationMeta(
-    'entryCount',
-  );
-  @override
-  late final GeneratedColumn<int> entryCount = GeneratedColumn<int>(
-    'entry_count',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-    'status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('noData'),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    date,
-    totalMl,
-    targetMl,
-    goalCompleted,
-    goalCompletedAt,
-    entryCount,
-    status,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'daily_hydration';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<DailyHydrationData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('date')) {
-      context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dateMeta);
-    }
-    if (data.containsKey('total_ml')) {
-      context.handle(
-        _totalMlMeta,
-        totalMl.isAcceptableOrUnknown(data['total_ml']!, _totalMlMeta),
-      );
-    }
-    if (data.containsKey('target_ml')) {
-      context.handle(
-        _targetMlMeta,
-        targetMl.isAcceptableOrUnknown(data['target_ml']!, _targetMlMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_targetMlMeta);
-    }
-    if (data.containsKey('goal_completed')) {
-      context.handle(
-        _goalCompletedMeta,
-        goalCompleted.isAcceptableOrUnknown(
-          data['goal_completed']!,
-          _goalCompletedMeta,
-        ),
-      );
-    }
-    if (data.containsKey('goal_completed_at')) {
-      context.handle(
-        _goalCompletedAtMeta,
-        goalCompletedAt.isAcceptableOrUnknown(
-          data['goal_completed_at']!,
-          _goalCompletedAtMeta,
-        ),
-      );
-    }
-    if (data.containsKey('entry_count')) {
-      context.handle(
-        _entryCountMeta,
-        entryCount.isAcceptableOrUnknown(data['entry_count']!, _entryCountMeta),
-      );
-    }
-    if (data.containsKey('status')) {
-      context.handle(
-        _statusMeta,
-        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {date};
-  @override
-  DailyHydrationData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DailyHydrationData(
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}date'],
-      )!,
-      totalMl: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}total_ml'],
-      )!,
-      targetMl: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}target_ml'],
-      )!,
-      goalCompleted: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}goal_completed'],
-      )!,
-      goalCompletedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}goal_completed_at'],
-      ),
-      entryCount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}entry_count'],
-      )!,
-      status: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}status'],
-      )!,
-    );
-  }
-
-  @override
-  $DailyHydrationTable createAlias(String alias) {
-    return $DailyHydrationTable(attachedDatabase, alias);
-  }
-}
-
-class DailyHydrationData extends DataClass
-    implements Insertable<DailyHydrationData> {
-  final String date;
-  final int totalMl;
-  final int targetMl;
-  final bool goalCompleted;
-  final int? goalCompletedAt;
-  final int entryCount;
-  final String status;
-  const DailyHydrationData({
-    required this.date,
-    required this.totalMl,
-    required this.targetMl,
-    required this.goalCompleted,
-    this.goalCompletedAt,
-    required this.entryCount,
-    required this.status,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['date'] = Variable<String>(date);
-    map['total_ml'] = Variable<int>(totalMl);
-    map['target_ml'] = Variable<int>(targetMl);
-    map['goal_completed'] = Variable<bool>(goalCompleted);
-    if (!nullToAbsent || goalCompletedAt != null) {
-      map['goal_completed_at'] = Variable<int>(goalCompletedAt);
-    }
-    map['entry_count'] = Variable<int>(entryCount);
-    map['status'] = Variable<String>(status);
-    return map;
-  }
-
-  DailyHydrationCompanion toCompanion(bool nullToAbsent) {
-    return DailyHydrationCompanion(
-      date: Value(date),
-      totalMl: Value(totalMl),
-      targetMl: Value(targetMl),
-      goalCompleted: Value(goalCompleted),
-      goalCompletedAt: goalCompletedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(goalCompletedAt),
-      entryCount: Value(entryCount),
-      status: Value(status),
-    );
-  }
-
-  factory DailyHydrationData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return DailyHydrationData(
-      date: serializer.fromJson<String>(json['date']),
-      totalMl: serializer.fromJson<int>(json['totalMl']),
-      targetMl: serializer.fromJson<int>(json['targetMl']),
-      goalCompleted: serializer.fromJson<bool>(json['goalCompleted']),
-      goalCompletedAt: serializer.fromJson<int?>(json['goalCompletedAt']),
-      entryCount: serializer.fromJson<int>(json['entryCount']),
-      status: serializer.fromJson<String>(json['status']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'date': serializer.toJson<String>(date),
-      'totalMl': serializer.toJson<int>(totalMl),
-      'targetMl': serializer.toJson<int>(targetMl),
-      'goalCompleted': serializer.toJson<bool>(goalCompleted),
-      'goalCompletedAt': serializer.toJson<int?>(goalCompletedAt),
-      'entryCount': serializer.toJson<int>(entryCount),
-      'status': serializer.toJson<String>(status),
-    };
-  }
-
-  DailyHydrationData copyWith({
-    String? date,
-    int? totalMl,
-    int? targetMl,
-    bool? goalCompleted,
-    Value<int?> goalCompletedAt = const Value.absent(),
-    int? entryCount,
-    String? status,
-  }) => DailyHydrationData(
-    date: date ?? this.date,
-    totalMl: totalMl ?? this.totalMl,
-    targetMl: targetMl ?? this.targetMl,
-    goalCompleted: goalCompleted ?? this.goalCompleted,
-    goalCompletedAt: goalCompletedAt.present
-        ? goalCompletedAt.value
-        : this.goalCompletedAt,
-    entryCount: entryCount ?? this.entryCount,
-    status: status ?? this.status,
-  );
-  DailyHydrationData copyWithCompanion(DailyHydrationCompanion data) {
-    return DailyHydrationData(
-      date: data.date.present ? data.date.value : this.date,
-      totalMl: data.totalMl.present ? data.totalMl.value : this.totalMl,
-      targetMl: data.targetMl.present ? data.targetMl.value : this.targetMl,
-      goalCompleted: data.goalCompleted.present
-          ? data.goalCompleted.value
-          : this.goalCompleted,
-      goalCompletedAt: data.goalCompletedAt.present
-          ? data.goalCompletedAt.value
-          : this.goalCompletedAt,
-      entryCount: data.entryCount.present
-          ? data.entryCount.value
-          : this.entryCount,
-      status: data.status.present ? data.status.value : this.status,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('DailyHydrationData(')
-          ..write('date: $date, ')
-          ..write('totalMl: $totalMl, ')
-          ..write('targetMl: $targetMl, ')
-          ..write('goalCompleted: $goalCompleted, ')
-          ..write('goalCompletedAt: $goalCompletedAt, ')
-          ..write('entryCount: $entryCount, ')
-          ..write('status: $status')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    date,
-    totalMl,
-    targetMl,
-    goalCompleted,
-    goalCompletedAt,
-    entryCount,
-    status,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is DailyHydrationData &&
-          other.date == this.date &&
-          other.totalMl == this.totalMl &&
-          other.targetMl == this.targetMl &&
-          other.goalCompleted == this.goalCompleted &&
-          other.goalCompletedAt == this.goalCompletedAt &&
-          other.entryCount == this.entryCount &&
-          other.status == this.status);
-}
-
-class DailyHydrationCompanion extends UpdateCompanion<DailyHydrationData> {
-  final Value<String> date;
-  final Value<int> totalMl;
-  final Value<int> targetMl;
-  final Value<bool> goalCompleted;
-  final Value<int?> goalCompletedAt;
-  final Value<int> entryCount;
-  final Value<String> status;
-  final Value<int> rowid;
-  const DailyHydrationCompanion({
-    this.date = const Value.absent(),
-    this.totalMl = const Value.absent(),
-    this.targetMl = const Value.absent(),
-    this.goalCompleted = const Value.absent(),
-    this.goalCompletedAt = const Value.absent(),
-    this.entryCount = const Value.absent(),
-    this.status = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  DailyHydrationCompanion.insert({
-    required String date,
-    this.totalMl = const Value.absent(),
-    required int targetMl,
-    this.goalCompleted = const Value.absent(),
-    this.goalCompletedAt = const Value.absent(),
-    this.entryCount = const Value.absent(),
-    this.status = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : date = Value(date),
-       targetMl = Value(targetMl);
-  static Insertable<DailyHydrationData> custom({
-    Expression<String>? date,
-    Expression<int>? totalMl,
-    Expression<int>? targetMl,
-    Expression<bool>? goalCompleted,
-    Expression<int>? goalCompletedAt,
-    Expression<int>? entryCount,
-    Expression<String>? status,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (date != null) 'date': date,
-      if (totalMl != null) 'total_ml': totalMl,
-      if (targetMl != null) 'target_ml': targetMl,
-      if (goalCompleted != null) 'goal_completed': goalCompleted,
-      if (goalCompletedAt != null) 'goal_completed_at': goalCompletedAt,
-      if (entryCount != null) 'entry_count': entryCount,
-      if (status != null) 'status': status,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  DailyHydrationCompanion copyWith({
-    Value<String>? date,
-    Value<int>? totalMl,
-    Value<int>? targetMl,
-    Value<bool>? goalCompleted,
-    Value<int?>? goalCompletedAt,
-    Value<int>? entryCount,
-    Value<String>? status,
-    Value<int>? rowid,
-  }) {
-    return DailyHydrationCompanion(
-      date: date ?? this.date,
-      totalMl: totalMl ?? this.totalMl,
-      targetMl: targetMl ?? this.targetMl,
-      goalCompleted: goalCompleted ?? this.goalCompleted,
-      goalCompletedAt: goalCompletedAt ?? this.goalCompletedAt,
-      entryCount: entryCount ?? this.entryCount,
-      status: status ?? this.status,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (date.present) {
-      map['date'] = Variable<String>(date.value);
-    }
-    if (totalMl.present) {
-      map['total_ml'] = Variable<int>(totalMl.value);
-    }
-    if (targetMl.present) {
-      map['target_ml'] = Variable<int>(targetMl.value);
-    }
-    if (goalCompleted.present) {
-      map['goal_completed'] = Variable<bool>(goalCompleted.value);
-    }
-    if (goalCompletedAt.present) {
-      map['goal_completed_at'] = Variable<int>(goalCompletedAt.value);
-    }
-    if (entryCount.present) {
-      map['entry_count'] = Variable<int>(entryCount.value);
-    }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('DailyHydrationCompanion(')
-          ..write('date: $date, ')
-          ..write('totalMl: $totalMl, ')
-          ..write('targetMl: $targetMl, ')
-          ..write('goalCompleted: $goalCompleted, ')
-          ..write('goalCompletedAt: $goalCompletedAt, ')
-          ..write('entryCount: $entryCount, ')
-          ..write('status: $status, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3606,10 +3611,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UserProfilesTable userProfiles = $UserProfilesTable(this);
+  late final $DailyHydrationTable dailyHydration = $DailyHydrationTable(this);
   late final $HydrationEntriesTable hydrationEntries = $HydrationEntriesTable(
     this,
   );
-  late final $DailyHydrationTable dailyHydration = $DailyHydrationTable(this);
   late final $XpEventsTable xpEvents = $XpEventsTable(this);
   late final $AchievementsTable achievements = $AchievementsTable(this);
   late final $TriviaProgressTable triviaProgress = $TriviaProgressTable(this);
@@ -3623,8 +3628,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfiles,
-    hydrationEntries,
     dailyHydration,
+    hydrationEntries,
     xpEvents,
     achievements,
     triviaProgress,
@@ -3995,6 +4000,370 @@ typedef $$UserProfilesTableProcessedTableManager =
       UserProfile,
       PrefetchHooks Function()
     >;
+typedef $$DailyHydrationTableCreateCompanionBuilder =
+    DailyHydrationCompanion Function({
+      required String localDate,
+      Value<int> totalMl,
+      required int targetMl,
+      Value<bool> goalCompleted,
+      Value<int?> goalCompletedAt,
+      Value<int> entryCount,
+      Value<String> status,
+      Value<int> rowid,
+    });
+typedef $$DailyHydrationTableUpdateCompanionBuilder =
+    DailyHydrationCompanion Function({
+      Value<String> localDate,
+      Value<int> totalMl,
+      Value<int> targetMl,
+      Value<bool> goalCompleted,
+      Value<int?> goalCompletedAt,
+      Value<int> entryCount,
+      Value<String> status,
+      Value<int> rowid,
+    });
+
+final class $$DailyHydrationTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DailyHydrationTable,
+          DailyHydrationData
+        > {
+  $$DailyHydrationTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$HydrationEntriesTable, List<HydrationEntry>>
+  _hydrationEntriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.hydrationEntries,
+    aliasName: 'daily_hydration__local_date__hydration_entries__local_date',
+  );
+
+  $$HydrationEntriesTableProcessedTableManager get hydrationEntriesRefs {
+    final manager =
+        $$HydrationEntriesTableTableManager($_db, $_db.hydrationEntries).filter(
+          (f) => f.localDate.localDate.sqlEquals(
+            $_itemColumn<String>('local_date')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _hydrationEntriesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$DailyHydrationTableFilterComposer
+    extends Composer<_$AppDatabase, $DailyHydrationTable> {
+  $$DailyHydrationTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get localDate => $composableBuilder(
+    column: $table.localDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalMl => $composableBuilder(
+    column: $table.totalMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetMl => $composableBuilder(
+    column: $table.targetMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get goalCompleted => $composableBuilder(
+    column: $table.goalCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get goalCompletedAt => $composableBuilder(
+    column: $table.goalCompletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get entryCount => $composableBuilder(
+    column: $table.entryCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> hydrationEntriesRefs(
+    Expression<bool> Function($$HydrationEntriesTableFilterComposer f) f,
+  ) {
+    final $$HydrationEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localDate,
+      referencedTable: $db.hydrationEntries,
+      getReferencedColumn: (t) => t.localDate,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HydrationEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.hydrationEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$DailyHydrationTableOrderingComposer
+    extends Composer<_$AppDatabase, $DailyHydrationTable> {
+  $$DailyHydrationTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get localDate => $composableBuilder(
+    column: $table.localDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalMl => $composableBuilder(
+    column: $table.totalMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetMl => $composableBuilder(
+    column: $table.targetMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get goalCompleted => $composableBuilder(
+    column: $table.goalCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get goalCompletedAt => $composableBuilder(
+    column: $table.goalCompletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get entryCount => $composableBuilder(
+    column: $table.entryCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DailyHydrationTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DailyHydrationTable> {
+  $$DailyHydrationTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get localDate =>
+      $composableBuilder(column: $table.localDate, builder: (column) => column);
+
+  GeneratedColumn<int> get totalMl =>
+      $composableBuilder(column: $table.totalMl, builder: (column) => column);
+
+  GeneratedColumn<int> get targetMl =>
+      $composableBuilder(column: $table.targetMl, builder: (column) => column);
+
+  GeneratedColumn<bool> get goalCompleted => $composableBuilder(
+    column: $table.goalCompleted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get goalCompletedAt => $composableBuilder(
+    column: $table.goalCompletedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get entryCount => $composableBuilder(
+    column: $table.entryCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  Expression<T> hydrationEntriesRefs<T extends Object>(
+    Expression<T> Function($$HydrationEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$HydrationEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localDate,
+      referencedTable: $db.hydrationEntries,
+      getReferencedColumn: (t) => t.localDate,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HydrationEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hydrationEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$DailyHydrationTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DailyHydrationTable,
+          DailyHydrationData,
+          $$DailyHydrationTableFilterComposer,
+          $$DailyHydrationTableOrderingComposer,
+          $$DailyHydrationTableAnnotationComposer,
+          $$DailyHydrationTableCreateCompanionBuilder,
+          $$DailyHydrationTableUpdateCompanionBuilder,
+          (DailyHydrationData, $$DailyHydrationTableReferences),
+          DailyHydrationData,
+          PrefetchHooks Function({bool hydrationEntriesRefs})
+        > {
+  $$DailyHydrationTableTableManager(
+    _$AppDatabase db,
+    $DailyHydrationTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DailyHydrationTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DailyHydrationTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DailyHydrationTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> localDate = const Value.absent(),
+                Value<int> totalMl = const Value.absent(),
+                Value<int> targetMl = const Value.absent(),
+                Value<bool> goalCompleted = const Value.absent(),
+                Value<int?> goalCompletedAt = const Value.absent(),
+                Value<int> entryCount = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DailyHydrationCompanion(
+                localDate: localDate,
+                totalMl: totalMl,
+                targetMl: targetMl,
+                goalCompleted: goalCompleted,
+                goalCompletedAt: goalCompletedAt,
+                entryCount: entryCount,
+                status: status,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String localDate,
+                Value<int> totalMl = const Value.absent(),
+                required int targetMl,
+                Value<bool> goalCompleted = const Value.absent(),
+                Value<int?> goalCompletedAt = const Value.absent(),
+                Value<int> entryCount = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DailyHydrationCompanion.insert(
+                localDate: localDate,
+                totalMl: totalMl,
+                targetMl: targetMl,
+                goalCompleted: goalCompleted,
+                goalCompletedAt: goalCompletedAt,
+                entryCount: entryCount,
+                status: status,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DailyHydrationTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({hydrationEntriesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (hydrationEntriesRefs) db.hydrationEntries,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (hydrationEntriesRefs)
+                    await $_getPrefetchedData<
+                      DailyHydrationData,
+                      $DailyHydrationTable,
+                      HydrationEntry
+                    >(
+                      currentTable: table,
+                      referencedTable: $$DailyHydrationTableReferences
+                          ._hydrationEntriesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$DailyHydrationTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).hydrationEntriesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.localDate == item.localDate,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DailyHydrationTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DailyHydrationTable,
+      DailyHydrationData,
+      $$DailyHydrationTableFilterComposer,
+      $$DailyHydrationTableOrderingComposer,
+      $$DailyHydrationTableAnnotationComposer,
+      $$DailyHydrationTableCreateCompanionBuilder,
+      $$DailyHydrationTableUpdateCompanionBuilder,
+      (DailyHydrationData, $$DailyHydrationTableReferences),
+      DailyHydrationData,
+      PrefetchHooks Function({bool hydrationEntriesRefs})
+    >;
 typedef $$HydrationEntriesTableCreateCompanionBuilder =
     HydrationEntriesCompanion Function({
       required String id,
@@ -4015,6 +4384,35 @@ typedef $$HydrationEntriesTableUpdateCompanionBuilder =
       Value<int> createdAt,
       Value<int> rowid,
     });
+
+final class $$HydrationEntriesTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $HydrationEntriesTable, HydrationEntry> {
+  $$HydrationEntriesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DailyHydrationTable _localDateTable(_$AppDatabase db) =>
+      db.dailyHydration.createAlias(
+        'hydration_entries__local_date__daily_hydration__local_date',
+      );
+
+  $$DailyHydrationTableProcessedTableManager get localDate {
+    final $_column = $_itemColumn<String>('local_date')!;
+
+    final manager = $$DailyHydrationTableTableManager(
+      $_db,
+      $_db.dailyHydration,
+    ).filter((f) => f.localDate.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_localDateTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$HydrationEntriesTableFilterComposer
     extends Composer<_$AppDatabase, $HydrationEntriesTable> {
@@ -4040,11 +4438,6 @@ class $$HydrationEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get localDate => $composableBuilder(
-    column: $table.localDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get source => $composableBuilder(
     column: $table.source,
     builder: (column) => ColumnFilters(column),
@@ -4054,6 +4447,29 @@ class $$HydrationEntriesTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$DailyHydrationTableFilterComposer get localDate {
+    final $$DailyHydrationTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localDate,
+      referencedTable: $db.dailyHydration,
+      getReferencedColumn: (t) => t.localDate,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DailyHydrationTableFilterComposer(
+            $db: $db,
+            $table: $db.dailyHydration,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$HydrationEntriesTableOrderingComposer
@@ -4080,11 +4496,6 @@ class $$HydrationEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get localDate => $composableBuilder(
-    column: $table.localDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get source => $composableBuilder(
     column: $table.source,
     builder: (column) => ColumnOrderings(column),
@@ -4094,6 +4505,29 @@ class $$HydrationEntriesTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$DailyHydrationTableOrderingComposer get localDate {
+    final $$DailyHydrationTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localDate,
+      referencedTable: $db.dailyHydration,
+      getReferencedColumn: (t) => t.localDate,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DailyHydrationTableOrderingComposer(
+            $db: $db,
+            $table: $db.dailyHydration,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$HydrationEntriesTableAnnotationComposer
@@ -4116,14 +4550,34 @@ class $$HydrationEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get localDate =>
-      $composableBuilder(column: $table.localDate, builder: (column) => column);
-
   GeneratedColumn<String> get source =>
       $composableBuilder(column: $table.source, builder: (column) => column);
 
   GeneratedColumn<int> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$DailyHydrationTableAnnotationComposer get localDate {
+    final $$DailyHydrationTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localDate,
+      referencedTable: $db.dailyHydration,
+      getReferencedColumn: (t) => t.localDate,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DailyHydrationTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dailyHydration,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$HydrationEntriesTableTableManager
@@ -4137,16 +4591,9 @@ class $$HydrationEntriesTableTableManager
           $$HydrationEntriesTableAnnotationComposer,
           $$HydrationEntriesTableCreateCompanionBuilder,
           $$HydrationEntriesTableUpdateCompanionBuilder,
-          (
-            HydrationEntry,
-            BaseReferences<
-              _$AppDatabase,
-              $HydrationEntriesTable,
-              HydrationEntry
-            >,
-          ),
+          (HydrationEntry, $$HydrationEntriesTableReferences),
           HydrationEntry,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool localDate})
         > {
   $$HydrationEntriesTableTableManager(
     _$AppDatabase db,
@@ -4198,9 +4645,56 @@ class $$HydrationEntriesTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$HydrationEntriesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({localDate = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (localDate) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.localDate,
+                                referencedTable:
+                                    $$HydrationEntriesTableReferences
+                                        ._localDateTable(db),
+                                referencedColumn:
+                                    $$HydrationEntriesTableReferences
+                                        ._localDateTable(db)
+                                        .localDate,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -4215,262 +4709,9 @@ typedef $$HydrationEntriesTableProcessedTableManager =
       $$HydrationEntriesTableAnnotationComposer,
       $$HydrationEntriesTableCreateCompanionBuilder,
       $$HydrationEntriesTableUpdateCompanionBuilder,
-      (
-        HydrationEntry,
-        BaseReferences<_$AppDatabase, $HydrationEntriesTable, HydrationEntry>,
-      ),
+      (HydrationEntry, $$HydrationEntriesTableReferences),
       HydrationEntry,
-      PrefetchHooks Function()
-    >;
-typedef $$DailyHydrationTableCreateCompanionBuilder =
-    DailyHydrationCompanion Function({
-      required String date,
-      Value<int> totalMl,
-      required int targetMl,
-      Value<bool> goalCompleted,
-      Value<int?> goalCompletedAt,
-      Value<int> entryCount,
-      Value<String> status,
-      Value<int> rowid,
-    });
-typedef $$DailyHydrationTableUpdateCompanionBuilder =
-    DailyHydrationCompanion Function({
-      Value<String> date,
-      Value<int> totalMl,
-      Value<int> targetMl,
-      Value<bool> goalCompleted,
-      Value<int?> goalCompletedAt,
-      Value<int> entryCount,
-      Value<String> status,
-      Value<int> rowid,
-    });
-
-class $$DailyHydrationTableFilterComposer
-    extends Composer<_$AppDatabase, $DailyHydrationTable> {
-  $$DailyHydrationTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get totalMl => $composableBuilder(
-    column: $table.totalMl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get targetMl => $composableBuilder(
-    column: $table.targetMl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get goalCompleted => $composableBuilder(
-    column: $table.goalCompleted,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get goalCompletedAt => $composableBuilder(
-    column: $table.goalCompletedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get entryCount => $composableBuilder(
-    column: $table.entryCount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get status => $composableBuilder(
-    column: $table.status,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$DailyHydrationTableOrderingComposer
-    extends Composer<_$AppDatabase, $DailyHydrationTable> {
-  $$DailyHydrationTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get totalMl => $composableBuilder(
-    column: $table.totalMl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get targetMl => $composableBuilder(
-    column: $table.targetMl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get goalCompleted => $composableBuilder(
-    column: $table.goalCompleted,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get goalCompletedAt => $composableBuilder(
-    column: $table.goalCompletedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get entryCount => $composableBuilder(
-    column: $table.entryCount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get status => $composableBuilder(
-    column: $table.status,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$DailyHydrationTableAnnotationComposer
-    extends Composer<_$AppDatabase, $DailyHydrationTable> {
-  $$DailyHydrationTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get date =>
-      $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<int> get totalMl =>
-      $composableBuilder(column: $table.totalMl, builder: (column) => column);
-
-  GeneratedColumn<int> get targetMl =>
-      $composableBuilder(column: $table.targetMl, builder: (column) => column);
-
-  GeneratedColumn<bool> get goalCompleted => $composableBuilder(
-    column: $table.goalCompleted,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get goalCompletedAt => $composableBuilder(
-    column: $table.goalCompletedAt,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get entryCount => $composableBuilder(
-    column: $table.entryCount,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get status =>
-      $composableBuilder(column: $table.status, builder: (column) => column);
-}
-
-class $$DailyHydrationTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $DailyHydrationTable,
-          DailyHydrationData,
-          $$DailyHydrationTableFilterComposer,
-          $$DailyHydrationTableOrderingComposer,
-          $$DailyHydrationTableAnnotationComposer,
-          $$DailyHydrationTableCreateCompanionBuilder,
-          $$DailyHydrationTableUpdateCompanionBuilder,
-          (
-            DailyHydrationData,
-            BaseReferences<
-              _$AppDatabase,
-              $DailyHydrationTable,
-              DailyHydrationData
-            >,
-          ),
-          DailyHydrationData,
-          PrefetchHooks Function()
-        > {
-  $$DailyHydrationTableTableManager(
-    _$AppDatabase db,
-    $DailyHydrationTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$DailyHydrationTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$DailyHydrationTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$DailyHydrationTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> date = const Value.absent(),
-                Value<int> totalMl = const Value.absent(),
-                Value<int> targetMl = const Value.absent(),
-                Value<bool> goalCompleted = const Value.absent(),
-                Value<int?> goalCompletedAt = const Value.absent(),
-                Value<int> entryCount = const Value.absent(),
-                Value<String> status = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => DailyHydrationCompanion(
-                date: date,
-                totalMl: totalMl,
-                targetMl: targetMl,
-                goalCompleted: goalCompleted,
-                goalCompletedAt: goalCompletedAt,
-                entryCount: entryCount,
-                status: status,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String date,
-                Value<int> totalMl = const Value.absent(),
-                required int targetMl,
-                Value<bool> goalCompleted = const Value.absent(),
-                Value<int?> goalCompletedAt = const Value.absent(),
-                Value<int> entryCount = const Value.absent(),
-                Value<String> status = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => DailyHydrationCompanion.insert(
-                date: date,
-                totalMl: totalMl,
-                targetMl: targetMl,
-                goalCompleted: goalCompleted,
-                goalCompletedAt: goalCompletedAt,
-                entryCount: entryCount,
-                status: status,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$DailyHydrationTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $DailyHydrationTable,
-      DailyHydrationData,
-      $$DailyHydrationTableFilterComposer,
-      $$DailyHydrationTableOrderingComposer,
-      $$DailyHydrationTableAnnotationComposer,
-      $$DailyHydrationTableCreateCompanionBuilder,
-      $$DailyHydrationTableUpdateCompanionBuilder,
-      (
-        DailyHydrationData,
-        BaseReferences<_$AppDatabase, $DailyHydrationTable, DailyHydrationData>,
-      ),
-      DailyHydrationData,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool localDate})
     >;
 typedef $$XpEventsTableCreateCompanionBuilder =
     XpEventsCompanion Function({
@@ -5521,10 +5762,10 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$UserProfilesTableTableManager get userProfiles =>
       $$UserProfilesTableTableManager(_db, _db.userProfiles);
-  $$HydrationEntriesTableTableManager get hydrationEntries =>
-      $$HydrationEntriesTableTableManager(_db, _db.hydrationEntries);
   $$DailyHydrationTableTableManager get dailyHydration =>
       $$DailyHydrationTableTableManager(_db, _db.dailyHydration);
+  $$HydrationEntriesTableTableManager get hydrationEntries =>
+      $$HydrationEntriesTableTableManager(_db, _db.hydrationEntries);
   $$XpEventsTableTableManager get xpEvents =>
       $$XpEventsTableTableManager(_db, _db.xpEvents);
   $$AchievementsTableTableManager get achievements =>

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../tokens/flow_colors.dart';
 import '../tokens/flow_spacing.dart';
 import '../tokens/flow_typography.dart';
+import 'flow_tappable.dart';
 
 /// CMP-03. Text-only tappable link, 48dp tall regardless of label
 /// length — a real hit target, not just the text glyph bounds (needed
@@ -31,8 +32,9 @@ class FlowTextButton extends StatelessWidget {
         ? colors.textSecondary
         : colors.brandPrimaryTextSafe;
 
-    return GestureDetector(
+    return FlowTappable(
       onTap: onPressed,
+      enabled: !isDisabled,
       child: Container(
         height: 48,
         padding: const EdgeInsets.symmetric(horizontal: FlowSpacing.smMd),
