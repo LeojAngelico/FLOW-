@@ -1,7 +1,7 @@
 # Workplan: Hydration logging (APP-01 core loop + APP-02 Add Water)
 
-Status: gates
-Reference feature: **none complete — see § Reference feature** | Last agent: flutter-gatekeeper
+Status: done
+Reference feature: **none complete — see § Reference feature** | Last agent: developer (accepted)
 
 ---
 
