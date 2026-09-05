@@ -106,6 +106,7 @@ class TargetPage extends ConsumerWidget {
             TargetHero(
               eyebrow: loc.onboardingTargetEyebrow,
               valueMl: displayedMl,
+              unitLabel: loc.onboardingTargetUnitLabelSpoken,
               mode: TargetHeroMode.editing,
               minMl: OnboardingRules.minTargetMl,
               maxMl: OnboardingRules.maxTargetMl,
@@ -131,12 +132,18 @@ class TargetPage extends ConsumerWidget {
                 child: TargetHero(
                   eyebrow: loc.onboardingTargetEyebrow,
                   valueMl: displayedMl,
+                  unitLabel: loc.onboardingTargetUnitLabelSpoken,
                   rangeLabelBuilder: (value) => value.round().toString(),
                 ),
               ),
             ),
           const SizedBox(height: FlowSpacing.md),
-          if (!isEditing && OnboardingRules.isHighTarget(displayedMl)) ...[
+          // No `!isEditing` guard: `FR-014`'s caution belongs on a
+          // *manual* target above 3,500ml — it must render precisely
+          // while adjusting, not only on the read-only suggestion
+          // (Manual QA item 8: adjust to 3,600, the caution appears, and
+          // Continue still works).
+          if (OnboardingRules.isHighTarget(displayedMl)) ...[
             Semantics(
               liveRegion: true,
               child: InfoCard(

@@ -33,7 +33,7 @@ void main() {
       final notifier = container.read(basicsProvider.notifier);
 
       notifier.onAgeChanged('5');
-      notifier.onAgeBlurred();
+      notifier.onAgeBlurred('5');
 
       final state = container.read(basicsProvider);
       expect(state.ageTouched, isTrue);
@@ -44,12 +44,40 @@ void main() {
       final notifier = container.read(basicsProvider.notifier);
 
       notifier.onAgeChanged('5');
-      notifier.onAgeBlurred();
+      notifier.onAgeBlurred('5');
       expect(container.read(basicsProvider).ageError, isNotNull);
 
       notifier.onAgeChanged('30');
 
       expect(container.read(basicsProvider).ageError, isNull);
+    });
+
+    test('blurring an emptied field validates the current (empty) field '
+        'text, not the stale draft value left behind by the last '
+        'successful parse (gate-4 finding: onAgeBlurred used to read '
+        'OnboardingDraft.age, which onAgeChanged never clears back to '
+        'null)', () {
+      final notifier = container.read(basicsProvider.notifier);
+
+      notifier.onAgeChanged('30'); // draft.age becomes 30
+      notifier.onAgeChanged(''); // unparsable -- draft.age stays 30
+      expect(container.read(onboardingDraftProvider).age, 30);
+
+      notifier.onAgeBlurred(''); // must validate '', not the stale '30'
+
+      final state = container.read(basicsProvider);
+      expect(state.ageTouched, isTrue);
+      expect(state.ageError, isNotNull);
+    });
+
+    test('validateAgeText is the single source both onAgeBlurred and '
+        "BasicsPage's Continue-button isValid computation read, so they "
+        'can never disagree', () {
+      final notifier = container.read(basicsProvider.notifier);
+
+      expect(notifier.validateAgeText(''), isNotNull);
+      expect(notifier.validateAgeText('5'), isNotNull);
+      expect(notifier.validateAgeText('30'), isNull);
     });
 
     test('a valid age writes through to the shared draft', () {

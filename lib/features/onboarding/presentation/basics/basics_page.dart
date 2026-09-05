@@ -65,10 +65,18 @@ class _BasicsPageState extends ConsumerState<BasicsPage> {
         ? basicsState.nameError?.message
         : null;
 
+    // Derived from the exact same field text `onAgeBlurred` validates
+    // (not `draft.age`, which can go stale the moment the age field is
+    // cleared — see `basics_notifier.dart`'s `validateAgeText` doc
+    // comment) so Continue and the blur-shown error can never disagree.
+    // `validateDisplayName` is included so a name over 24 characters
+    // (shown inline as an error) also disables Continue, rather than
+    // letting a name that will fail `user_profiles`' CHECK constraint
+    // reach the completion write five screens later.
     final isValid =
-        draft.age != null &&
-        OnboardingRules.validateAge(draft.age!) == null &&
-        draft.sex != null;
+        notifier.validateAgeText(_ageController.text) == null &&
+        draft.sex != null &&
+        OnboardingRules.validateDisplayName(draft.displayName) == null;
 
     return OnboardingScaffold(
       header: StepHeader(
@@ -121,7 +129,7 @@ class _BasicsPageState extends ConsumerState<BasicsPage> {
           const SizedBox(height: FlowSpacing.sm),
           Focus(
             onFocusChange: (hasFocus) {
-              if (!hasFocus) notifier.onAgeBlurred();
+              if (!hasFocus) notifier.onAgeBlurred(_ageController.text);
             },
             child: FlowTextField(
               controller: _ageController,

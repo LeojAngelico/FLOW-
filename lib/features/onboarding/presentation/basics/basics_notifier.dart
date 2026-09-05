@@ -48,19 +48,30 @@ class BasicsNotifier extends _$BasicsNotifier {
       ref.read(onboardingDraftProvider.notifier).setAge(parsed);
     }
     if (state.ageTouched) {
-      state = state.copyWith(ageError: _validateAgeText(value));
+      state = state.copyWith(ageError: validateAgeText(value));
     }
   }
 
-  void onAgeBlurred() {
-    final currentText = ref.read(onboardingDraftProvider).age?.toString() ?? '';
+  /// Validates [currentText] — the text actually in the field at the
+  /// moment of blur — rather than `OnboardingDraft.age`. The draft can be
+  /// stale relative to the field: [onAgeChanged] only writes through when
+  /// the text parses, so an emptied field leaves the draft holding its
+  /// last valid age with no way for a blur that reads the draft to ever
+  /// notice the field is now empty. `BasicsPage` threads `TextEditingController.text`
+  /// in here for the same reason it threads it into `isValid`.
+  void onAgeBlurred(String currentText) {
     state = state.copyWith(
       ageTouched: true,
-      ageError: _validateAgeText(currentText),
+      ageError: validateAgeText(currentText),
     );
   }
 
-  ValidationFailure? _validateAgeText(String text) {
+  /// Validates the raw text currently in the age field. Not private:
+  /// `BasicsPage`'s `isValid` computation calls this exact method on the
+  /// exact same field text used here, so the Continue button and the
+  /// blur-shown error can never disagree about whether the current input
+  /// is valid.
+  ValidationFailure? validateAgeText(String text) {
     final parsed = int.tryParse(text);
     // An empty/unparsable field is not a valid age either — reuses
     // `OnboardingRules.validateAge`'s own `CPY-031` message rather than

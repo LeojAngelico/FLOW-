@@ -213,4 +213,40 @@ void main() {
     expect(result, isA<Err<void>>());
     expect((result as Err<void>).failure, isA<StorageFailure>());
   });
+
+  group('displayName normalization (gate-4 finding 6)', () {
+    test(
+      'a 24-rune name with a trailing space -- valid per '
+      'validateDisplayName\'s trimmed-rune count, but would violate '
+      'user_profiles\' untrimmed length CHECK -- is stored trimmed',
+      () async {
+        final name = '${'A' * 24} ';
+        final draft = readyDraft.copyWith(displayName: name);
+
+        final result = await buildUseCase().call(draft);
+
+        expect(result, isA<Ok<void>>());
+        expect(repository.lastProfile!.displayName, 'A' * 24);
+      },
+    );
+
+    test('a whitespace-only name is stored as null, matching FR-003\'s '
+        '"no name" answer rather than an empty string', () async {
+      final draft = readyDraft.copyWith(displayName: '   ');
+
+      final result = await buildUseCase().call(draft);
+
+      expect(result, isA<Ok<void>>());
+      expect(repository.lastProfile!.displayName, isNull);
+    });
+
+    test('a name with internal spaces keeps them -- only leading/trailing '
+        'whitespace is trimmed', () async {
+      final draft = readyDraft.copyWith(displayName: '  Alex Rivera  ');
+
+      await buildUseCase().call(draft);
+
+      expect(repository.lastProfile!.displayName, 'Alex Rivera');
+    });
+  });
 }

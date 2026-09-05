@@ -27,6 +27,7 @@ class TargetHero extends StatelessWidget {
     required this.eyebrow,
     required this.valueMl,
     required this.rangeLabelBuilder,
+    required this.unitLabel,
     this.mode = TargetHeroMode.viewing,
     this.onDecrement,
     this.onIncrement,
@@ -42,6 +43,14 @@ class TargetHero extends StatelessWidget {
   /// Formats a raw ml value for the slider's min/max range labels
   /// (e.g. `'500'`/`'4,000'`) — the caller owns unit formatting.
   final String Function(double) rangeLabelBuilder;
+
+  /// The spoken unit word (e.g. `"millilitres"`) [FlowSlider] announces
+  /// as its `Semantics.value`/`increasedValue`/`decreasedValue` while
+  /// [mode] is [TargetHeroMode.editing]. Required so this Core component
+  /// never reads `AppLocalizations` itself — the caller supplies every
+  /// user-facing string, the same rule `StepHeader`/`StatDisplay`/
+  /// `CtaSection` already follow.
+  final String unitLabel;
 
   final TargetHeroMode mode;
 
@@ -106,7 +115,7 @@ class TargetHero extends StatelessWidget {
               min: minMl.toDouble(),
               max: maxMl.toDouble(),
               step: 50,
-              unitLabel: 'milliliters',
+              unitLabel: unitLabel,
               onChanged: onSliderChanged ?? (_) {},
               rangeLabelBuilder: rangeLabelBuilder,
             ),

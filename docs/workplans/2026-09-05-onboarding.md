@@ -1,7 +1,7 @@
 # Workplan: Onboarding (FLOW-01 · ONB-02 → ONB-08 → first profile write)
 
-Status: tests
-Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: flutter-unit-tester
+Status: gate-4-fix-wave
+Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: flutter-implementer (gate-4 fix wave)
 
 ---
 
@@ -1317,16 +1317,139 @@ expected value from first principles before trusting a red test.
 
 ---
 
+**40. Gate 4 fix wave — the gatekeeper's 2 localization findings and the
+reviewer's 5 must-fix findings, addressed together in one dispatch.**
+Exact decisions, one per finding:
+
+- **Finding 1 (`target_hero.dart:109`, hardcoded `'milliliters'`).**
+  `TargetHero` gained a new **required** `unitLabel` parameter (matching
+  `eyebrow`/`valueMl`/`rangeLabelBuilder`'s existing required-ness rather
+  than an optional one with a fallback default, which would have
+  reintroduced a literal inside the component). It is threaded straight
+  into the internal `FlowSlider(unitLabel: unitLabel, ...)` call,
+  replacing the literal. `target_page.dart` (confirmed the only caller,
+  via a repo-wide grep for `TargetHero(`) now passes the new ARB key
+  **`onboardingTargetUnitLabelSpoken`** (`"millilitres"`, British
+  spelling — matching the spelling already used by
+  `onboardingTargetHeroSemantics`'s existing "millilitres" string,
+  rather than the hardcoded literal's American "milliliters") at both
+  its `TargetHero(...)` call sites (viewing and editing).
+- **Finding 2 (`weight_page.dart:128`, hardcoded `'kilograms'`).** New
+  ARB key **`onboardingWeightUnitLabelSpoken`** (`"kilograms"`), added
+  alongside the pre-existing `onboardingWeightUnitLabel` (`"kg"`, the
+  short *display* form next to the `StatDisplay`/text field — left
+  untouched). `weight_page.dart`'s `FlowSlider(unitLabel: ...)` call now
+  reads the new key instead of the literal. **Not touched:**
+  `flow_slider.dart`'s own `unitLabel = 'kilograms'` default parameter
+  value — it is a Core component default a caller can override (both
+  callers already do, post-fix), was not named by the gatekeeper's two
+  flagged lines, and is out of this fix wave's exact 7-item scope.
+- **Finding 3 (`target_page.dart`, `CPY-074` caution wrongly gated on
+  `!isEditing`).** The `!isEditing &&` clause was deleted verbatim,
+  leaving `if (OnboardingRules.isHighTarget(displayedMl))` as the sole
+  condition — exactly what the dispatch instruction specified ("remove
+  the `!isEditing &&` guard entirely"), not inverted to `isEditing &&`.
+  The caution can now appear in every mode where the displayed value
+  exceeds 3,500ml, including the untouched `suggested` (viewing) case if
+  the calculator's own suggestion is ever that high — the instruction
+  did not ask for that case to be excluded, only for the incorrect
+  exclusion of the editing case to be removed.
+- **Finding 4 (`basics_notifier.dart` `onAgeBlurred`, stale-draft
+  validation).** `onAgeBlurred` now takes a required `String currentText`
+  parameter and validates that text via a renamed-public
+  `validateAgeText` (was the private `_validateAgeText`) instead of
+  reading `OnboardingDraft.age`. `basics_page.dart`'s `Focus.onFocusChange`
+  now calls `notifier.onAgeBlurred(_ageController.text)`.
+- **Finding 5 (`basics_page.dart` `isValid`, missing name-length check
+  and stale-draft age check — same file, same root cause as #4).**
+  `isValid` now reads `notifier.validateAgeText(_ageController.text) ==
+  null` (the identical field text and identical validator `onAgeBlurred`
+  uses, so the two can never disagree) **and**
+  `OnboardingRules.validateDisplayName(draft.displayName) == null`. The
+  previous `draft.age != null && validateAge(draft.age!) == null` pair
+  was replaced outright — `validateAgeText`'s own null/empty-parses-to-
+  `minAge - 1` handling already subsumes the `draft.age != null` check.
+- **Finding 6 (`complete_onboarding.dart`, untrimmed `displayName`).** A
+  new private `_normalizedDisplayName(String?)` trims and maps an
+  empty-after-trim result to `null`, called when constructing
+  `UserProfile.displayName`. Placed in `CompleteOnboarding` (the domain
+  usecase), not in `basics_notifier.dart`/`basics_page.dart` — per the
+  dispatch instruction's explicit reasoning ("this needs to hold
+  regardless of which UI calls the usecase, same reasoning as the
+  existing weight-rounding precedent in the data-layer mapper";
+  Decisions #15 is that precedent, though it lives in the *data* layer's
+  mapper rather than a usecase — the dispatch instruction named
+  `complete_onboarding.dart` explicitly, so that is where this landed).
+  Domain validation (`OnboardingRules.validateDisplayName`, which already
+  trims before counting runes) is unchanged and still runs on the raw,
+  untrimmed draft value before this normalization — the normalization is
+  a **storage-shape** concern, not a second validation pass.
+- **Finding 7 (`onboarding_repository_impl.dart`, pref write outside
+  `try`).** The `await _preferencesDataSource.setOnboardingComplete();`
+  line moved inside the existing `try` block, immediately after the
+  transaction write it was already ordered after; the `catch` clause is
+  otherwise unchanged. The `FR-019` ordering (commit, then flag) is
+  identical to before — only the exception-safety of the second step
+  changed.
+
+**Test coverage added for all 5 reviewer must-fix findings** (the
+gatekeeper's 2 localization findings have no independent test — they are
+caught by `flutter analyze`'s hardcoded-string sweep the gatekeeper
+already runs):
+
+- Finding 3: `target_notifier_test.dart` gained one case proving
+  `isHighTarget` stays `true` while `TargetMode` is `edited` (the state
+  `target_page.dart`'s corrected condition reads). **Caveat:** this is
+  the closest available proof without a widget-level test — no
+  `target_page_test.dart` (or any onboarding page widget test) exists in
+  this repo, and the dispatch instruction named exactly four existing
+  test files as the location for this wave's coverage, none of them a
+  widget test. The actual rendering behaviour (the caution's visibility
+  in the tree) is therefore still only manually verifiable (Manual QA
+  item 8) — flagged here rather than silently assumed covered.
+- Finding 4: two new cases in `basics_notifier_test.dart` — blurring an
+  emptied field (after a prior valid entry) now produces an error
+  instead of silently validating the stale `30`; and a direct assertion
+  that `validateAgeText` is the one function both `onAgeBlurred` and
+  `BasicsPage.isValid` call.
+- Finding 5: covered by the same `validateAgeText` assertions above plus
+  `OnboardingRules.validateDisplayName` already having its own boundary
+  coverage in `onboarding_rules_test.dart`; no new `basics_page_test.dart`
+  was added, for the same reason as Finding 3's caveat.
+- Finding 6: three new cases in `complete_onboarding_test.dart` — a
+  24-rune name plus a trailing space is stored trimmed; an all-whitespace
+  name is stored as `null`; internal spaces are preserved.
+- Finding 7: one new case in `onboarding_repository_impl_test.dart`,
+  using a new `_ThrowingPreferencesDataSource` test double (subclasses
+  the concrete `OnboardingPreferencesDataSource` and overrides
+  `setOnboardingComplete` to throw) — proves the call now returns a
+  `StorageFailure` `Result.err` instead of letting the exception escape
+  the `await` uncaught, and that the already-committed profile row is
+  still there (idempotence intact for a retry).
+
+---
+
 ## Gate results
 
-- analyze: not run by this dispatch (out of scope for a test-writing pass; see CLAUDE.md's own gate list for the developer to run before merge)
-- tests: `flutter test` — 404/404 passing (265 baseline + 139 new: 12 new onboarding/calculator test files below, plus the pre-existing suite unaffected). The 8 `CMP-xx` component tests remain unwritten (Decisions #39) and are not counted here.
-- localization:
-- platform:
-- security:
-- documentation:
-- scope: this dispatch touched only `test/features/hydration/calculator/reference_intake_v1_test.dart` and eleven files under `test/features/onboarding/` (new files only; no `lib/` file was modified)
-- test coverage of new state code: all five onboarding-specific notifiers (`OnboardingDraftNotifier`, `BasicsNotifier`, `WeightNotifier`, `TargetNotifier`, `RemindersNotifier`) now have a test file; the two onboarding usecases and the repository implementation are covered; the calculator's full `08 §6.4` boundary table plus its rounding/clamp/floor edge cases are covered
+- analyze: PASS — `flutter analyze` reports 14 issues, none in any file this diff touched (all in pre-existing `lib/core/result/failure.dart` and pre-existing component test files); confirmed via `git diff --stat main...HEAD` against each flagged path.
+- tests: PASS — `flutter test` — 404/404 passing.
+- localization: FIXED (was FAIL, see Decisions #40) — the two hardcoded strings (`target_hero.dart:109` `'milliliters'`, `weight_page.dart:128` `'kilograms'`) are now caller-supplied/ARB-backed. Not re-run by this dispatch (no shell tool) — the developer should re-run `flutter analyze`/`flutter test`/`dart format .` to confirm.
+- platform: PASS — no new native capability referenced by this diff (grep for `permission_handler`/`Permission.`/`flutter_local_notifications`/camera/location APIs across the changed `onboarding`/`core/design/components`/`hydration` calculator+domain files returned nothing); Android manifest and iOS `Info.plist` untouched, consistent with no platform surface added.
+- security: PASS — grep of the full diff for hardcoded credentials/API keys/tokens and for logging of tokens/credentials returned no matches.
+- documentation: PASS — every new public class and enum in files added by this diff carries a preceding `///` doc comment (checked programmatically across all `git diff --diff-filter=A` files, excluding generated `.g.dart`/`l10n/generated`).
+- scope: PASS — every file in `git diff --stat main...HEAD` (excluding generated `.g.dart` and `lib/l10n/generated/*`) matches an entry in the workplan's file plan, including the eight flat stub deletions (`splash_page.dart`, `welcome_page.dart`, `basics_page.dart`, `weight_page.dart`, `activity_page.dart`, `environment_page.dart`, `target_page.dart`, `reminders_page.dart` — confirmed gone from disk and zero remaining references anywhere in `lib/`/`test/`) and `recovery_page.dart` confirmed byte-for-byte untouched.
+- test coverage of new state code: PASS — all five onboarding notifiers (`OnboardingDraftNotifier`, `BasicsNotifier`, `WeightNotifier`, `TargetNotifier`, `RemindersNotifier`), both usecases (`CalculateSuggestedTarget`, `CompleteOnboarding`) and the repository implementation (`OnboardingRepositoryImpl`) each have a corresponding test file, all passing.
+
+**Gate 4 fix wave (this dispatch):** all 7 findings from the gatekeeper's
+localization FAIL (2 items) and the reviewer's must-fix list (5 items)
+are addressed on disk — see Decisions #40. This dispatch had no shell
+tool, so none of `flutter analyze` / `flutter test` / `dart format .`
+were re-run; the developer must run all three before re-closing this
+gate. The generated `app_localizations.dart`/`app_localizations_en.dart`
+files were hand-edited to add the two new getters this fix wave's ARB
+additions require (no `flutter gen-l10n` available) — the developer
+should run `flutter gen-l10n` once to confirm these hand edits match
+what codegen would have produced.
 
 ---
 

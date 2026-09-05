@@ -202,4 +202,45 @@ void main() {
     expect((result as Err<void>).failure, isA<StorageFailure>());
     expect(prefs.getBool('onboardingComplete'), isNull);
   });
+
+  test('a SharedPreferences write failure after a successful transaction '
+      'commit is caught and mapped to a StorageFailure, not left to '
+      'escape the Future<Result<T>> contract uncaught (gate-4 finding 7: '
+      'the setOnboardingComplete() call used to sit outside the try '
+      'block)', () async {
+    final throwingRepository = OnboardingRepositoryImpl(
+      OnboardingLocalDataSource(database),
+      _ThrowingPreferencesDataSource(prefs),
+    );
+
+    // If this call escapes uncaught, `await` re-throws it here and the
+    // test fails with an exception rather than a clean assertion --
+    // exactly the bug this test guards against.
+    final result = await throwingRepository.completeOnboarding(
+      profile: buildProfile(),
+      reminders: const ReminderPreferences.defaults(),
+    );
+
+    expect(result, isA<Err<void>>());
+    expect((result as Err<void>).failure, isA<StorageFailure>());
+    // The profile write already committed and is idempotent
+    // (insertOnConflictUpdate on id = 1), so a retry after this failure
+    // is safe -- the FR-019 ordering is otherwise unchanged.
+    final rows = await database.select(database.userProfiles).get();
+    expect(rows, hasLength(1));
+    expect(prefs.getBool('onboardingComplete'), isNull);
+  });
+}
+
+/// Stands in for the real `SharedPreferences`-backed write, throwing
+/// unconditionally, so the repository's error-handling around the pref
+/// write is reachable without a way to make the real (mock-backed)
+/// `SharedPreferences` plugin fail.
+class _ThrowingPreferencesDataSource extends OnboardingPreferencesDataSource {
+  _ThrowingPreferencesDataSource(super.prefs);
+
+  @override
+  Future<void> setOnboardingComplete() {
+    throw Exception('simulated SharedPreferences write failure');
+  }
 }

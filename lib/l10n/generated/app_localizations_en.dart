@@ -580,6 +580,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingWeightUnitLabel => 'kg';
 
   @override
+  String get onboardingWeightUnitLabelSpoken => 'kilograms';
+
+  @override
   String get onboardingActivityHeadline => 'How active is your day-to-day?';
 
   @override
@@ -651,6 +654,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingTargetEyebrow => 'Your daily target';
+
+  @override
+  String get onboardingTargetUnitLabelSpoken => 'millilitres';
 
   @override
   String onboardingTargetHeroSemantics(int amountMl) {

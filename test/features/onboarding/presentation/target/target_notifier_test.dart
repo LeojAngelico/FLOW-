@@ -167,6 +167,25 @@ void main() {
     expect(container.read(onboardingDraftProvider).manualTargetMl, isNull);
   });
 
+  test('a value above 3,500ml reached via the editor (Adjust) still '
+      'reports isHighTarget true while TargetMode is editing/edited -- '
+      'the state target_page.dart\'s caution-visibility condition reads '
+      '(gate-4 finding 3: the caution was wrongly gated behind '
+      '"!isEditing", so it could never appear on a manually-adjusted '
+      'target -- the opposite of FR-014/Manual QA item 8)', () {
+    seedReadyDraft();
+    container.listen(targetProvider, (previous, next) {});
+    final notifier = container.read(targetProvider.notifier);
+
+    notifier.startAdjusting();
+    notifier.setDraftTargetMl(3600);
+
+    final state = container.read(targetProvider);
+    expect(state.mode, TargetMode.edited);
+    expect(OnboardingRules.isHighTarget(state.draftTargetMl!), isTrue);
+    expect(state.failure, isNull); // the caution never blocks
+  });
+
   test('a returning user whose draft already has a manualTargetMl set '
       '(Back/Forward, FR-018) restores TargetMode.edited from build(), '
       'not suggested', () {

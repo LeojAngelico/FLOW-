@@ -59,7 +59,7 @@ final class WeightNotifierProvider
   }
 }
 
-String _$weightNotifierHash() => r'ce330deed8d6d64fb3966b5ccdfe4bcf10fdbeb5';
+String _$weightNotifierHash() => r'baeacf5eecfba4168920f1685891e89466b8f1b5';
 
 /// `ONB-04`'s screen-owned state: keeps the typed text and the slider
 /// in sync. The hard part this notifier solves: a slider drag must not

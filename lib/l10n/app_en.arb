@@ -404,6 +404,10 @@
   "@onboardingWeightUnitLabel": {
     "description": "ONB-04 — unit label next to the weight StatDisplay/text field. Metric-only this pass (Decisions #8)."
   },
+  "onboardingWeightUnitLabelSpoken": "kilograms",
+  "@onboardingWeightUnitLabelSpoken": {
+    "description": "ONB-04 — the full spoken word FlowSlider's accessibility label speaks (e.g. \"68 kilograms\"), distinct from onboardingWeightUnitLabel's short display form (\"kg\"). Gate-4 fix: previously the literal English word 'kilograms' was hardcoded in weight_page.dart."
+  },
   "onboardingActivityHeadline": "How active is your day-to-day?",
   "@onboardingActivityHeadline": {
     "description": "ONB-05, CPY-049 — headline."
@@ -487,6 +491,10 @@
   "onboardingTargetEyebrow": "Your daily target",
   "@onboardingTargetEyebrow": {
     "description": "ONB-07 — TargetHero's eyebrow label, both viewing and editing modes."
+  },
+  "onboardingTargetUnitLabelSpoken": "millilitres",
+  "@onboardingTargetUnitLabelSpoken": {
+    "description": "ONB-07 — the full spoken word FlowSlider's accessibility label speaks while TargetHero is in editing mode (e.g. \"3600 millilitres\"). Gate-4 fix: previously the literal English word 'milliliters' was hardcoded inside target_hero.dart (a Core component), which must never read AppLocalizations itself; TargetHero.unitLabel is now a required, caller-supplied parameter and target_page.dart is its only caller."
   },
   "onboardingTargetHeroSemantics": "Your suggested daily target: {amountMl} millilitres",
   "@onboardingTargetHeroSemantics": {

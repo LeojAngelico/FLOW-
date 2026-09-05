@@ -1135,6 +1135,12 @@ abstract class AppLocalizations {
   /// **'kg'**
   String get onboardingWeightUnitLabel;
 
+  /// ONB-04 — the full spoken word FlowSlider's accessibility label speaks (e.g. "68 kilograms"), distinct from onboardingWeightUnitLabel's short display form ("kg"). Gate-4 fix: previously the literal English word 'kilograms' was hardcoded in weight_page.dart.
+  ///
+  /// In en, this message translates to:
+  /// **'kilograms'**
+  String get onboardingWeightUnitLabelSpoken;
+
   /// ONB-05, CPY-049 — headline.
   ///
   /// In en, this message translates to:
@@ -1260,6 +1266,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your daily target'**
   String get onboardingTargetEyebrow;
+
+  /// ONB-07 — the full spoken word FlowSlider's accessibility label speaks while TargetHero is in editing mode (e.g. "3600 millilitres"). Gate-4 fix: previously the literal English word 'milliliters' was hardcoded inside target_hero.dart (a Core component), which must never read AppLocalizations itself; TargetHero.unitLabel is now a required, caller-supplied parameter and target_page.dart is its only caller.
+  ///
+  /// In en, this message translates to:
+  /// **'millilitres'**
+  String get onboardingTargetUnitLabelSpoken;
 
   /// ONB-07 accessibility string — merges TargetHero's eyebrow and value into one semantics node in viewing mode (manual QA item 12), matching the hydration summary precedent.
   ///

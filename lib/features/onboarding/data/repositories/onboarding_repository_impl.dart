@@ -42,17 +42,23 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
         profile: profile.toCompanion(),
         reminders: _toReminderSettingsCompanion(reminders),
       );
+
+      // Only reached once the transaction above has actually committed —
+      // this ordering, not a shared transaction, is the whole `FR-019`
+      // guarantee (Decisions #4). Kept inside this same `try`: every
+      // other write in this codebase wraps its whole body (see
+      // `hydration_repository_impl.dart`), so a throw here is mapped to a
+      // `Failure` and returned through the `Future<Result<T>>` contract
+      // instead of escaping uncaught and leaving a caller's
+      // `isSubmitting` flag stuck `true` forever. A failure here
+      // (extremely unlikely — `SharedPreferences` is an in-memory-backed
+      // cache) still leaves a valid, idempotent profile row behind, so a
+      // retry that re-runs this whole method is safe.
+      await _preferencesDataSource.setOnboardingComplete();
+      return const Result.ok(null);
     } catch (error) {
       return Result.err(_mapException(error));
     }
-
-    // Only reached once the transaction above has actually committed —
-    // this ordering, not a shared transaction, is the whole `FR-019`
-    // guarantee (Decisions #4). A failure here (extremely unlikely —
-    // `SharedPreferences` is an in-memory-backed cache) still leaves a
-    // valid, idempotent profile row behind.
-    await _preferencesDataSource.setOnboardingComplete();
-    return const Result.ok(null);
   }
 
   /// Drift/SQLite exceptions (a CHECK-constraint violation, a disk

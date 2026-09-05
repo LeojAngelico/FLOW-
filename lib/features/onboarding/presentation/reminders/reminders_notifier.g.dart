@@ -53,7 +53,7 @@ final class RemindersNotifierProvider
   }
 }
 
-String _$remindersNotifierHash() => r'81fee3ec1609a6c0f165852d88ac38c5d45c7aeb';
+String _$remindersNotifierHash() => r'29b3c1d60bdb02d198f7bfef4c19525f8cbedf46';
 
 /// `ONB-08`'s screen-owned state: the window/interval/weekday mutators
 /// (all write straight through to the shared draft's

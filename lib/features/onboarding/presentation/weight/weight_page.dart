@@ -125,7 +125,7 @@ class _WeightPageState extends ConsumerState<WeightPage> {
             min: OnboardingRules.minWeightKg,
             max: OnboardingRules.maxWeightKg,
             step: 0.5,
-            unitLabel: 'kilograms',
+            unitLabel: loc.onboardingWeightUnitLabelSpoken,
             rangeLabelBuilder: (value) => value.round().toString(),
             onChanged: notifier.onSliderChanged,
           ),

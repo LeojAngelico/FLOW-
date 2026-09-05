@@ -65,7 +65,7 @@ class CompleteOnboarding {
     }
 
     final profile = UserProfile(
-      displayName: draft.displayName,
+      displayName: _normalizedDisplayName(draft.displayName),
       age: draft.age!,
       sex: draft.sex!,
       weightKg: draft.weightKg!,
@@ -86,6 +86,22 @@ class CompleteOnboarding {
       profile: profile,
       reminders: draft.reminders,
     );
+  }
+
+  /// Trims [displayName] and maps an empty-after-trim result to `null`
+  /// — `FR-003`'s own "no name" answer. `OnboardingRules.validateDisplayName`
+  /// counts trimmed runes, but `user_profiles.display_name`'s `CHECK
+  /// (length(display_name) <= 24)` counts the raw stored string. A
+  /// 24-rune name with one trailing space — which mobile autocorrect
+  /// inserts routinely — passes domain validation untrimmed and then
+  /// fails that CHECK, an unrecoverable dead end five screens after the
+  /// user typed it. Trimming here, not in a notifier, holds regardless of
+  /// which UI ever calls this usecase — the same reasoning as the
+  /// weight-rounding precedent in `user_profile_mapper.dart` (Decisions
+  /// #15).
+  String? _normalizedDisplayName(String? displayName) {
+    final trimmed = displayName?.trim() ?? '';
+    return trimmed.isEmpty ? null : trimmed;
   }
 
   Failure? _validate(OnboardingDraft draft) {
