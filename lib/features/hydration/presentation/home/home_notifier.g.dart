@@ -58,7 +58,7 @@ final class HomeProvider extends $NotifierProvider<Home, HomeState> {
   }
 }
 
-String _$homeHash() => r'fca0ccedd6b90bb6b0b936fdbc7c5f018c04721e';
+String _$homeHash() => r'eefd2af2ae0efff533789dbff4307248c3985c99';
 
 /// Owns the *write* half of `/home`: quick-add logging, the debounce
 /// that collapses a rapid double-tap into one entry (`FR-039`), the

@@ -78,4 +78,4 @@ final class TodayProvider extends $FunctionalProvider<String, String, String>
   }
 }
 
-String _$todayHash() => r'6d7c19579c02c6b855f8dabecb092c4c6949d762';
+String _$todayHash() => r'60cb37a8c74d254580a244aefd7885367a0db82d';

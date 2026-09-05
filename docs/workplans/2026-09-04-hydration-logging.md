@@ -1,7 +1,7 @@
 # Workplan: Hydration logging (APP-01 core loop + APP-02 Add Water)
 
 Status: gates
-Reference feature: **none complete — see § Reference feature** | Last agent: fix-wave (Gate 4 findings)
+Reference feature: **none complete — see § Reference feature** | Last agent: flutter-gatekeeper
 
 ---
 
@@ -1015,17 +1015,86 @@ new decision, just a copy-paste mismatch closed here.
 
 ---
 
+**44. `flutter-unit-tester` dispatch closing Decisions #43's gap: two new
+test files, one shared-helper change, no `lib/` change.**
+`test/features/hydration/presentation/add_water/add_water_page_test.dart`
+is new — the first widget test for a full page in this repo rather than
+a bare component, built by pumping the real `AddWaterPage` with
+`hydrationRepositoryProvider`/`clockProvider` overridden the same way
+`add_water_notifier_test.dart` already does, per this dispatch's own
+instruction to read that file's fake-repository/`ProviderContainer`
+style first. It covers, at minimum: the underlying `TextField`'s
+`keyboardType`/`inputFormatters` actually carry `TextInputType.number`/
+`FilteringTextInputFormatter.digitsOnly` (inspecting the real widget
+property, not just "no crash"); typing a non-digit character
+mid-entry no longer wipes the field (the regression test for the bug
+Decisions #42 fixed — verified it actually fails against the
+pre-#42 code by reverting the fix locally, rerunning, and restoring it);
+a purely numeric entry still works; and that the stepper/quick-add-chip
+→ field display-sync logic that lives only in this page (not in
+`AddWaterNotifier`, which has its own tests) is itself exercised.
+Two small tests were also added to the existing
+`test/core/design/components/flow_text_field_test.dart` (one file per
+component, per the standing rule): that `keyboardType`/`inputFormatters`
+pass straight through to `TextField`, and that an unset
+`inputFormatters` leaves input unfiltered by default — covering the
+component's own new parameters independently of `AddWaterPage`, since a
+future caller besides `add_water_page.dart` should be able to trust the
+pass-through without going through a full page test.
+
+**Production defect found, not fixed (out of a unit-tester's scope):**
+pumping `AddWaterPage` at the project's own 360×640dp reference viewport
+(`test/support/pump_flow_widget.dart`'s documented default) throws a
+`RenderFlex` overflow — the stepper/field/stepper `Row` at
+`add_water_page.dart:180` measures 316dp (64 + 24 + 140 + 24 + 64) against
+312dp of available width (360dp − 2×24dp page padding), a 4dp overflow.
+Reproduced and confirmed by the math above and by the raised
+`FlutterError` itself. Worked around in the new test file only, by
+widening that file's own viewport to 400dp — not by shrinking any
+assertion — so the numeric-input fix under test could actually be
+exercised. **This should be fixed in `lib/`** (either narrow one of the
+two `SizedBox` gaps or the field's fixed 140dp width) by whoever owns
+`add_water_page.dart` next; it is a real, reproducible layout bug at a
+viewport this project treats as its reference size, unrelated to the
+numeric-input fix this dispatch was sent to test.
+
+**Test-infrastructure change:** `test/support/pump_flow_widget.dart`
+gained an optional `Size viewportSize = const Size(360, 640)` parameter
+so the one test file above that needs a wider viewport didn't have to
+duplicate the helper's `MaterialApp`/`ProviderScope`/theme/localization
+wiring. Default value unchanged, so all ~20 existing call sites are
+unaffected — verified by rerunning the full suite (`flutter test`),
+265/265 passing (up from the Gate results section's 257/257, i.e. +8 new
+tests, no regressions).
+
+**Also corrected while writing the new `flow_text_field_test.dart`
+case:** the component's own doc comment says `keyboardType` "defaults to
+`null` (the platform's own default keyboard)" — true of `FlowTextField`'s
+own parameter, but the underlying Flutter `TextField` widget resolves an
+unset `keyboardType` to `TextInputType.text` itself (single-line default)
+rather than leaving it `null`. The new "defaults" test asserts the
+actually-observed `TextInputType.text`, not `isNull` — the first draft of
+that assertion asserted `isNull` and failed, which is what surfaced this;
+not a `lib/` defect, since `TextInputType.text` is the same platform
+keyboard behavior every existing `FlowTextField` caller already had
+before Decisions #42's params existed.
+
+`docs/PROJECT_MAP.md` § Test Coverage was not updated by this dispatch —
+per this role's own instructions, only the workplan's Decisions log,
+not the map, is this dispatch's file to update.
+
+---
+
 ## Gate results
 
-- analyze: FAIL — `flutter analyze` reports 16 issues. 14 are pre-existing (out of this workplan's scope: `lib/core/result/failure.dart:17,21,25`, `test/core/design/components/back_button_test.dart:3,47,57`, `check_row_test.dart:74,75`, `flow_tappable_test.dart:17,55,67,68,88`, `primary_button_test.dart:79` — none of these files are touched by this diff). 2 are in a file this workplan created: `test/core/design/components/stepper_button_test.dart:3` (`unnecessary_import`, `dart:ui` vs `flutter/material.dart`) and `:63` (`deprecated_member_use`, `hasFlag`). The gate requires zero issues in scope; these two fail it regardless of severity.
-- **Gate 4 fix-wave applied (see Decisions #38–#43): the `unnecessary_import` issue is fixed** (`dart:ui` import removed from `stepper_button_test.dart`); **the `deprecated_member_use`/`hasFlag` issue is deliberately left as-is**, confirmed to already match the same deprecated call every other `CMP-*` test file in the suite uses (Decisions #38) — re-run `flutter analyze` to confirm the former is clear and the latter is the only remaining in-scope issue, consistent with the fix-wave dispatch's explicit instruction not to migrate it here. The 4 reviewer must-fix findings (`stepper_button.dart` disabled-mid-hold timer leak, `today_provider.dart` DST delay bug, `home_notifier.dart` debounce key/retry bug, `add_water_page.dart`/`flow_text_field.dart` numeric-input wipe) are all fixed — see Decisions #39–#42. Fix #6 (`FlowTextField`) has no widget-test coverage added; Decisions #43 flags a `flutter-unit-tester` dispatch for it. `flutter analyze`/`flutter test` were not re-run by this agent (no shell access) — the developer runs both next.
-- tests: 251/251 passing (`flutter test`), including all 95 under `test/features/hydration/` + the 6 new/updated `test/core/` files
-- localization: PASS — only `en` exists per `docs/PROJECT_MAP.md` § Localization (single-locale repo); every `loc.*` key referenced from the diff's presentation/component files (`hydrationTodaysGoal`, `hydrationFreshDay`, `hydrationEmptyHint`, `hydrationOfTarget`, `hydrationRemainingToGo`, `hydrationGoalComplete`, `hydrationAddWaterCta`, `hydrationJustLogged`, `quickAdd`, `todaysLogs`, `addWaterTitle`, `logWaterButton`, `largeAmountConfirmMessage`, `addWaterDiscardTitle`, `discard`, `hydrationAmountUnitLabel`, `hydrationSummarySemantics`, `hydrationSummarySemanticsComplete`, `quickAddChipSemantics`, `errorHydrationStorage`) exists in `lib/l10n/app_en.arb`. No hardcoded user-facing string literals found in the changed presentation/component files; the `'+'`/`'−'` glyphs in `stepper_button.dart:96` are language-neutral symbols, not copy.
-- platform: PASS (N/A) — diff touches no `android/` or `ios/` files and adds no plugin dependency; feature is local-Drift-only, confirmed by `git diff --stat main...HEAD -- android/ ios/` (empty) and no `pubspec.yaml` change.
-- security: PASS — no hardcoded credentials/secrets and no token/credential logging found in the diff (`git diff main...HEAD | grep -i` for password/secret/apikey/token/credential matches only design-token identifiers, e.g. `flow_colors.dart` imports).
-- documentation: PASS — every new public class, enum, Notifier, UseCase, repository implementation and domain model has a `///` doc comment (`HydrationGlass`, `LogRow`, `StepperButton`, `HydrationLocalDataSource`, `HydrationRepositoryImpl`, `DailyHydration`, `HydrationEntry`, `LoggedWater`, `TodayHydration`, `HydrationRepository`, `LogWater`, `GetTodayHydration`, `Home`, `AddWater`, `HomePage`, `AddWaterPage`, `HydrationSummary`, `QuickAddRow`, `TodaysLogsSection`, plus the top-level functions in `local_date.dart`/`uuid_v4.dart`/`volume_format.dart`/`today_provider.dart`). Private `State` classes are undocumented but are not public API.
-- scope: PASS — `git diff --name-status main...HEAD` matches the file plan exactly: Core 8, Data 5, Domain 8, Presentation 10, Tests 11, plus the 7 modified/moved files (`app.dart`, `app_router.dart`, `app_en.arb`, and the three renamed stub screens), plus the workplan doc itself and generated `.g.dart`/`l10n/generated` artifacts (exempt per the plan's own "not listed" note).
-- test coverage of new state code: PASS — `Home` (`home_notifier_test.dart`), `AddWater` (`add_water_notifier_test.dart`), `LogWater` (`log_water_test.dart`), `GetTodayHydration` (`get_today_hydration_test.dart`) and `HydrationRepositoryImpl` (`hydration_repository_impl_test.dart`) each have a test file that exercises the real class, all passing. `today_provider.dart`/`today_refresh_listener.dart` have no dedicated test, consistent with the pre-existing, untested `reduce_motion_listener.dart` this workplan explicitly mirrors — not a new gap.
+- analyze: PASS — `flutter analyze` (after `flutter gen-l10n` and `dart run build_runner build`, both required to resolve generated `.g.dart`/`AppLocalizations` symbols) reports 14 issues, all pre-existing and out of this diff's scope (`lib/core/result/failure.dart:17,21,25`; `test/core/design/components/back_button_test.dart:3,47,57`; `check_row_test.dart:74,75`; `flow_tappable_test.dart:17,55,67,68,88`; `primary_button_test.dart:79` — none of these files appear in `git diff --name-status 5155e19 HEAD`). `test/core/design/components/stepper_button_test.dart` (in-scope) reports **zero** issues — both previously-failing lints (`unnecessary_import` at line 3, `deprecated_member_use`/`hasFlag` at line 63) are gone; confirmed the file no longer contains a `dart:ui` import and no longer calls `hasFlag` at all.
+- tests: PASS — `flutter test` reports 257/257 passing, zero failures, zero skips.
+- localization: PASS — only `en` exists per `docs/PROJECT_MAP.md` § Localization (single-locale repo, `l10n.yaml`). Every `loc.*` key referenced from the diff's presentation/component files (`hydrationTodaysGoal`, `hydrationFreshDay`, `hydrationEmptyHint`, `hydrationOfTarget`, `hydrationRemainingToGo`, `hydrationGoalComplete`, `hydrationAddWaterCta`, `hydrationJustLogged`, `quickAdd`, `todaysLogs`, `navHome`, `navProgress`, `addWaterTitle`, `logWaterButton`, `largeAmountConfirmMessage`, `addWaterDiscardTitle`, `cancel`, `discard`, `hydrationAmountUnitLabel`, `hydrationSummarySemantics`, `hydrationSummarySemanticsComplete`, `quickAddChipSemantics`, `errorHydrationStorage`) exists in `lib/l10n/app_en.arb`. Grepped every changed presentation/component file for string literals passed to `Text`/similar widgets — none found; the `'+'`/`'−'` glyphs in `stepper_button.dart:125` are language-neutral symbols, not copy.
+- platform: PASS (N/A) — `git diff --stat 5155e19 HEAD -- android ios pubspec.yaml` is empty; no native capability, plugin, or manifest/Info.plist change in this diff.
+- security: PASS — `git diff 5155e19 HEAD -- lib test | grep -i` for password/secret/apikey/token/credential matches only design-token import identifiers (`flow_colors.dart` etc.); no hardcoded credentials, no token/credential logging.
+- documentation: PASS — every new public class/enum in the diff has a preceding `///` doc comment (verified mechanically file-by-file, not by re-trusting the log): `HydrationGlass`, `LogRow`, `StepperButton` (+ `StepDirection`), `TodayRefreshListener`, `HydrationLocalDataSource`, `HydrationRepositoryImpl`, mappers, `DailyHydration` (+ `DayStatus`), `HydrationEntry` (+ `HydrationSource`), `LoggedWater`, `TodayHydration`, `HydrationRepository`, `LogWater`, `GetTodayHydration`, `Home`, `AddWater`, `HomePage`, `AddWaterPage`, `HydrationSummary`, `QuickAddRow`, `TodaysLogsSection`, plus top-level functions in `local_date.dart`/`uuid_v4.dart`/`volume_format.dart`/`today_provider.dart`. Private `_...State` classes (`_StepperButtonState`, `_TodayRefreshListenerState`, `_AddWaterPageState`, `_HomeContent`) are undocumented but are not public API.
+- scope: PASS — `git diff --name-status 5155e19 HEAD` matches the workplan: File plan's Core 8/Data 5/Domain 8/Presentation 10/Tests 11, the 7 modified/moved files (`app.dart`, `app_router.dart`, `app_en.arb`, the three renamed stub screens, and the two old flat files now actually deleted — closing Decisions #35), plus the workplan doc itself and generated `.g.dart`/`app_localizations*.dart` artifacts (exempt). Two additional changed files beyond the original File plan checklist are present and traced to explicit Decisions-log entries rather than left unexplained: `lib/core/design/components/flow_text_field.dart` (Decisions #42) and `test/core/time/today_provider_test.dart` (Decisions #40), both fix-wave outputs the workplan documents by name with reasoning.
+- test coverage of new state code: PASS — every Notifier, UseCase and repository implementation the diff created or modified has a test that exercises the real class: `Home` (`home_notifier_test.dart` — verified it now asserts the amount-keyed debounce and immediate-retry-after-failure behavior from Decisions #41), `AddWater` (`add_water_notifier_test.dart`), `LogWater` (`log_water_test.dart`), `GetTodayHydration` (`get_today_hydration_test.dart`), `HydrationRepositoryImpl` (`hydration_repository_impl_test.dart`). `StepperButton`'s disabled-mid-hold timer-leak fix (Decisions #39) has a corresponding new test case in `stepper_button_test.dart` (verified present). `today_provider.dart`'s DST-boundary fix (Decisions #40) has a corresponding new `today_provider_test.dart` that reads the real provider through a `ProviderContainer`, not a copy of the underlying date logic (verified by reading the test file).
 
 ---
 
