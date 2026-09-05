@@ -1,7 +1,7 @@
 # Workplan: Onboarding (FLOW-01 · ONB-02 → ONB-08 → first profile write)
 
-Status: presentation
-Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: presentation-implementer
+Status: tests
+Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: flutter-unit-tester
 
 ---
 
@@ -605,7 +605,7 @@ something. If it is an inline indicator, leave it — do not extract a
 
 ### Tests (19 new)
 
-- [ ] `test/features/hydration/calculator/reference_intake_v1_test.dart`
+- [x] `test/features/hydration/calculator/reference_intake_v1_test.dart`
       — **all ten rows of `08 §6.4` verbatim** (`TC-100`–`TC-115`), plus:
       half-up rounding at exactly `x50` (1,050 → 1,100), the ±600 ml
       weight clamp at both ends, the `age < 14` 1,000 ml floor vs the
@@ -614,29 +614,29 @@ something. If it is an inline indicator, leave it — do not extract a
       and that `breakdown[]` deltas sum to the pre-rounding drinking
       total. If the implementation disagrees with the table, the
       implementation is wrong.
-- [ ] `test/features/onboarding/domain/models/onboarding_rules_test.dart`
+- [x] `test/features/onboarding/domain/models/onboarding_rules_test.dart`
       — the boundary table CLAUDE.md §12 asks for: age 8/9/120/121;
       weight 24.9/25.0/250.0/250.1; name ''/'  '/1 char/24/25/emoji at
       the rune boundary; target 499/500/3500/3501/4000/4001; reminder
       windows where end == start, end < start, end = start + interval.
-- [ ] `test/features/onboarding/domain/models/reminder_preferences_test.dart`
+- [x] `test/features/onboarding/domain/models/reminder_preferences_test.dart`
       — `BR-30`: 08:00–22:00 every 120 → 8 times ending exactly at
       22:00; an interval that overshoots `end` drops the overshoot; a
       window shorter than one interval yields exactly one time.
-- [ ] `test/features/onboarding/domain/models/onboarding_draft_test.dart`
+- [x] `test/features/onboarding/domain/models/onboarding_draft_test.dart`
       — `copyWith` clears `displayName`/`manualTargetMl` back to `null`
       via the sentinel; `isReadyForTarget`/`isComplete` flip on exactly
       the right fields.
-- [ ] `test/features/onboarding/domain/usecases/calculate_suggested_target_test.dart`
+- [x] `test/features/onboarding/domain/usecases/calculate_suggested_target_test.dart`
       — draft → `HydrationInputs` mapping is faithful; an incomplete
       draft returns `ValidationFailure`, never throws.
-- [ ] `test/features/onboarding/domain/usecases/complete_onboarding_test.dart`
+- [x] `test/features/onboarding/domain/usecases/complete_onboarding_test.dart`
       — `targetSource` is `manual` when `manualTargetMl` is set **even if
       it equals the suggestion**, `suggested` otherwise;
       `calculatorMethodId` comes from the calculator's `methodId`;
       `profileCreatedAt`/`updatedAt` come from the injected `Clock`; an
       invalid draft is rejected before the repository is touched.
-- [ ] `test/features/onboarding/data/repositories/onboarding_repository_impl_test.dart`
+- [x] `test/features/onboarding/data/repositories/onboarding_repository_impl_test.dart`
       — against `NativeDatabase.memory()`: the profile row lands with
       every column correctly encoded (enum names, comma-joined
       circumstances in stable order, epoch millis); `reminder_settings`
@@ -645,20 +645,20 @@ something. If it is an inline indicator, leave it — do not extract a
       (the `FR-019` ordering — assert the pref explicitly); running
       completion twice leaves exactly one `user_profiles` row; a
       CHECK-constraint violation surfaces as `StorageFailure`.
-- [ ] `test/features/onboarding/presentation/onboarding_draft_notifier_test.dart`
+- [x] `test/features/onboarding/presentation/onboarding_draft_notifier_test.dart`
       — `FR-018`: values set at step N survive a step N+1 write and a
       return to N; `reset()` clears everything.
-- [ ] `test/features/onboarding/presentation/basics/basics_notifier_test.dart`
+- [x] `test/features/onboarding/presentation/basics/basics_notifier_test.dart`
       — no error before blur, error after blur, error clears when the
       value becomes valid.
-- [ ] `test/features/onboarding/presentation/weight/weight_notifier_test.dart`
+- [x] `test/features/onboarding/presentation/weight/weight_notifier_test.dart`
       — slider and field stay in sync in both directions; clamps at
       25.0/250.0; rounds to one decimal.
-- [ ] `test/features/onboarding/presentation/target/target_notifier_test.dart`
+- [x] `test/features/onboarding/presentation/target/target_notifier_test.dart`
       — Accept leaves `manualTargetMl` null; Adjust then Accept sets it;
       revert clears it; ±50 clamps at 500/4,000; `isHighTarget` above
       3,500 does not disable the CTA.
-- [ ] `test/features/onboarding/presentation/reminders/reminders_notifier_test.dart`
+- [x] `test/features/onboarding/presentation/reminders/reminders_notifier_test.dart`
       — Skip submits with `enabled: false` and still succeeds; a
       double-tap produces one `completeOnboarding` call; a
       `StorageFailure` leaves `isSubmitting` false, the draft intact and
@@ -1257,18 +1257,76 @@ of work. **The developer must delete these eight files manually** —
 see the exact list and an `rm` command in the file plan's "Modified (3)
 + deleted (7)" section above.
 
+**39. This dispatch wrote the twelve non-widget test files § Tests names
+(the calculator, both hydration-shared/onboarding domain models, both
+onboarding usecases, the repository implementation, and all five
+presentation notifiers) and deliberately left the eight `CMP-xx`
+component tests (`pixel_icon_test` through `target_hero_test`)
+unwritten.** The dispatching instruction named the calculator's boundary
+table, the shared `keepAlive` draft notifier, `TargetNotifier`'s
+editing/edited distinction, the `Stream<T>`-reads/`Future<Result<T>>`-
+writes pattern, and the data layer's Drift+SharedPreferences ordering by
+name, and did not mention the eight components — the same
+separately-scoped-bucket treatment the Core dispatch's own Decisions #22
+already established for this exact list. The repo's "one test file per
+component" count therefore stays at 21/29 after this pass, not 21/21;
+whoever picks up the eight component tests should treat Decisions #22's
+flag as still open.
+
+Three real findings from writing these tests, none requiring a
+production-code change beyond what was already fixed before this dispatch
+started:
+
+- **Every onboarding notifier's generated provider is named
+  `<name>Provider`, not `<name>NotifierProvider`** (e.g. `weightProvider`,
+  `basicsProvider`, `targetProvider`, `remindersProvider` — confirmed by
+  reading each `.g.dart` file's `final ... = ...Provider._();` line
+  directly, after the naming bug the dispatching agent flagged as
+  already-fixed in `lib/` turned out to still trip up a first draft of
+  these tests). `onboardingDraftProvider` is the one exception, because
+  its class is literally named `OnboardingDraftNotifier` and Riverpod's
+  generator strips only the `Notifier` suffix, not `Draft`.
+- **`clockProvider` is unusable un-overridden in a plain
+  `ProviderContainer` test.** It reads `AppEnvironment.current`, which
+  throws `StateError` unless `AppEnvironment.initialize()` has run (only
+  `main()` does that). Any test that reaches `completeOnboardingProvider`
+  (directly or via `RemindersNotifier.submit()`) must override
+  `clockProvider` with a `FixedClock`, the same way
+  `hydration/presentation/home/home_notifier_test.dart` already does —
+  this is not new, but it is easy to miss the first time a test exercises
+  this particular provider chain from the onboarding side.
+- **A hand-written fake standing in for a repository whose *documented
+  contract* includes a side effect (here, `OnboardingRepository
+  .completeOnboarding` setting `onboardingComplete` on success, per
+  `FR-019`) must reproduce that side effect, not just the return value.**
+  `reminders_notifier_test.dart`'s "submit invalidates
+  onboardingCompleteProvider" test initially used a fake that only
+  tracked call count and returned `Ok`, leaving the overridden
+  `SharedPreferences` instance untouched — `RemindersNotifier`'s
+  `ref.invalidate(onboardingCompleteProvider)` then correctly re-read a
+  value that had genuinely never changed, so the test's own fake was
+  wrong, not the notifier. Fixed by having `_FakeOnboardingRepository`
+  accept the same `SharedPreferences` instance and set the flag on
+  success, mirroring the interface's documented behaviour rather than
+  only its return type.
+
+None of these three are production defects — the first two are testing-
+environment setup requirements that already exist elsewhere in the repo,
+and the third was a bug in the test double, caught by re-deriving the
+expected value from first principles before trusting a red test.
+
 ---
 
 ## Gate results
 
-- analyze:
-- tests:
+- analyze: not run by this dispatch (out of scope for a test-writing pass; see CLAUDE.md's own gate list for the developer to run before merge)
+- tests: `flutter test` — 404/404 passing (265 baseline + 139 new: 12 new onboarding/calculator test files below, plus the pre-existing suite unaffected). The 8 `CMP-xx` component tests remain unwritten (Decisions #39) and are not counted here.
 - localization:
 - platform:
 - security:
 - documentation:
-- scope:
-- test coverage of new state code:
+- scope: this dispatch touched only `test/features/hydration/calculator/reference_intake_v1_test.dart` and eleven files under `test/features/onboarding/` (new files only; no `lib/` file was modified)
+- test coverage of new state code: all five onboarding-specific notifiers (`OnboardingDraftNotifier`, `BasicsNotifier`, `WeightNotifier`, `TargetNotifier`, `RemindersNotifier`) now have a test file; the two onboarding usecases and the repository implementation are covered; the calculator's full `08 §6.4` boundary table plus its rounding/clamp/floor edge cases are covered
 
 ---
 
