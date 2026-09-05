@@ -36,7 +36,7 @@ void main() {
     (tester) async {
       await pumpApp(tester, onboardingComplete: false);
 
-      expect(find.text('Welcome'), findsOneWidget);
+      expect(find.text('Meet Bloop, your hydration companion'), findsOneWidget);
     },
   );
 

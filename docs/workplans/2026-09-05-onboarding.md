@@ -1,7 +1,7 @@
 # Workplan: Onboarding (FLOW-01 · ONB-02 → ONB-08 → first profile write)
 
-Status: core
-Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: core-implementer
+Status: presentation
+Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: presentation-implementer
 
 ---
 
@@ -442,7 +442,7 @@ something. If it is an inline indicator, leave it — do not extract a
 
 ### Presentation (20: 2 moved + rewritten, 18 new)
 
-- [ ] `lib/features/onboarding/presentation/onboarding_draft_notifier.dart`
+- [x] `lib/features/onboarding/presentation/onboarding_draft_notifier.dart`
       — `@Riverpod(keepAlive: true) class OnboardingDraftNotifier` whose
       state **is** the domain `OnboardingDraft` (no separate
       `_state.dart` — the state is already a domain model). One mutator
@@ -450,7 +450,7 @@ something. If it is an inline indicator, leave it — do not extract a
       torn down while no screen watches it during a route transition,
       which would silently break `FR-018`. Exposes `reset()`, called
       after a successful completion so a future data-reset starts clean.
-- [ ] `lib/features/onboarding/presentation/widgets/onboarding_scaffold.dart`
+- [x] `lib/features/onboarding/presentation/widgets/onboarding_scaffold.dart`
       — **the single highest-leverage file in this plan.** `13 §14.1`:
       *"one scaffold across all eight screens."* Owns the
       `color.canvas.game` ground (not white), the pixel environment band
@@ -459,58 +459,58 @@ something. If it is an inline indicator, leave it — do not extract a
       content width, keyboard avoidance with 16 dp clearance, and the
       slot for `StepHeader` / body / `CtaSection`. If a screen reaches
       for its own `Scaffold`, the game layer stops reading as a system.
-- [ ] `lib/features/onboarding/presentation/splash/splash_page.dart` —
+- [x] `lib/features/onboarding/presentation/splash/splash_page.dart` —
       *moved* from `presentation/splash_page.dart`. `BrandMark` on the
       game canvas, matching the native launch screen so the handoff does
       not flash. No notifier, no timer, no spinner — it renders for the
       instant before `resolveRedirect` resolves (see § Out of scope).
-- [ ] `lib/features/onboarding/presentation/welcome/welcome_page.dart` —
+- [x] `lib/features/onboarding/presentation/welcome/welcome_page.dart` —
       *moved* from `presentation/welcome_page.dart`, rewritten. `ONB-02`:
       `BrandMark`, `CPY-010`/`CPY-011`, three `Pillar`s (CMP-08, exists)
       with `icon-droplet` / `icon-chart` / `icon-lightbulb`, `CPY-018`
       trust line, `CtaSection` → `CPY-019`. Bloop **Curious** per
       `13 §9.3`. Single static state; each pillar is one semantic node.
-- [ ] `.../presentation/basics/basics_page.dart` — `ONB-03`, step 1/5.
+- [x] `.../presentation/basics/basics_page.dart` — `ONB-03`, step 1/5.
       Name `FlowTextField` (optional, `CPY-045` helper), age
       `FlowTextField` (numeric, `TextInputType.number` +
       `FilteringTextInputFormatter.digitsOnly` — the parameters
       `FlowTextField` gained in hydration Decisions #42), sex
       `SegmentedChoice` (CMP-05), `CPY-039` helper. Continue disabled
       until age and sex are valid.
-- [ ] `.../presentation/basics/basics_notifier.dart` — writes through to
+- [x] `.../presentation/basics/basics_notifier.dart` — writes through to
       the draft on every change; owns only which fields have been
       **blurred** and the currently-shown error, because `05 ONB-03`
       requires validation on blur, not per keystroke. Validation itself
       is `onboarding_rules.dart`.
-- [ ] `.../presentation/basics/basics_state.dart` —
+- [x] `.../presentation/basics/basics_state.dart` —
       `{ bool ageTouched, bool nameTouched, ValidationFailure? ageError, ValidationFailure? nameError }`.
-- [ ] `.../presentation/weight/weight_page.dart` — `ONB-04`, step 2/5.
+- [x] `.../presentation/weight/weight_page.dart` — `ONB-04`, step 2/5.
       `StatDisplay` hero (tap to type) + `FlowSlider` 25–250 kg step 0.5,
       prefilled 65.0. Bloop **Steady** on the `sprite-scale-platform`
       plinth. The numeric field is the accessible primary control and the
       slider is the enhancement (`05 ONB-04` a11y); the slider exposes
       `Semantics(value: "68 kilograms")` and steps by 1 for screen
       readers.
-- [ ] `.../presentation/weight/weight_notifier.dart` — keeps the typed
+- [x] `.../presentation/weight/weight_notifier.dart` — keeps the typed
       text and the slider in sync (the hard part: a slider drag must not
       fight a partially-typed field), clamps to
       `OnboardingRules.minWeightKg/maxWeightKg`, rounds to one decimal
       before writing to the draft.
-- [ ] `.../presentation/weight/weight_state.dart` —
+- [x] `.../presentation/weight/weight_state.dart` —
       `{ double weightKg, String fieldText, ValidationFailure? error }`.
-- [ ] `.../presentation/activity/activity_page.dart` — `ONB-05`, step
+- [x] `.../presentation/activity/activity_page.dart` — `ONB-05`, step
       3/5. Five `ChoiceCard`s (CMP-06, exists), `CPY-050`–`CPY-054` split
       at the `·` into title + descriptor. **Radio semantics**
       (`inMutuallyExclusiveGroup: true`, `selected:`) and selection
       carried by check icon + border + accessible state, never colour
       alone (`06 §2.6` rule 1). No notifier — selection goes straight to
       the draft.
-- [ ] `.../presentation/environment/environment_page.dart` — `ONB-06`,
+- [x] `.../presentation/environment/environment_page.dart` — `ONB-06`,
       step 4/5. 2×2 `IconChoiceTile` grid (CMP-07, exists), divider, four
       `CheckRow`s (CMP-12, exists) with true checkbox semantics, and the
       conditional `InfoCard` (`CPY-071`) with `liveRegion: true` so its
       appearance is announced. No notifier.
-- [ ] `.../presentation/target/target_page.dart` — `ONB-07`, step 5/5,
+- [x] `.../presentation/target/target_page.dart` — `ONB-07`, step 5/5,
       **the most important screen in the flow.** `viewing` shows
       `CPY-072` (binding wording), the value in `TargetHero`, `CPY-073`
       glasses anchor (1 glass = 250 ml), `CPY-075` → `OVL-10`, `CPY-076`,
@@ -521,23 +521,23 @@ something. If it is an inline indicator, leave it — do not extract a
       `liveRegion`, non-blocking. **Forbidden on this screen** (`05`):
       the words *must*, *need to*, *required*, *minimum*; any red; any
       urgency framing. Bloop **Encouraging**.
-- [ ] `.../presentation/target/target_notifier.dart` — calls
+- [x] `.../presentation/target/target_notifier.dart` — calls
       `CalculateSuggestedTarget` once when the screen is first reached,
       holds the result, owns the `suggested → editing → edited`
       transition, ±50 ml clamped to
       `OnboardingRules.minTargetMl/maxTargetMl`, and the revert to
       suggested. Writes `manualTargetMl` to the draft **only** in the
       `edited` state, which is what makes `targetSource` correct.
-- [ ] `.../presentation/target/target_state.dart` —
+- [x] `.../presentation/target/target_state.dart` —
       `{ TargetMode mode, SuggestedHydrationTarget? suggestion, int? draftTargetMl, Failure? failure }`
       + `enum TargetMode { suggested, editing, edited }`.
-- [ ] `.../presentation/target/widgets/calculation_method_sheet.dart` —
+- [x] `.../presentation/target/widgets/calculation_method_sheet.dart` —
       `OVL-10`. A bottom sheet rendered **from**
       `SuggestedHydrationTarget.breakdown[]` / `.assumptions[]` /
       `.disclaimer` (`FR-012`, `05 OVL-10`: "not hardcoded copy"). Maps
       each id to its ARB key (Decisions #7). `CPY-081`–`CPY-089`,
       `CPY-028` "Got it". The Sources row is omitted (§ Out of scope).
-- [ ] `.../presentation/reminders/reminders_page.dart` — `ONB-08`.
+- [x] `.../presentation/reminders/reminders_page.dart` — `ONB-08`.
       `CPY-120` Skip top-right at a 48 dp target (a real, visible
       option — `FR-017`), `CPY-121`, three `SettingRow`s (CMP-14, exists)
       opening the native time picker / the interval sheet, seven
@@ -547,7 +547,7 @@ something. If it is an inline indicator, leave it — do not extract a
       formatter. **This screen carries the final write**: both Skip and
       the CTA call `submit()`, and the page `context.go('/home')`s on
       success.
-- [ ] `.../presentation/reminders/reminders_notifier.dart` — the window
+- [x] `.../presentation/reminders/reminders_notifier.dart` — the window
       /interval/weekday mutators (through to the draft), the
       `end > start` validation (`CPY-122`, CTA disabled), and the
       submission half: `Future<bool> submit({required bool enabled})`
@@ -556,10 +556,10 @@ something. If it is an inline indicator, leave it — do not extract a
       resetting the draft on `Ok`. Returns `true` only on an actual
       commit; **the page navigates, not the notifier** (hydration
       Decisions #28).
-- [ ] `.../presentation/reminders/reminders_state.dart` —
+- [x] `.../presentation/reminders/reminders_state.dart` —
       `{ bool isSubmitting, ValidationFailure? windowError, Failure? submitFailure }`,
       `_unset` sentinel on the nullable fields.
-- [ ] `.../presentation/reminders/widgets/reminder_preview_card.dart` —
+- [x] `.../presentation/reminders/widgets/reminder_preview_card.dart` —
       renders `ReminderPreferences.reminderMinutes()` as `CPY-126`
       ("You'll get {count} reminders today: {times}") plus `CPY-127`, in
       an `InfoCard`. Recomputes on every change; `liveRegion`.
@@ -570,18 +570,20 @@ something. If it is an inline indicator, leave it — do not extract a
       `_onboardingCompleteKey` → `onboardingCompleteKey` (public). One
       line. See Decisions #5 for why this rather than converting the
       provider to a Notifier.
-- [ ] `lib/app/router/app_router.dart` — update the eight onboarding
+- [x] `lib/app/router/app_router.dart` — update the eight onboarding
       import paths to the new `presentation/<screen>/` locations. **No
       route paths change**, and `/recovery`'s import is untouched.
-- [ ] `lib/l10n/app_en.arb` — add the onboarding strings **verbatim from
-      `09-content-copy-spec.md`**: `CPY-010`–`CPY-019`, `CPY-021`,
-      `CPY-024`, `CPY-027`, `CPY-028`, `CPY-030`–`CPY-045`,
-      `CPY-049`–`CPY-054`, `CPY-060`–`CPY-071`, `CPY-072`–`CPY-080`,
-      `CPY-081`–`CPY-089`, `CPY-120`–`CPY-128`, plus the `ONB-03`/`04`/
-      `07` a11y strings and one storage-error message. `CPY-070` and
-      `CPY-072` are **binding wording — do not paraphrase.** `CPY-030`,
-      `CPY-041`, `CPY-073`, `CPY-126` take placeholders. Do **not** touch
-      the dead boilerplate keys (`qrScanner*`, `faceCapture*`, `login*`).
+- [x] `lib/l10n/app_en.arb` — add the onboarding strings. **Not verbatim
+      from `09-content-copy-spec.md`** — that file does not exist
+      anywhere in this repository (confirmed by grep across `docs/` and
+      the whole tree before writing a single string); see Decisions #33.
+      Added `continueButton`, `onboardingStepLabel` and every
+      `onboarding*` key the six answer screens, `OVL-10`, and `ONB-08`
+      need — including the ones `welcome_page.dart`/`basics_page.dart`/
+      `weight_page.dart` already referenced but that were never added to
+      the ARB by the prior cut-off dispatch (see Decisions #32). Did
+      **not** touch the dead boilerplate keys (`qrScanner*`,
+      `faceCapture*`, `login*`).
 - [ ] Delete the seven flat onboarding stubs replaced by
       `presentation/<screen>/` files: `splash_page.dart`,
       `welcome_page.dart`, `basics_page.dart`, `weight_page.dart`,
@@ -589,8 +591,17 @@ something. If it is an inline indicator, leave it — do not extract a
       `reminders_page.dart` (eight, counting splash). **`recovery_page.dart`
       stays exactly where it is.** The hydration pass left five orphans
       behind because its dispatch had no delete tool (its Decisions #35);
-      do not repeat that — verify with grep that nothing imports the old
-      paths, then delete.
+      **this dispatch repeats that, for the same reason** — no delete/
+      shell tool was available in this session either (Read/Edit/Write/
+      Grep/Glob only). `app_router.dart`'s imports were repointed at the
+      new `presentation/<screen>/` files (confirmed via grep — no other
+      file imports the eight old flat paths), so the eight old files are
+      genuinely dead, but they were left byte-for-byte on disk rather
+      than being hollowed out, matching this task's "do not modify a
+      file outside your layer" instruction as closely as an unfixable
+      tooling gap allows. **The developer must delete these eight files
+      manually**, e.g.:
+      `rm lib/features/onboarding/presentation/{splash_page,welcome_page,basics_page,weight_page,activity_page,environment_page,target_page,reminders_page}.dart`
 
 ### Tests (19 new)
 
@@ -1055,6 +1066,196 @@ lockup.svg` was confirmed (via its own `aria-label`, "FLOW wordmark
 with Bloop") to already be a single combined asset — `BrandMark` renders
 it as one `SvgPicture.asset` call rather than stacking `app-icon.svg`
 and the wordmark separately.
+
+---
+
+**28. This presentation dispatch was a continuation of one cut off
+mid-way by an infrastructure rate limit, not by an error in its own
+work — real progress already existed on disk and no report had been
+written.** The following was already built, and is described here
+because no prior report existed to describe it: `onboarding_draft_notifier.dart`,
+`widgets/onboarding_scaffold.dart`, `splash/splash_page.dart`,
+`welcome/welcome_page.dart`, and the full `basics/` and `weight/` trios
+(`{page,notifier,state}.dart`). Every file's own doc comments already
+explain its individual design (e.g. `onboarding_scaffold.dart`'s "single
+highest-leverage file" reasoning, `weight_notifier.dart`'s
+text/slider-sync design) — this and the following two entries capture
+what was **not** already explained in a doc comment, found only by
+reading the code end to end before adding anything.
+
+**29. The prior dispatch's already-built `welcome_page.dart`,
+`basics_page.dart` and `weight_page.dart` referenced roughly 25
+`AppLocalizations` getters (`onboardingWelcomeHeadline`,
+`onboardingStepLabel`, `onboardingBasicsSexHelper`, `continueButton`,
+etc.) that did not exist anywhere in `lib/l10n/app_en.arb` or the
+generated `AppLocalizations` class — confirmed by grepping the ARB file
+and `app_localizations_en.dart` for `onboarding` before writing anything
+and finding zero matches.** This means those three screens could not
+have compiled against generated localization output as they stood. This
+is not a defect introduced by this dispatch; it is the state the cut-off
+left behind (the l10n step of its own work was still pending when the
+rate limit hit). This dispatch added every one of those pre-existing
+references to the ARB, verbatim to the key names already used in the
+already-written `.dart` files, rather than renaming the code to match a
+different key scheme — changing the working pages would have been an
+unrelated diff for a file this dispatch didn't otherwise need to touch.
+
+**30. `09-content-copy-spec.md`, the document the workplan repeatedly
+cites for verbatim `CPY-xxx` wording, does not exist anywhere in this
+repository.** Confirmed by grepping the whole tree (`docs/`, `lib/`, the
+project root) for `content-copy-spec` and for distinctive strings like
+`CPY-070`/`CPY-072` before writing a single ARB value — the only hits
+were this workplan's own text and `hydration_result.dart`'s doc comment,
+both of which merely *cite* the id, never quote its wording. Every
+string this pass added to `app_en.arb` is therefore this implementer's
+own construction, not a verified verbatim copy — including `CPY-070`
+(`onboardingTargetProfessionalNotice`) and `CPY-072`
+(`onboardingTargetHeadline`), which the workplan flags as **binding,
+do-not-paraphrase** wording. Both were written to honour `ONB-07`'s
+stated constraints (no *must*/*need to*/*required*/*minimum*, no
+urgency, no red) as closely as possible without the source text, and
+both are called out individually in the ARB's own `@`-description
+blocks with a flag for the developer to check against the real spec
+once it's available. This is the same situation Decisions #21's domain
+implementer and the Core dispatch (#22) were already in for their own
+unwritten pieces — treated the same way: done as well as possible,
+flagged loudly, not silently guessed past.
+
+**31. `ONB-05`/`ONB-06`'s exact `CPY-xxx` numbering (headlines,
+subheads, tile/checkbox labels) is likewise this implementer's
+construction, not verified against a numbering authority, for the same
+reason as Decisions #30.** Where the workplan's file-plan text names a
+specific id against a specific string (`CPY-030`, `CPY-039`, `CPY-042`,
+`CPY-045`, `CPY-070`–`CPY-080`, `CPY-081`–`CPY-089`, `CPY-120`–`CPY-128`,
+`CPY-028`), the ARB's `@`-description cites that id. Where the workplan
+only gives a range without pinning which string gets which number inside
+it (e.g. `CPY-060`–`CPY-071` covering `ONB-06`'s headline, subhead, four
+tile labels, a section header and four checkbox labels — eleven strings
+for a twelve-id range once `CPY-070`/`CPY-071` are accounted for
+separately), this implementer chose not to assert a specific number per
+string rather than risk a false-precision mapping; those ARB entries
+describe the string's screen and purpose instead.
+
+**32. `ONB-07`'s disclaimer is rendered from one ARB key
+(`onboardingCalcDisclaimer`), reused verbatim on both `ONB-07` (the
+plan's `CPY-076`) and inside `OVL-10` (the plan's `CPY-089`), rather than
+two separately-worded strings.** Both surfaces render the same
+calculator output field (`SuggestedHydrationTarget.disclaimer`, id
+`'referenceIntakeDisclaimer'`) — giving them independently-invented
+wording risked the two screens disagreeing on what is meant to be the
+same disclaimer. If the real copy spec turns out to give these two
+placements genuinely different sentences, only this one ARB key needs
+to split into two.
+
+**33. `ONB-08`'s interval bottom sheet and the day-letter/day-name ARB
+keys are this implementer's addition, built inline in
+`reminders_page.dart` rather than as a separate file.** The file plan
+lists only `reminders_page.dart`, `reminders_notifier.dart`,
+`reminders_state.dart` and `widgets/reminder_preview_card.dart` for
+`ONB-08` — no dedicated interval-sheet or day-toggle-row file — so the
+picker sheet is a private method on `RemindersPage` rather than a new
+file the plan didn't ask for (per this task's "a file you think is
+missing is a planning question, not something to add"). Its rows are
+built from `FlowTappable` + `PixelIcon` (`icon-check.svg`), explicitly
+**not** `ListTile`/`Icon(Icons.check)`, to hold the line on `13 §14.1`'s
+"no Material Symbols anywhere in onboarding" rule even inside an
+otherwise-unspecified internal picker. `remindersIntervalOptionsMinutes`
+(`30, 60, 90, 120, 180, 240`) lives as a top-level const in
+`reminders_notifier.dart`, mirroring `weight_notifier.dart`'s
+`weightPrefillKg` precedent for an undocumented-but-necessary constant,
+per the workplan's own § Open product questions proposal.
+
+**34. `TargetNotifier`'s `editing` vs `edited` distinction is this
+implementer's concrete design for a transition the file plan names but
+does not fully specify.** The plan says the notifier "owns the
+`suggested → editing → edited` transition" and writes `manualTargetMl`
+"only in the `edited` state" — but does not say what, if anything,
+distinguishes merely *entering* the editor from actually *changing* the
+value inside it. This implementer chose: tapping Adjust moves
+`suggested → editing` and shows the calculator's own value in the
+editor **without** writing `manualTargetMl` to the shared draft; the
+first actual stepper tap or slider change moves `editing → edited` and
+writes through. This is what makes a user who taps Adjust and
+immediately taps Continue without changing anything come out as
+`targetSource == suggested`, matching the acceptance criterion
+literally ("even when the adjusted value happens to equal the
+suggestion" implies an actual edit occurred, not merely opening the
+editor). The CTA follows the same two-way split: `suggested` shows
+Accept/Adjust (`CPY-077`/`CPY-078`); `editing`/`edited` both show
+Continue/"use suggested amount" (the plan's `CPY-080`) — collapsing the
+sub-states in the CTA once either is in play, so the button set does
+not flicker between two different button pairs while adjusting.
+
+**35. Two accessibility overrides were added on top of already-shipped
+Core components, from the feature side, without modifying those Core
+files.** `TargetHero` in viewing mode is wrapped in
+`Semantics(label: "Your suggested daily target: N millilitres", child:
+ExcludeSemantics(...))` so a screen reader gets one merged node instead
+of walking the eyebrow and the pixel value separately (manual QA item
+12's literal example). The same pattern wraps each `DayToggle` on
+`ONB-08` with its full day name (`"Monday"`, not the visible `"M"`),
+mirroring the existing `quickAddChipSemantics` precedent for overriding
+a visible-text-derived label. Neither `target_hero.dart` nor
+`day_toggle.dart` was touched — both overrides live entirely in the
+consuming pages, which is the correct seam per `flutter-ui-kit` SKILL
+("a component belongs to the shared kit... otherwise the feature's
+`widgets/`") for a need specific to these two screens.
+
+**36. Known, pre-existing localization gaps in already-built files were
+found but deliberately not fixed by this dispatch.** `basics_page.dart`
+(prior dispatch) renders `ValidationFailure.message` directly as
+`FlowTextField.errorText` — and `onboarding_rules.dart` (domain layer,
+also already built) constructs those messages as hardcoded English
+literals, matching an identical, already-shipped pattern in
+`hydration/domain/usecases/log_water.dart`. Separately,
+`weight_notifier.dart`/`weight_page.dart` pass the literal English word
+`'kilograms'` into `FlowSlider.unitLabel`, and `target_hero.dart` (Core)
+hardcodes `'milliliters'` the same way — both become a screen reader's
+spoken unit and are not behind `AppLocalizations`. All three are real
+instances of CLAUDE.md §9/§21's "no hardcoded user-facing string" rule
+being broken, but all three are in files this dispatch was not asked to
+change (`onboarding_rules.dart` is domain; `target_hero.dart` is Core;
+fixing `basics_page.dart`/`weight_notifier.dart` properly means also
+threading a localized message through every `OnboardingRules.validate*`
+call site, a bigger change than "finish the presentation layer").
+Flagged here instead of silently patched or silently shipped — **the
+developer should decide whether this is worth a follow-up pass** before
+treating onboarding as fully localized.
+
+**37. No `.g.dart` file exists yet for any onboarding notifier —
+`onboarding_draft_notifier.g.dart`, `basics_notifier.g.dart`,
+`weight_notifier.g.dart`, `target_notifier.g.dart`,
+`reminders_notifier.g.dart` — and none of the ARB additions in this pass
+have been compiled into `app_localizations_en.dart` either.** This
+session's tool set was Read/Edit/Write/Grep/Glob only — no shell/Bash
+tool was available to run `dart run build_runner build
+--delete-conflicting-outputs` or `flutter gen-l10n`. Both commands must
+be run before `flutter analyze` or any test can pass; until then,
+analyze will show missing-part-file and missing-getter errors across
+every file this pass and the prior one touched. This is a tooling gap,
+not a layering one — distinct from the intentional forward-references
+Decisions #14/#17/#21/#22 describe, which resolve once the next *layer*
+lands; this resolves once someone with a shell runs two commands.
+
+**38. The eight now-superseded flat onboarding files
+(`splash_page.dart`, `welcome_page.dart`, `basics_page.dart`,
+`weight_page.dart`, `activity_page.dart`, `environment_page.dart`,
+`target_page.dart`, `reminders_page.dart`, all directly under
+`presentation/`) could not be deleted, for the same reason as
+Decisions #37 — no delete/shell tool was available in this session,
+matching the hydration pass's own Decisions #35 precedent exactly.**
+`app_router.dart`'s imports were repointed at the new
+`presentation/<screen>/` locations, and a repo-wide grep for the eight
+old import paths turned up only `app_router.dart` itself (already
+fixed), so these eight files are now genuinely dead — nothing imports
+them — but they remain, byte-for-byte, wherever the prior dispatch (for
+`splash_page.dart`/`welcome_page.dart`) or the original scaffold (for
+the other six, which were still their original one-line `Scaffold`
+stubs) left them. They were left untouched rather than hollowed out to
+avoid an unrelated diff to files outside this dispatch's actual layer
+of work. **The developer must delete these eight files manually** —
+see the exact list and an `rm` command in the file plan's "Modified (3)
++ deleted (7)" section above.
 
 ---
 
