@@ -51,22 +51,10 @@ class _FakeHydrationRepository implements HydrationRepository {
 }
 
 void main() {
-  // `AddWaterPage`'s stepper/field/stepper Row measures 316dp
-  // (64 + 24 + 140 + 24 + 64) against 312dp of available width at the
-  // 360dp reference viewport (360 - 2*24dp page padding) -- a
-  // pre-existing 4dp `RenderFlex` overflow, unrelated to the
-  // numeric-input fix this file tests. Flagged as a production defect
-  // in the report rather than fixed here (fixing it means editing
-  // `lib/`, which this file's role does not permit); a wider viewport
-  // avoids the overflow so the numeric-input behaviour can actually be
-  // exercised.
-  const testViewportSize = Size(400, 640);
-
   Future<void> pumpAddWaterPage(WidgetTester tester) async {
     await pumpFlowWidget(
       tester,
       const AddWaterPage(),
-      viewportSize: testViewportSize,
       overrides: [
         hydrationRepositoryProvider.overrideWithValue(
           _FakeHydrationRepository(),

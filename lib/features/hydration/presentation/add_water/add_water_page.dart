@@ -186,7 +186,7 @@ class _AddWaterPageState extends ConsumerState<AddWaterPage> {
                       onStep: () =>
                           ref.read(addWaterProvider.notifier).decrement(),
                     ),
-                    const SizedBox(width: FlowSpacing.lg),
+                    const SizedBox(width: FlowSpacing.md),
                     SizedBox(
                       width: 140,
                       child: FlowTextField(
@@ -202,7 +202,7 @@ class _AddWaterPageState extends ConsumerState<AddWaterPage> {
                         },
                       ),
                     ),
-                    const SizedBox(width: FlowSpacing.lg),
+                    const SizedBox(width: FlowSpacing.md),
                     StepperButton(
                       direction: StepDirection.increment,
                       enabled: state.amountMl < LogWater.maxAmountMl,
