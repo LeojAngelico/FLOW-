@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flow/core/design/components/flow_text_field.dart';
 
@@ -61,4 +62,62 @@ void main() {
 
     expect(find.byType(Text), findsNothing);
   });
+
+  testWidgets(
+    'inputFormatters defaults to null, and an unset keyboardType falls '
+    'through to TextField\'s own single-line default (TextInputType.text) '
+    'rather than FlowTextField forcing a value of its own, so an '
+    'existing caller that does not pass either keeps its prior '
+    'behaviour unchanged',
+    (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+
+      await pumpFlowWidget(tester, FlowTextField(controller: controller));
+
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.keyboardType, TextInputType.text);
+      expect(textField.inputFormatters, isNull);
+    },
+  );
+
+  testWidgets('passes keyboardType and inputFormatters straight through to the '
+      'underlying TextField', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+
+    await pumpFlowWidget(
+      tester,
+      FlowTextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      ),
+    );
+
+    final textField = tester.widget<TextField>(find.byType(TextField));
+    expect(textField.keyboardType, TextInputType.number);
+    expect(textField.inputFormatters, [FilteringTextInputFormatter.digitsOnly]);
+  });
+
+  testWidgets(
+    'a digits-only inputFormatter actually filters non-digit characters '
+    'as they are typed, not just an unused constructor parameter',
+    (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+
+      await pumpFlowWidget(
+        tester,
+        FlowTextField(
+          controller: controller,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        ),
+      );
+
+      await tester.enterText(find.byType(FlowTextField), '5a0b');
+
+      expect(controller.text, '50');
+    },
+  );
 }

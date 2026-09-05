@@ -165,5 +165,135 @@
   "errorScannerUnsupported": "Scanning is not supported on this device.",
   "errorScannerFailed": "The scanner could not be started.",
   "errorCameraStartFailed": "The camera could not be started.",
-  "errorCaptureFailed": "The photo could not be captured. Please try again."
+  "errorCaptureFailed": "The photo could not be captured. Please try again.",
+  "hydrationTodaysGoal": "Today's goal",
+  "@hydrationTodaysGoal": {
+    "description": "APP-01 dashboard, CPY-099 — header above the hydration summary once at least one entry exists today."
+  },
+  "hydrationFreshDay": "A fresh day",
+  "@hydrationFreshDay": {
+    "description": "APP-01 dashboard, CPY-097 — replaces hydrationTodaysGoal as the header while today has zero entries."
+  },
+  "hydrationEmptyHint": "Tap an amount to log your first drink",
+  "@hydrationEmptyHint": {
+    "description": "APP-01 dashboard, CPY-101 — shown under the numbers while today has zero entries."
+  },
+  "hydrationOfTarget": "of {target}",
+  "@hydrationOfTarget": {
+    "description": "APP-01 dashboard, CPY-092 — shown under today's total, e.g. 'of 2 L'.",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "hydrationRemainingToGo": "{amount} to go",
+  "@hydrationRemainingToGo": {
+    "description": "APP-01 dashboard, CPY-093 — remaining ml/L until today's target; shown instead of hydrationGoalComplete before the goal is met.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "hydrationGoalComplete": "Goal complete",
+  "@hydrationGoalComplete": {
+    "description": "APP-01 dashboard, CPY-094 — shown instead of hydrationRemainingToGo once totalMl >= targetMl."
+  },
+  "hydrationAddWaterCta": "+ Add water",
+  "@hydrationAddWaterCta": {
+    "description": "APP-01 dashboard, CPY-100 — navigates to /home/add for a custom amount."
+  },
+  "hydrationJustLogged": "+{amount}",
+  "@hydrationJustLogged": {
+    "description": "APP-01 dashboard, CPY-106 — transient feedback shown near the summary right after a successful log.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "quickAdd": "Quick add",
+  "@quickAdd": {
+    "description": "APP-01 dashboard, CPY-109 — header above the quick-add chip row."
+  },
+  "todaysLogs": "Today's logs",
+  "@todaysLogs": {
+    "description": "APP-01 dashboard, CPY-110 — header above today's entries list."
+  },
+  "addWaterTitle": "Add Water",
+  "@addWaterTitle": {
+    "description": "APP-02, CPY-102 — /home/add screen title."
+  },
+  "logWaterButton": "Log water",
+  "@logWaterButton": {
+    "description": "APP-02, CPY-103 — the custom-amount screen's submit CTA, and the large-amount confirm dialog's confirm action."
+  },
+  "largeAmountConfirmMessage": "That's a large amount. Log {amount}?",
+  "@largeAmountConfirmMessage": {
+    "description": "APP-02, CPY-104 — confirm dialog shown before logging a custom amount above 1,000ml (FR-024).",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "addWaterDiscardTitle": "Discard this amount?",
+  "@addWaterDiscardTitle": {
+    "description": "APP-02, CPY-108 — discard-on-back confirm dialog title, shown once the amount has changed from 0."
+  },
+  "discard": "Discard",
+  "@discard": {
+    "description": "APP-02 — the destructive action on the discard-on-back confirm dialog."
+  },
+  "hydrationAmountUnitLabel": "ml",
+  "@hydrationAmountUnitLabel": {
+    "description": "APP-02 — unit caption under the custom-amount stepper/text field. Not a CPY-* code in the copy spec; added because FlowTextField carries no built-in unit affordance and CLAUDE.md forbids a hardcoded user-facing string."
+  },
+  "hydrationSummarySemantics": "Today's progress: {total} of {target}, {percent} percent, {remaining} to go",
+  "@hydrationSummarySemantics": {
+    "description": "APP-01 accessibility label merging the hydration summary (glass + all four numbers) into one semantics node, per FR-030/FR-031. CMP-47 HydrationGlass excludes itself from semantics; hydration_summary.dart reads this instead of letting a screen reader walk each number individually.",
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      },
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "hydrationSummarySemanticsComplete": "Today's progress: {total} of {target}, {percent} percent, goal complete",
+  "@hydrationSummarySemanticsComplete": {
+    "description": "Same as hydrationSummarySemantics, once the goal is met (FR-033) — replaces the remaining-ml clause with completion.",
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "quickAddChipSemantics": "Add {amount}",
+  "@quickAddChipSemantics": {
+    "description": "APP-01 accessibility label for each QuickAddChip on /home — overrides CMP-04's own visible-text-derived label so a screen reader announces the action ('Add 250 ml'), not just the amount.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "errorHydrationStorage": "We couldn't save that. Please try again.",
+  "@errorHydrationStorage": {
+    "description": "APP-01/APP-02 — shown inline (never replacing the displayed total) when a hydration read or write fails with a StorageFailure."
+  }
 }

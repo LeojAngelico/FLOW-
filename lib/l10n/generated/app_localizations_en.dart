@@ -407,4 +407,88 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorCaptureFailed =>
       'The photo could not be captured. Please try again.';
+
+  @override
+  String get hydrationTodaysGoal => 'Today\'s goal';
+
+  @override
+  String get hydrationFreshDay => 'A fresh day';
+
+  @override
+  String get hydrationEmptyHint => 'Tap an amount to log your first drink';
+
+  @override
+  String hydrationOfTarget(String target) {
+    return 'of $target';
+  }
+
+  @override
+  String hydrationRemainingToGo(String amount) {
+    return '$amount to go';
+  }
+
+  @override
+  String get hydrationGoalComplete => 'Goal complete';
+
+  @override
+  String get hydrationAddWaterCta => '+ Add water';
+
+  @override
+  String hydrationJustLogged(String amount) {
+    return '+$amount';
+  }
+
+  @override
+  String get quickAdd => 'Quick add';
+
+  @override
+  String get todaysLogs => 'Today\'s logs';
+
+  @override
+  String get addWaterTitle => 'Add Water';
+
+  @override
+  String get logWaterButton => 'Log water';
+
+  @override
+  String largeAmountConfirmMessage(String amount) {
+    return 'That\'s a large amount. Log $amount?';
+  }
+
+  @override
+  String get addWaterDiscardTitle => 'Discard this amount?';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get hydrationAmountUnitLabel => 'ml';
+
+  @override
+  String hydrationSummarySemantics(
+    String total,
+    String target,
+    int percent,
+    String remaining,
+  ) {
+    return 'Today\'s progress: $total of $target, $percent percent, $remaining to go';
+  }
+
+  @override
+  String hydrationSummarySemanticsComplete(
+    String total,
+    String target,
+    int percent,
+  ) {
+    return 'Today\'s progress: $total of $target, $percent percent, goal complete';
+  }
+
+  @override
+  String quickAddChipSemantics(String amount) {
+    return 'Add $amount';
+  }
+
+  @override
+  String get errorHydrationStorage =>
+      'We couldn\'t save that. Please try again.';
 }

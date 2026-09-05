@@ -15,13 +15,20 @@ import 'package:flow/l10n/generated/app_localizations.dart';
 /// it returns null rather than throwing a clear error) — every
 /// component test gets it for free rather than each needing its own
 /// fix.
+///
+/// [viewportSize] defaults to the 360x640dp reference viewport and only
+/// needs overriding when the subject under test does not fit it — see
+/// `add_water_page_test.dart` for a documented case (a pre-existing
+/// production layout overflow at 360dp, unrelated to what that file
+/// tests, worked around here rather than masked by shrinking content).
 Future<void> pumpFlowWidget(
   WidgetTester tester,
   Widget child, {
   Brightness brightness = Brightness.light,
   List<Override> overrides = const [],
+  Size viewportSize = const Size(360, 640),
 }) async {
-  tester.view.physicalSize = const Size(360, 640);
+  tester.view.physicalSize = viewportSize;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
