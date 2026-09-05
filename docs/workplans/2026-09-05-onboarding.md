@@ -1,7 +1,7 @@
 # Workplan: Onboarding (FLOW-01 · ONB-02 → ONB-08 → first profile write)
 
-Status: domain
-Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: domain-implementer
+Status: core
+Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: core-implementer
 
 ---
 
@@ -306,39 +306,39 @@ asset named below already ships in `assets/` and is declared in
 `pubspec.yaml`; `flutter_svg` is already a dependency and
 `hydration_glass.dart` is the working `SvgPicture.asset` precedent.
 
-- [ ] `lib/core/design/components/pixel_icon.dart` — `CMP-42 PixelIcon`.
+- [x] `lib/core/design/components/pixel_icon.dart` — `CMP-42 PixelIcon`.
       Renders one of `assets/icons/onboarding/*.svg` at 16/20/24/32/40/48
       dp. **2 dp per art pixel, never fractional** (`13 §14.1` — a
       fractional scale produces subpixel seams that read as blur).
       Everything else here depends on it.
-- [ ] `lib/core/design/components/game_panel.dart` — `CMP-40 GamePanel`,
+- [x] `lib/core/design/components/game_panel.dart` — `CMP-40 GamePanel`,
       variants `flat` · `deep` · `milestone`. The onboarding card. Thin
       wrapper over `FlowFrameBox` that fixes the fill/depth/bevel token
       triples so no screen picks them ad hoc.
-- [ ] `lib/core/design/components/step_header.dart` — `CMP-09 StepHeader`.
+- [x] `lib/core/design/components/step_header.dart` — `CMP-09 StepHeader`.
       Back chevron (48 dp target, `icon-chevron-left.svg` via
       `PixelIcon`) + "Step N of 5" (`CPY-030`, caller-supplied string —
       the component does not read l10n) + the existing `StepTrack`
       (CMP-44). Used on `ONB-03`–`ONB-07`.
-- [ ] `lib/core/design/components/cta_section.dart` — `CMP-45 CtaSection`,
+- [x] `lib/core/design/components/cta_section.dart` — `CMP-45 CtaSection`,
       `primary` and `primary+secondary`. The footer on all seven form
       screens; owns the safe-area inset and the gap so it is identical
       everywhere instead of re-typed seven times.
-- [ ] `lib/core/design/components/brand_mark.dart` — `CMP-20 BrandMark`,
+- [x] `lib/core/design/components/brand_mark.dart` — `CMP-20 BrandMark`,
       `mark` and `mark+wordmark`, from `assets/brand/app-icon.svg` /
       `wordmark-lockup.svg`. `ONB-02` and the `/` placeholder.
-- [ ] `lib/core/design/components/mascot_frame.dart` — `CMP-43 MascotFrame`,
+- [x] `lib/core/design/components/mascot_frame.dart` — `CMP-43 MascotFrame`,
       `bare` · `plinth` · `plinth+particles`. Bloop at 88–120 dp
       (`13 §14.1`), one pose per `13 §9.3`, `sprite-scale-platform.svg`
       as the plinth, ≤ 3 `particle-sparkle.svg`/`particle-bubble.svg`.
       **4 dp per art pixel** for illustration. Particles are static under
       `reduceMotion` (caller-supplied bool, hydration Decisions #23).
-- [ ] `lib/core/design/components/stat_display.dart` — `CMP-41 StatDisplay`,
+- [x] `lib/core/design/components/stat_display.dart` — `CMP-41 StatDisplay`,
       `value+unit` and `value+unit+meter`. `type.pixelHero` value +
       `type.pixelUnit` unit inside a `GamePanel`; the meter puts the
       bright fill on `color.trackDark`, **not** `trackSubtle` (measured
       1.83:1, `06 §2.5`). `ONB-04`'s weight hero.
-- [ ] `lib/core/design/components/target_hero.dart` — `CMP-54 TargetHero`,
+- [x] `lib/core/design/components/target_hero.dart` — `CMP-54 TargetHero`,
       `viewing` and `editing`. Eyebrow + ± `StepperButton`s (CMP-23,
       exists) + pixel value + `FlowSlider` (CMP-11, exists) + range
       labels. `ONB-07`'s accept/adjust hero; `APP-08` inherits it.
@@ -970,6 +970,91 @@ substitute for the actual test file. **Flag for whoever picks up
 it is still unwritten and is this plan's own acceptance criterion
 ("All ten rows of `08 §6.4`'s boundary table produce the stated
 target").
+
+---
+
+**22. This Core dispatch built only the 8 listed component files —
+no test files, no barrel, no export additions.** `§ Tests` lists eight
+matching component tests as a separately-scoped bucket (same precedent
+as Decisions #21 for the domain layer's usecase tests); this invocation
+was scoped to `§ Core`'s file list only. **Flag for whoever picks up
+`test/core/design/components/{pixel_icon,game_panel,step_header,
+cta_section,brand_mark,mascot_frame,stat_display,target_hero}_test.dart`:**
+they are unwritten, and the repo's standing "one test file per
+component" rule (Decisions #12, currently 21/21 covered) is not yet
+restored to green — it will regress to 21/29 until those eight land.
+
+**23. `StepHeader`'s back chevron is built directly from `FlowFrameBox` +
+the new `PixelIcon`, not by composing the existing `FlowBackButton`.**
+The dispatch's own reuse list named `StepTrack`, `StepperButton` and
+`FlowSlider` as existing components to build on, and pointedly did not
+name `FlowBackButton` — while separately calling out `PixelIcon` by name
+for this exact chevron. `FlowBackButton` renders the same 48dp/depth-3
+recipe already (built before `PixelIcon` existed, so it calls
+`SvgPicture.asset` directly instead), which makes the two now
+near-duplicates. **Flag for the developer:** either accept the
+duplication (it is small — one `FlowFrameBox` + one icon each) or, in a
+later pass, refactor `FlowBackButton` to wrap `StepHeader`'s chevron (or
+vice versa) so there is one 48dp-chevron-button implementation instead
+of two. Not fixed here because `back_button.dart` is not in this
+dispatch's file list and touching it would be an unrelated diff.
+
+**24. A pre-existing doc-comment conflict, not introduced by this
+pass: `back_button.dart` and `setting_row.dart` both already cite
+"CMP-42" for `FlowBackButton`'s chevron, while this workplan assigns
+CMP-42 to `PixelIcon`.** Neither file is in this dispatch's file list,
+so neither was changed. This plan's own catalogue numbering is treated
+as authoritative for the 8 new files (per the explicit dispatch
+instructions), but the mismatch means the repo now has two components
+both claiming CMP-42 in their doc comments. **Flag for the developer:**
+one of the two doc comments is wrong and should be corrected in a
+follow-up — likely `back_button.dart`'s and `setting_row.dart`'s stale
+references, since this workplan is the more recent, more detailed
+source for the catalogue numbering.
+
+**25. `GamePanel`'s three variants pick fill/depth pairs by name, not by
+spec'd dp/token values (the file plan gives variant names and the "no
+screen picks tokens ad hoc" intent, not the exact per-variant tokens):**
+`flat` → `surfacePrimary` fill, depth 0 (no offset — a flush, non-card
+block); `deep` → `panelDeep` fill, depth 4, paired with `panelDeepInk`
+(fixed white) / `panelDeepAccent` (fixed light aqua) content text per
+this component's own doc comment; `milestone` → `achievement` gold
+fill, depth 4, paired with `onBrandFill` (the same fixed navy
+`PrimaryButton.isMilestone` already uses on this exact fill). Radius is
+`FlowRadius.lg` (16dp) throughout — the largest scale step below `xl`,
+chosen because every other radius in the scale is already claimed by an
+existing component (buttons at `sm`, tiles at `md`) and a panel is
+visually the largest surface in this set. `StatDisplay` and `TargetHero`
+both consume `GamePanel(variant: .deep)` and its paired ink/accent
+colors, rather than reaching for `textPrimary`/`textSecondary` — those
+flip with the theme and are not guaranteed legible against `panelDeep`,
+which does not flip the same way.
+
+**26. `MascotFrame`'s 88-120dp size bound (`13 §14.1`) and its separate
+"4dp per art pixel" illustration rule cannot both hold for the shipped
+Bloop assets.** `bloop-steady.svg`'s own art-pixel grid is 44x38 (a
+6-unit native grid, same convention as the icon set); at a literal
+4dp/pixel scale that renders at 176x152dp, well outside 88-120dp. This
+implementation honors the explicit numeric range — it is the one a
+screen's fixed layout must fit inside — and lets `BoxFit.contain` scale
+each pose down to it. **Flag for the developer:** confirm this reading;
+if the two constraints were meant to describe different mascot
+instances (e.g. a small onboarding footprint vs. a larger dashboard
+one) rather than the same `MascotFrame`, only this file's docs and
+default `size` need to change, not its structure.
+
+**27. `BrandMark`'s mark width (default 160dp) and `MascotFrame`'s
+particle placement/motion (three fixed `Alignment` offsets, a
+`FlowMotion.celebrate`-duration scale+fade loop) are this implementer's
+invention — no cited section pins exact numbers for either.** Both are
+visual defaults a screen can override (`BrandMark.width`) or are
+self-contained decoration with no external contract (`MascotFrame`'s
+particle motion curve/positions), so getting them exactly right is a
+presentation-layer/visual-QA concern, not a domain one. `wordmark-
+lockup.svg` was confirmed (via its own `aria-label`, "FLOW wordmark
+with Bloop") to already be a single combined asset — `BrandMark` renders
+it as one `SvgPicture.asset` call rather than stacking `app-icon.svg`
+and the wordmark separately.
 
 ---
 
