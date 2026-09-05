@@ -1,7 +1,7 @@
 # Workplan: Onboarding (FLOW-01 · ONB-02 → ONB-08 → first profile write)
 
-Status: gate-4-fix-wave
-Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: flutter-implementer (gate-4 fix wave)
+Status: done
+Reference feature: **hydration logging** (`docs/workplans/2026-09-04-hydration-logging.md`) | Last agent: developer (accepted)
 
 ---
 
@@ -1430,6 +1430,18 @@ already runs):
 ---
 
 ## Gate results
+
+**Gate 4 re-check (full re-run, post fix-wave, commit `90215c8`):**
+
+- analyze: PASS — `flutter pub get`, `flutter gen-l10n`, `dart run build_runner build` all ran clean with zero diff produced (confirms the fix wave's hand-edited `app_localizations*.dart`/`.g.dart` files matched what codegen produces). `flutter analyze` reports 14 issues, all pre-existing and outside this diff (`lib/core/result/failure.dart:17,21,25` `use_super_parameters`; `deprecated_member_use`/`unnecessary_import` in `test/core/design/components/{back_button,check_row,flow_tappable,primary_button}_test.dart`) — none of these five files were touched by `git diff main...HEAD`.
+- tests: PASS — `flutter test` — 411/411 passing (matches the fix-wave commit's own claim).
+- localization: PASS — re-swept every presentation/component file in the full diff (`git diff --name-only main...HEAD`), not only the two previously-failing lines. `target_hero.dart`'s `unitLabel` and `weight_page.dart`'s `FlowSlider(unitLabel: ...)` are now caller-supplied (`loc.onboardingTargetUnitLabelSpoken` / `loc.onboardingWeightUnitLabelSpoken`); both new ARB keys exist in `lib/l10n/app_en.arb` with matching generated getters. `docs/PROJECT_MAP.md` § Localization lists `en` as the only locale, so no cross-locale gap is possible. No other hardcoded string literal reaches a user-facing widget anywhere in the changed `presentation/`/`core/design/components/` files (component defaults such as `flow_slider.dart`'s pre-existing `unitLabel = 'kilograms'` fallback are untouched by this diff and are overridden by both of its callers).
+- platform: PASS — `git diff --stat main...HEAD -- android/ ios/ pubspec.yaml` is empty; grep of the full diff for `permission_handler`/`Permission.`/`flutter_local_notifications`/camera/location APIs returns nothing (two incidental doc-comment mentions of "permission"/"location" as English words, not API calls).
+- security: PASS — grep of the full diff for hardcoded credentials/API keys/secrets/tokens/bearer strings and for `print`/`log`/`debugPrint` calls returns no matches.
+- documentation: PASS — every class/enum/mixin declaration added by this diff (`git diff --diff-filter=A`, excluding `.g.dart`/`l10n/generated`) has a `///` doc comment within the preceding lines (checked programmatically, allowing for `@riverpod`/`@Riverpod(...)` annotation lines between the doc comment and the declaration).
+- scope: PASS — every changed path in `git diff --name-status main...HEAD` (excluding `.g.dart` and `lib/l10n/generated/*`) matches an entry in the file plan: 8 Core components, 3 calculator files, 3 hydration-shared domain files, 5 data files, 7 onboarding-domain files, 20 presentation files, 11 of the 19 planned test files (the 8 component tests remain unwritten — flagged under the file plan's own `[ ]` checkboxes, not a scope violation since no extra file was added), the 3 modified files, and the 8 flat-stub deletions (confirmed gone from disk, zero remaining references). `test/app/router/app_router_test.dart`'s one-line change is not separately listed in the file plan but is directly and only a consequence of `welcome_page.dart`'s in-plan rewrite (old placeholder's literal "Welcome" text no longer exists) and is explained in commit `3a0dc11`'s message. `recovery_page.dart` confirmed byte-for-byte untouched.
+- test coverage of new state code: PASS — all five onboarding notifiers (`OnboardingDraftNotifier`, `BasicsNotifier`, `WeightNotifier`, `TargetNotifier`, `RemindersNotifier`), both usecases (`CalculateSuggestedTarget`, `CompleteOnboarding`) and the repository implementation (`OnboardingRepositoryImpl`) each have a corresponding, passing test file. Verified the fix wave's 5 reviewer must-fix findings are each backed by a real, matching test (not just claimed): `target_notifier_test.dart`'s `isHighTarget` case, `basics_notifier_test.dart`'s emptied-field and `validateAgeText`-identity cases, `complete_onboarding_test.dart`'s trim/whitespace cases, `onboarding_repository_impl_test.dart`'s `_ThrowingPreferencesDataSource` case — read each production diff hunk (finding 1–7) against its corresponding test and confirmed they match Decisions #40's descriptions verbatim.
+
 
 - analyze: PASS — `flutter analyze` reports 14 issues, none in any file this diff touched (all in pre-existing `lib/core/result/failure.dart` and pre-existing component test files); confirmed via `git diff --stat main...HEAD` against each flagged path.
 - tests: PASS — `flutter test` — 404/404 passing.
