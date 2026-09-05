@@ -1,7 +1,7 @@
 # Workplan: Hydration logging (APP-01 core loop + APP-02 Add Water)
 
-Status: tests
-Reference feature: **none complete — see § Reference feature** | Last agent: flutter-unit-tester
+Status: gates
+Reference feature: **none complete — see § Reference feature** | Last agent: fix-wave (Gate 4 findings)
 
 ---
 
@@ -910,6 +910,103 @@ than assuming "exists" means "correct." Two were not:
   occur on a real screen; it is purely an artifact of driving the
   notifier directly through a bare `ProviderContainer.read()`.
 
+**38. Gate 4 fix-wave: the gatekeeper's 2 analyzer issues in
+`stepper_button_test.dart` were resolved one way, not two.** The
+`dart:ui` import at the top of the file (`unnecessary_import` — it's
+redundant against `flutter/material.dart`, which re-exports
+`SemanticsFlag` transitively) was removed. The `hasFlag`
+`deprecated_member_use` warning at the old line 63 was **not**
+migrated — read `flow_tappable_test.dart` first, per the dispatch's own
+instruction, and confirmed it already calls
+`data.hasFlag(SemanticsFlag.X)` in five places (lines 17/55/67/68/88),
+the exact same deprecated call `stepper_button_test.dart` already made.
+No code change was needed there; the file already matched the suite's
+one standing style. This means `flutter analyze` will likely still
+report `deprecated_member_use` at that line — deliberately, per the
+dispatch's explicit instruction not to introduce a second style by
+migrating only this one file to `flagsCollection`. Flag this to
+whoever owns the eventual repo-wide `hasFlag` → `flagsCollection`
+migration: it should be one pass across all Semantics-flag test
+assertions, not file-by-file.
+
+**39. Gate 4 fix-wave: `StepperButton`'s disabled-mid-hold timer leak,
+fixed with both a `didUpdateWidget` guard and a per-callback guard,
+not one alone.** `didUpdateWidget` calls `_cancelTimers()` when
+`oldWidget.enabled` was `true` and `widget.enabled` is now `false`,
+covering the gap between two timer firings. The initial-delay and
+periodic-repeat callbacks themselves also check `!widget.enabled` and
+cancel-and-return before calling `widget.onStep()`, covering the case
+where a timer's callback is already queued to run in the same frame the
+widget disables (a race `didUpdateWidget` alone cannot close, since
+`didUpdateWidget` and a pending `Timer` callback are two independent
+schedule points). Added
+`test/core/design/components/stepper_button_test.dart`'s new case
+("a mid-hold rebuild to enabled: false stops the auto-repeat timer") —
+this is Manual QA item 8, previously untested.
+
+**40. Gate 4 fix-wave: `today_provider.dart`'s next-midnight boundary is
+now built via `DateTime(year, month, day + 1)`, exactly as the
+dispatch specified**, replacing
+`localMidnightToday.add(const Duration(days: 1))`. Added
+`test/core/time/today_provider_test.dart`, which captures the
+`Duration` the provider hands to its internal `Timer` by intercepting
+`Timer` construction through a hand-rolled `Zone` (`ZoneSpecification.
+createTimer`) rather than adding `fake_async` as a dependency — the
+provider has no other seam that exposes the delay without either
+refactoring it into a separately-testable pure function (not asked
+for) or waiting out a real ~24-hour `Timer`. Mirrors
+`local_date_test.dart`'s exact fixture dates (2026-03-08 spring-forward,
+2026-11-01 fall-back) and its explicit caveat: since Dart's plain
+`DateTime` reads the *host* machine's timezone, these tests prove the
+delay is computed via calendar-day arithmetic (correct on any host),
+not that this specific CI/dev machine's timezone actually transitions
+on those dates — the same limitation `local_date_test.dart` already
+documents for `BR-16`.
+
+**41. Gate 4 fix-wave: `Home.quickAdd`'s debounce is now keyed on
+`(amount, timestamp)`, not timestamp alone, and clears its stamp on the
+`Err` branch.** `_lastQuickAddAmountMl` was added alongside
+`_lastQuickAddAt`; the debounce guard now only skips a call when both
+the amount matches the previous call's amount *and* the window hasn't
+elapsed — two different chips tapped in quick succession no longer
+collide. On a failed write, both `_lastQuickAddAt` and
+`_lastQuickAddAmountMl` are reset to `null` before `state` is updated
+with the failure, so an immediate retry on the same chip is never
+mistaken for a debounced duplicate. Updated
+`home_notifier_test.dart`'s retry test to drop the real 350ms
+`Future.delayed` workaround it previously needed (renamed to reflect
+that it's now testing an *immediate* retry) and added a new case
+proving two different amounts tapped back-to-back both write.
+
+**42. Gate 4 fix-wave: `FlowTextField` gained two optional
+pass-through parameters, `keyboardType` and `inputFormatters`, both
+defaulting to `null`.** Checked first (per the dispatch's own
+instruction) whether any caller besides `add_water_page.dart` uses
+`FlowTextField` — none do (`app_en.arb` and the generated
+`app_localizations.dart` also matched the search string but are
+unrelated ARB-key hits, not usages) — so the new parameters are
+additive and change no existing caller's behavior.
+`add_water_page.dart` now passes `TextInputType.number` and
+`FilteringTextInputFormatter.digitsOnly`, which removes the
+"non-digit character → `int.tryParse` fails → amount silently clamps
+to 0 → controller gets overwritten to `''` on the next build" failure
+mode as a side effect: a non-digit character now never reaches
+`onChanged` in the first place.
+
+**43. Gate 4 fix-wave: no widget test was added for fix #6, and no new
+test file was created.** Neither `add_water_page_test.dart` nor
+`flow_text_field_test.dart` exists anywhere in the repo — this is a
+genuine gap, not an oversight limited to this fix. Per the dispatch's
+own instruction not to invent a new test file structure inside this
+fix-wave, this is flagged rather than done here:
+**`flutter-unit-tester` should be dispatched to create
+`test/features/hydration/presentation/add_water/add_water_page_test.dart`**
+(or a `FlowTextField`-level test, whichever fits the repo's one-file-
+per-component/screen convention better) covering at minimum: typing a
+non-digit character leaves the field's displayed value alone rather
+than clamping to empty, and the field enforces `TextInputType.number` /
+digits-only input.
+
 Also: the file plan's own header still read "Tests (10 new)" while
 listing eleven bullets (the log_row/stepper_button pair is one bullet
 covering two files) — corrected to "Tests (11 new)" to match the
@@ -920,11 +1017,15 @@ new decision, just a copy-paste mismatch closed here.
 
 ## Gate results
 
-- analyze: clean (`flutter analyze` — 16 pre-existing info-level lints in `test/`, e.g. `deprecated_member_use` on `hasFlag`/`unnecessary_import`, consistent with the same lints already present in untouched sibling component tests; zero errors, zero warnings)
+- analyze: FAIL — `flutter analyze` reports 16 issues. 14 are pre-existing (out of this workplan's scope: `lib/core/result/failure.dart:17,21,25`, `test/core/design/components/back_button_test.dart:3,47,57`, `check_row_test.dart:74,75`, `flow_tappable_test.dart:17,55,67,68,88`, `primary_button_test.dart:79` — none of these files are touched by this diff). 2 are in a file this workplan created: `test/core/design/components/stepper_button_test.dart:3` (`unnecessary_import`, `dart:ui` vs `flutter/material.dart`) and `:63` (`deprecated_member_use`, `hasFlag`). The gate requires zero issues in scope; these two fail it regardless of severity.
+- **Gate 4 fix-wave applied (see Decisions #38–#43): the `unnecessary_import` issue is fixed** (`dart:ui` import removed from `stepper_button_test.dart`); **the `deprecated_member_use`/`hasFlag` issue is deliberately left as-is**, confirmed to already match the same deprecated call every other `CMP-*` test file in the suite uses (Decisions #38) — re-run `flutter analyze` to confirm the former is clear and the latter is the only remaining in-scope issue, consistent with the fix-wave dispatch's explicit instruction not to migrate it here. The 4 reviewer must-fix findings (`stepper_button.dart` disabled-mid-hold timer leak, `today_provider.dart` DST delay bug, `home_notifier.dart` debounce key/retry bug, `add_water_page.dart`/`flow_text_field.dart` numeric-input wipe) are all fixed — see Decisions #39–#42. Fix #6 (`FlowTextField`) has no widget-test coverage added; Decisions #43 flags a `flutter-unit-tester` dispatch for it. `flutter analyze`/`flutter test` were not re-run by this agent (no shell access) — the developer runs both next.
 - tests: 251/251 passing (`flutter test`), including all 95 under `test/features/hydration/` + the 6 new/updated `test/core/` files
-- localization:
-- platform:
-- security:
+- localization: PASS — only `en` exists per `docs/PROJECT_MAP.md` § Localization (single-locale repo); every `loc.*` key referenced from the diff's presentation/component files (`hydrationTodaysGoal`, `hydrationFreshDay`, `hydrationEmptyHint`, `hydrationOfTarget`, `hydrationRemainingToGo`, `hydrationGoalComplete`, `hydrationAddWaterCta`, `hydrationJustLogged`, `quickAdd`, `todaysLogs`, `addWaterTitle`, `logWaterButton`, `largeAmountConfirmMessage`, `addWaterDiscardTitle`, `discard`, `hydrationAmountUnitLabel`, `hydrationSummarySemantics`, `hydrationSummarySemanticsComplete`, `quickAddChipSemantics`, `errorHydrationStorage`) exists in `lib/l10n/app_en.arb`. No hardcoded user-facing string literals found in the changed presentation/component files; the `'+'`/`'−'` glyphs in `stepper_button.dart:96` are language-neutral symbols, not copy.
+- platform: PASS (N/A) — diff touches no `android/` or `ios/` files and adds no plugin dependency; feature is local-Drift-only, confirmed by `git diff --stat main...HEAD -- android/ ios/` (empty) and no `pubspec.yaml` change.
+- security: PASS — no hardcoded credentials/secrets and no token/credential logging found in the diff (`git diff main...HEAD | grep -i` for password/secret/apikey/token/credential matches only design-token identifiers, e.g. `flow_colors.dart` imports).
+- documentation: PASS — every new public class, enum, Notifier, UseCase, repository implementation and domain model has a `///` doc comment (`HydrationGlass`, `LogRow`, `StepperButton`, `HydrationLocalDataSource`, `HydrationRepositoryImpl`, `DailyHydration`, `HydrationEntry`, `LoggedWater`, `TodayHydration`, `HydrationRepository`, `LogWater`, `GetTodayHydration`, `Home`, `AddWater`, `HomePage`, `AddWaterPage`, `HydrationSummary`, `QuickAddRow`, `TodaysLogsSection`, plus the top-level functions in `local_date.dart`/`uuid_v4.dart`/`volume_format.dart`/`today_provider.dart`). Private `State` classes are undocumented but are not public API.
+- scope: PASS — `git diff --name-status main...HEAD` matches the file plan exactly: Core 8, Data 5, Domain 8, Presentation 10, Tests 11, plus the 7 modified/moved files (`app.dart`, `app_router.dart`, `app_en.arb`, and the three renamed stub screens), plus the workplan doc itself and generated `.g.dart`/`l10n/generated` artifacts (exempt per the plan's own "not listed" note).
+- test coverage of new state code: PASS — `Home` (`home_notifier_test.dart`), `AddWater` (`add_water_notifier_test.dart`), `LogWater` (`log_water_test.dart`), `GetTodayHydration` (`get_today_hydration_test.dart`) and `HydrationRepositoryImpl` (`hydration_repository_impl_test.dart`) each have a test file that exercises the real class, all passing. `today_provider.dart`/`today_refresh_listener.dart` have no dedicated test, consistent with the pre-existing, untested `reduce_motion_listener.dart` this workplan explicitly mirrors — not a new gap.
 
 ---
 

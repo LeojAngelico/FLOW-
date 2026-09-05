@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../tokens/flow_colors.dart';
 import '../tokens/flow_radius.dart';
@@ -16,6 +17,8 @@ class FlowTextField extends StatefulWidget {
     this.numericHero = false,
     this.hintText,
     this.onChanged,
+    this.keyboardType,
+    this.inputFormatters,
     super.key,
   });
 
@@ -24,6 +27,20 @@ class FlowTextField extends StatefulWidget {
   final bool numericHero;
   final String? hintText;
   final ValueChanged<String>? onChanged;
+
+  /// Passed straight through to the underlying [TextField]. Defaults to
+  /// `null` (the platform's own default keyboard) so existing callers
+  /// are unaffected — only a caller that needs a restricted keyboard
+  /// (e.g. a numeric amount field) sets this.
+  final TextInputType? keyboardType;
+
+  /// Passed straight through to the underlying [TextField]. Defaults to
+  /// `null` (no formatting/filtering) so existing callers are
+  /// unaffected. A caller that restricts input this way (e.g.
+  /// `FilteringTextInputFormatter.digitsOnly`) never sees a character
+  /// its `onChanged` cannot handle in the first place, instead of
+  /// receiving it and having to recover from a failed parse.
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<FlowTextField> createState() => _FlowTextFieldState();
@@ -79,6 +96,8 @@ class _FlowTextFieldState extends State<FlowTextField> {
             controller: widget.controller,
             focusNode: _focusNode,
             onChanged: widget.onChanged,
+            keyboardType: widget.keyboardType,
+            inputFormatters: widget.inputFormatters,
             style:
                 (widget.numericHero ? typography.numericHero : typography.bodyL)
                     .copyWith(color: colors.textPrimary),

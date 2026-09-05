@@ -61,9 +61,23 @@ class _StepperButtonState extends State<StepperButton> {
   void _handleTapDown(TapDownDetails _) {
     _hasRepeated = false;
     _initialDelayTimer = Timer(_initialRepeatDelay, () {
+      // The widget may have been rebuilt disabled (e.g. hitting the
+      // 2,000ml cap) while this delay was pending -- see the
+      // didUpdateWidget guard below for why this can't rely solely on
+      // that callback having already run.
+      if (!widget.enabled) {
+        _cancelTimers();
+        return;
+      }
       _hasRepeated = true;
       widget.onStep();
-      _repeatTimer = Timer.periodic(_repeatInterval, (_) => widget.onStep());
+      _repeatTimer = Timer.periodic(_repeatInterval, (_) {
+        if (!widget.enabled) {
+          _cancelTimers();
+          return;
+        }
+        widget.onStep();
+      });
     });
   }
 
@@ -72,6 +86,21 @@ class _StepperButtonState extends State<StepperButton> {
     _initialDelayTimer = null;
     _repeatTimer?.cancel();
     _repeatTimer = null;
+  }
+
+  @override
+  void didUpdateWidget(covariant StepperButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // FlowTappable nulls its gesture callbacks entirely when `enabled`
+    // goes false, which tears down the tap recognizer without ever
+    // calling onTapUp/onTapCancel -- so the auto-repeat timers would
+    // otherwise keep firing after the button becomes disabled mid-hold
+    // (e.g. hitting the 2,000ml cap while held). The per-callback guards
+    // above cover the timers that are already scheduled; this covers
+    // the case where disabling happens between two timer firings.
+    if (oldWidget.enabled && !widget.enabled) {
+      _cancelTimers();
+    }
   }
 
   void _handleTap() {

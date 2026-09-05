@@ -143,21 +143,36 @@ void main() {
     expect(state.lastLogged, isNull);
   });
 
-  test('a write failure followed by a successful retry clears the '
-      'failure', () async {
+  test('a write failure followed by an immediate retry on the same chip '
+      'is not swallowed by the debounce', () async {
     repository.failWith = const StorageFailure('disk full');
     final notifier = container.read(homeProvider.notifier);
     await notifier.quickAdd(250);
     expect(container.read(homeProvider).writeFailure, isNotNull);
 
     repository.failWith = null;
-    // Past the 300ms debounce window -- otherwise this retry would be a
-    // no-op via the debounce guard, not a genuine second write.
-    await Future<void>.delayed(const Duration(milliseconds: 350));
+    // No artificial delay: a failed attempt must clear its own debounce
+    // stamp, so this immediate retry on the same 250ml chip is a
+    // genuine second write, not a no-op swallowed by the debounce guard.
     await notifier.quickAdd(250);
 
     final state = container.read(homeProvider);
     expect(state.writeFailure, isNull);
     expect(state.lastLogged?.amountMl, 250);
+    expect(repository.logWaterCallCount, 2);
+  });
+
+  test('two different chips tapped in quick succession both register -- '
+      'the debounce is keyed on amount as well as time', () async {
+    final notifier = container.read(homeProvider.notifier);
+
+    await notifier.quickAdd(250);
+    // Immediately re-invoked with a *different* amount -- must not be
+    // eaten by the same-chip debounce, even though real elapsed time
+    // between these two lines is well under the 300ms window.
+    await notifier.quickAdd(350);
+
+    expect(repository.logWaterCallCount, 2);
+    expect(container.read(homeProvider).lastLogged?.amountMl, 350);
   });
 }

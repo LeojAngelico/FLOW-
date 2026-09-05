@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -191,11 +192,13 @@ class _AddWaterPageState extends ConsumerState<AddWaterPage> {
                       child: FlowTextField(
                         controller: _controller,
                         numericHero: true,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         onChanged: (value) {
                           final parsed = int.tryParse(value) ?? 0;
-                          ref
-                              .read(addWaterProvider.notifier)
-                              .setAmount(parsed);
+                          ref.read(addWaterProvider.notifier).setAmount(parsed);
                         },
                       ),
                     ),
@@ -226,8 +229,9 @@ class _AddWaterPageState extends ConsumerState<AddWaterPage> {
                       QuickAddChip(
                         amountMl: amount,
                         selected: state.amountMl == amount,
-                        onTap: () =>
-                            ref.read(addWaterProvider.notifier).setAmount(amount),
+                        onTap: () => ref
+                            .read(addWaterProvider.notifier)
+                            .setAmount(amount),
                       ),
                   ],
                 ),
