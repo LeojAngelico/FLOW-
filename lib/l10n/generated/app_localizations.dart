@@ -984,6 +984,594 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We couldn\'t save that. Please try again.'**
   String get errorHydrationStorage;
+
+  /// Onboarding, CPY-021 — the primary CTA on every ONB-03 to ONB-06 form screen (ONB-07's CTA has its own Accept/Adjust copy).
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// Onboarding, CPY-030 — CMP-09 StepHeader's caller-supplied step label, ONB-03 to ONB-07.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingStepLabel(int step, int total);
+
+  /// ONB-02, CPY-010 — the welcome screen's pixel-title headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet Bloop, your hydration companion'**
+  String get onboardingWelcomeHeadline;
+
+  /// ONB-02, CPY-011 — the welcome screen's subhead, under the headline.
+  ///
+  /// In en, this message translates to:
+  /// **'FLOW turns drinking water into a small daily game — track it, watch your progress, and keep a streak worth keeping.'**
+  String get onboardingWelcomeSubhead;
+
+  /// ONB-02 — first Pillar (CMP-08) title, icon-droplet.
+  ///
+  /// In en, this message translates to:
+  /// **'Hydrate'**
+  String get onboardingWelcomePillarHydrateTitle;
+
+  /// ONB-02 — first Pillar description.
+  ///
+  /// In en, this message translates to:
+  /// **'Log a drink in seconds, any time of day.'**
+  String get onboardingWelcomePillarHydrateDescription;
+
+  /// ONB-02 — second Pillar (CMP-08) title, icon-chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get onboardingWelcomePillarProgressTitle;
+
+  /// ONB-02 — second Pillar description.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch your daily and weekly trends fill in.'**
+  String get onboardingWelcomePillarProgressDescription;
+
+  /// ONB-02 — third Pillar (CMP-08) title, icon-lightbulb.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn'**
+  String get onboardingWelcomePillarLearnTitle;
+
+  /// ONB-02 — third Pillar description.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick up a hydration fact every day.'**
+  String get onboardingWelcomePillarLearnDescription;
+
+  /// ONB-02, CPY-018 — the trust/privacy line above the CTA (08 §10: no data leaves the device).
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you enter stays on this device.'**
+  String get onboardingWelcomeTrustLine;
+
+  /// ONB-02, CPY-019 — the welcome screen's CtaSection primary label.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get onboardingWelcomeCta;
+
+  /// ONB-03 headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get to know you'**
+  String get onboardingBasicsHeadline;
+
+  /// ONB-03 subhead.
+  ///
+  /// In en, this message translates to:
+  /// **'A few basics help us suggest a target that actually fits you.'**
+  String get onboardingBasicsSubhead;
+
+  /// ONB-03 — the name field's label.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get onboardingBasicsNameLabel;
+
+  /// ONB-03, CPY-045 — helper text under the optional name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a name if you\'d like FLOW to greet you by it.'**
+  String get onboardingBasicsNameOptionalHelper;
+
+  /// ONB-03 — the age field's label.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get onboardingBasicsAgeLabel;
+
+  /// ONB-03 — the sex SegmentedChoice's label.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get onboardingBasicsSexLabel;
+
+  /// ONB-03 — Sex.female segment label.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get onboardingBasicsSexFemale;
+
+  /// ONB-03 — Sex.male segment label.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get onboardingBasicsSexMale;
+
+  /// ONB-03 — Sex.preferNotToSay segment label.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get onboardingBasicsSexPreferNotToSay;
+
+  /// ONB-03, CPY-039 — helper text under the sex SegmentedChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'We only use this to fine-tune your suggested target.'**
+  String get onboardingBasicsSexHelper;
+
+  /// ONB-04 headline.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your weight?'**
+  String get onboardingWeightHeadline;
+
+  /// ONB-04, CPY-042 — reused verbatim as the prefilled-weight estimate marker per the workplan's § Open product questions.
+  ///
+  /// In en, this message translates to:
+  /// **'An estimate is fine — you can change it any time.'**
+  String get onboardingWeightReassurance;
+
+  /// ONB-04 — unit label next to the weight StatDisplay/text field. Metric-only this pass (Decisions #8).
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get onboardingWeightUnitLabel;
+
+  /// ONB-04 — the full spoken word FlowSlider's accessibility label speaks (e.g. "68 kilograms"), distinct from onboardingWeightUnitLabel's short display form ("kg"). Gate-4 fix: previously the literal English word 'kilograms' was hardcoded in weight_page.dart.
+  ///
+  /// In en, this message translates to:
+  /// **'kilograms'**
+  String get onboardingWeightUnitLabelSpoken;
+
+  /// ONB-05, CPY-049 — headline.
+  ///
+  /// In en, this message translates to:
+  /// **'How active is your day-to-day?'**
+  String get onboardingActivityHeadline;
+
+  /// ONB-05 — subhead, under the headline.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the one that matches most days.'**
+  String get onboardingActivitySubhead;
+
+  /// ONB-05, CPY-050 — ChoiceCard combined title/descriptor, split at '·' by activity_page.dart.
+  ///
+  /// In en, this message translates to:
+  /// **'Sedentary · Mostly sitting, little movement'**
+  String get onboardingActivitySedentary;
+
+  /// ONB-05, CPY-051.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightly active · Short walks or light chores'**
+  String get onboardingActivityLight;
+
+  /// ONB-05, CPY-052.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderately active · Exercise a few times a week'**
+  String get onboardingActivityModerate;
+
+  /// ONB-05, CPY-053.
+  ///
+  /// In en, this message translates to:
+  /// **'Highly active · Intense exercise most days'**
+  String get onboardingActivityHigh;
+
+  /// ONB-05, CPY-054.
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete · Daily intense training'**
+  String get onboardingActivityAthlete;
+
+  /// ONB-06, CPY-060 — headline.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your everyday environment like?'**
+  String get onboardingEnvironmentHeadline;
+
+  /// ONB-06, CPY-061 — subhead.
+  ///
+  /// In en, this message translates to:
+  /// **'This affects how much water you naturally lose to heat.'**
+  String get onboardingEnvironmentSubhead;
+
+  /// ONB-06 — Environment.temperate IconChoiceTile label.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperate'**
+  String get onboardingEnvironmentTemperate;
+
+  /// ONB-06 — Environment.warm IconChoiceTile label.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm'**
+  String get onboardingEnvironmentWarm;
+
+  /// ONB-06 — Environment.hot IconChoiceTile label.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot'**
+  String get onboardingEnvironmentHot;
+
+  /// ONB-06 — Environment.veryHot IconChoiceTile label.
+  ///
+  /// In en, this message translates to:
+  /// **'Very hot'**
+  String get onboardingEnvironmentVeryHot;
+
+  /// ONB-06 — section header above the special-circumstance CheckRows.
+  ///
+  /// In en, this message translates to:
+  /// **'Do any of these apply to you?'**
+  String get onboardingCircumstancesLabel;
+
+  /// ONB-06 — SpecialCircumstance.pregnancy CheckRow label.
+  ///
+  /// In en, this message translates to:
+  /// **'Pregnant'**
+  String get onboardingCircumstancePregnancy;
+
+  /// ONB-06 — SpecialCircumstance.breastfeeding CheckRow label.
+  ///
+  /// In en, this message translates to:
+  /// **'Breastfeeding'**
+  String get onboardingCircumstanceBreastfeeding;
+
+  /// ONB-06 — SpecialCircumstance.medicalCondition CheckRow label.
+  ///
+  /// In en, this message translates to:
+  /// **'A medical condition that affects hydration'**
+  String get onboardingCircumstanceMedicalCondition;
+
+  /// ONB-06 — SpecialCircumstance.other CheckRow label.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get onboardingCircumstanceOther;
+
+  /// ONB-06, CPY-071 — the conditional InfoCard shown once any special circumstance is checked (FR-011).
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll flag this on your target screen. It won\'t change the number, and it\'s never shared off this device.'**
+  String get onboardingCircumstanceNotice;
+
+  /// ONB-07, CPY-072 — binding wording per the workplan (do not paraphrase). The 09-content-copy-spec.md source this id names is not present in this repository, so this exact sentence is this implementer's construction honouring the plan's constraints (no 'must'/'need to'/'required'/'minimum', no urgency) rather than a verified verbatim copy — flagged for the developer to check against the real spec.
+  ///
+  /// In en, this message translates to:
+  /// **'This looks like a good starting point for you'**
+  String get onboardingTargetHeadline;
+
+  /// ONB-07 — TargetHero's eyebrow label, both viewing and editing modes.
+  ///
+  /// In en, this message translates to:
+  /// **'Your daily target'**
+  String get onboardingTargetEyebrow;
+
+  /// ONB-07 — the full spoken word FlowSlider's accessibility label speaks while TargetHero is in editing mode (e.g. "3600 millilitres"). Gate-4 fix: previously the literal English word 'milliliters' was hardcoded inside target_hero.dart (a Core component), which must never read AppLocalizations itself; TargetHero.unitLabel is now a required, caller-supplied parameter and target_page.dart is its only caller.
+  ///
+  /// In en, this message translates to:
+  /// **'millilitres'**
+  String get onboardingTargetUnitLabelSpoken;
+
+  /// ONB-07 accessibility string — merges TargetHero's eyebrow and value into one semantics node in viewing mode (manual QA item 12), matching the hydration summary precedent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your suggested daily target: {amountMl} millilitres'**
+  String onboardingTargetHeroSemantics(int amountMl);
+
+  /// ONB-07, CPY-073 — the glasses anchor line under the hero.
+  ///
+  /// In en, this message translates to:
+  /// **'About {glasses} glasses a day (1 glass = 250 ml)'**
+  String onboardingTargetGlassesAnchor(int glasses);
+
+  /// ONB-07, CPY-075 — tappable link opening OVL-10 (calculation_method_sheet.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'See how we calculated this'**
+  String get onboardingTargetSeeCalculation;
+
+  /// ONB-07, CPY-074 — non-blocking caution shown above 3,500 ml (FR-014). Never disables Continue.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s on the higher side — make sure it feels right for you.'**
+  String get onboardingTargetHighCaution;
+
+  /// ONB-07, CPY-070 — binding wording per the workplan, rendered above the fold whenever any special circumstance is checked (FR-011). The 09-content-copy-spec.md source is not present in this repository, so this exact sentence is this implementer's construction rather than a verified verbatim copy — flagged for the developer to check against the real spec.
+  ///
+  /// In en, this message translates to:
+  /// **'You mentioned something that can change how much water is right for you. It may be worth checking in with a healthcare professional.'**
+  String get onboardingTargetProfessionalNotice;
+
+  /// ONB-07, CPY-077 — CtaSection primary label while TargetMode.suggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get onboardingTargetAccept;
+
+  /// ONB-07, CPY-078 — CtaSection secondary label while TargetMode.suggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust'**
+  String get onboardingTargetAdjust;
+
+  /// ONB-07, CPY-079 — instructional line shown while editing/edited.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the slider or the +/- buttons to fine-tune your target.'**
+  String get onboardingTargetEditingInstruction;
+
+  /// ONB-07, CPY-080 — CtaSection secondary label while editing/edited; reverts to the calculator's suggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Use suggested amount'**
+  String get onboardingTargetRevertToSuggested;
+
+  /// ONB-07 — defensive message shown only if this screen is somehow reached with an incomplete draft; the router never allows this in practice.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back and finish the previous steps to see your target.'**
+  String get onboardingTargetIncompleteDraft;
+
+  /// OVL-10, CPY-081 — sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'How we calculated this'**
+  String get onboardingCalcSheetTitle;
+
+  /// OVL-10 — display name for calculationMethodId == 'reference_intake_v1' (workplan Decisions #19).
+  ///
+  /// In en, this message translates to:
+  /// **'Reference daily intake'**
+  String get onboardingCalcMethodReferenceIntake;
+
+  /// OVL-10, CPY-082 — breakdown line label for BreakdownLine.labelId == 'baseline'.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting point for your age and sex'**
+  String get onboardingCalcBaseline;
+
+  /// OVL-10, CPY-083 — breakdown line label for labelId == 'weightAdjustment'.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight adjustment'**
+  String get onboardingCalcWeightAdjustment;
+
+  /// OVL-10 — breakdown line label for labelId == 'activity'; {level} is the activity level's localized display name.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity ({level})'**
+  String onboardingCalcActivity(String level);
+
+  /// OVL-10 — breakdown line label for labelId == 'environment'; {level} is the environment's localized display name.
+  ///
+  /// In en, this message translates to:
+  /// **'Environment ({level})'**
+  String onboardingCalcEnvironment(String level);
+
+  /// OVL-10 — subtotal line label for labelId == 'totalWaterSubtotal'.
+  ///
+  /// In en, this message translates to:
+  /// **'Total water'**
+  String get onboardingCalcTotalWaterSubtotal;
+
+  /// OVL-10 — breakdown line label for labelId == 'foodWaterDeduction'.
+  ///
+  /// In en, this message translates to:
+  /// **'From food and other drinks'**
+  String get onboardingCalcFoodWaterDeduction;
+
+  /// OVL-10 — subtotal line label for labelId == 'drinkingTargetSubtotal'.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinking water target'**
+  String get onboardingCalcDrinkingTargetSubtotal;
+
+  /// OVL-10, CPY-085 — assumption line for assumptions[] id 'foodWaterFraction'.
+  ///
+  /// In en, this message translates to:
+  /// **'About a quarter of your total water need is assumed to come from food and other drinks.'**
+  String get onboardingCalcAssumptionFoodWaterFraction;
+
+  /// OVL-10, CPY-086 — assumption line for assumptions[] id 'weightAdjustmentClamped', shown only when it actually happened.
+  ///
+  /// In en, this message translates to:
+  /// **'Your weight adjustment was capped to keep this estimate realistic.'**
+  String get onboardingCalcAssumptionWeightAdjustmentClamped;
+
+  /// OVL-10, CPY-087 — assumption line for assumptions[] id 'resultClamped', shown only when it actually happened.
+  ///
+  /// In en, this message translates to:
+  /// **'Your target was kept within a safe, realistic range.'**
+  String get onboardingCalcAssumptionResultClamped;
+
+  /// OVL-10, CPY-089 — disclaimer for disclaimer id 'referenceIntakeDisclaimer'; also reused verbatim on ONB-07 (CPY-076) so both screens agree on the wording.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a general estimate, not medical advice. Everyone\'s needs are a little different.'**
+  String get onboardingCalcDisclaimer;
+
+  /// OVL-10, CPY-028 — the sheet's dismiss CTA.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get onboardingCalcGotIt;
+
+  /// ONB-08, CPY-120 — top-right Skip control (FlowTextButton); writes reminder_settings.enabled = false and still completes onboarding (FR-017).
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingRemindersSkip;
+
+  /// ONB-08, CPY-121 — headline.
+  ///
+  /// In en, this message translates to:
+  /// **'When should we remind you?'**
+  String get onboardingRemindersHeadline;
+
+  /// ONB-08, CPY-122 — shown under the time rows when end <= start; disables the CTA.
+  ///
+  /// In en, this message translates to:
+  /// **'End time must be after the start time.'**
+  String get onboardingRemindersWindowError;
+
+  /// ONB-08 — SettingRow label opening the native time picker for the window start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start time'**
+  String get onboardingRemindersStartLabel;
+
+  /// ONB-08 — SettingRow label opening the native time picker for the window end.
+  ///
+  /// In en, this message translates to:
+  /// **'End time'**
+  String get onboardingRemindersEndLabel;
+
+  /// ONB-08 — SettingRow label opening the interval bottom sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me every'**
+  String get onboardingRemindersIntervalLabel;
+
+  /// ONB-08 — one interval sheet row's label and the interval SettingRow's current value, e.g. '120 min'.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String onboardingRemindersIntervalOption(int minutes);
+
+  /// ONB-08 — label above the seven DayToggles.
+  ///
+  /// In en, this message translates to:
+  /// **'Active days'**
+  String get onboardingRemindersWeekdaysLabel;
+
+  /// ONB-08 — Monday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get onboardingRemindersDayLetterMon;
+
+  /// ONB-08 — Tuesday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get onboardingRemindersDayLetterTue;
+
+  /// ONB-08 — Wednesday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get onboardingRemindersDayLetterWed;
+
+  /// ONB-08 — Thursday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get onboardingRemindersDayLetterThu;
+
+  /// ONB-08 — Friday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get onboardingRemindersDayLetterFri;
+
+  /// ONB-08 — Saturday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get onboardingRemindersDayLetterSat;
+
+  /// ONB-08 — Sunday's DayToggle single-letter label.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get onboardingRemindersDayLetterSun;
+
+  /// ONB-08 — Monday's DayToggle accessibility label (overrides the visible single letter, matching quickAddChipSemantics' precedent).
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get onboardingRemindersDayNameMon;
+
+  /// ONB-08 — Tuesday's DayToggle accessibility label.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get onboardingRemindersDayNameTue;
+
+  /// ONB-08 — Wednesday's DayToggle accessibility label.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get onboardingRemindersDayNameWed;
+
+  /// ONB-08 — Thursday's DayToggle accessibility label.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get onboardingRemindersDayNameThu;
+
+  /// ONB-08 — Friday's DayToggle accessibility label.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get onboardingRemindersDayNameFri;
+
+  /// ONB-08 — Saturday's DayToggle accessibility label.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get onboardingRemindersDayNameSat;
+
+  /// ONB-08 — Sunday's DayToggle accessibility label.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get onboardingRemindersDayNameSun;
+
+  /// ONB-08, CPY-126 — the live preview InfoCard, recomputed from ReminderPreferences.reminderMinutes() (BR-30) on every window/interval change.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll get {count} reminders today: {times}'**
+  String onboardingRemindersPreviewCount(int count, String times);
+
+  /// ONB-08, CPY-127 — small caption under the live preview.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this anytime in Settings.'**
+  String get onboardingRemindersPreviewNote;
+
+  /// ONB-08, CPY-128 — CtaSection primary label; calls RemindersNotifier.submit(enabled: true).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on reminders'**
+  String get onboardingRemindersCta;
+
+  /// ONB-08 — shown inline when CompleteOnboarding returns a StorageFailure; the draft and every earlier answer stay intact (acceptance criteria: 'keeps the user on ONB-08 with the draft intact').
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save your profile. Please try again.'**
+  String get onboardingErrorStorage;
 }
 
 class _AppLocalizationsDelegate

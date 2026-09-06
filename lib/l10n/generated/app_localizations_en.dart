@@ -491,4 +491,343 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorHydrationStorage =>
       'We couldn\'t save that. Please try again.';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String onboardingStepLabel(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get onboardingWelcomeHeadline =>
+      'Meet Bloop, your hydration companion';
+
+  @override
+  String get onboardingWelcomeSubhead =>
+      'FLOW turns drinking water into a small daily game — track it, watch your progress, and keep a streak worth keeping.';
+
+  @override
+  String get onboardingWelcomePillarHydrateTitle => 'Hydrate';
+
+  @override
+  String get onboardingWelcomePillarHydrateDescription =>
+      'Log a drink in seconds, any time of day.';
+
+  @override
+  String get onboardingWelcomePillarProgressTitle => 'Progress';
+
+  @override
+  String get onboardingWelcomePillarProgressDescription =>
+      'Watch your daily and weekly trends fill in.';
+
+  @override
+  String get onboardingWelcomePillarLearnTitle => 'Learn';
+
+  @override
+  String get onboardingWelcomePillarLearnDescription =>
+      'Pick up a hydration fact every day.';
+
+  @override
+  String get onboardingWelcomeTrustLine =>
+      'Everything you enter stays on this device.';
+
+  @override
+  String get onboardingWelcomeCta => 'Get started';
+
+  @override
+  String get onboardingBasicsHeadline => 'Let\'s get to know you';
+
+  @override
+  String get onboardingBasicsSubhead =>
+      'A few basics help us suggest a target that actually fits you.';
+
+  @override
+  String get onboardingBasicsNameLabel => 'Name (optional)';
+
+  @override
+  String get onboardingBasicsNameOptionalHelper =>
+      'Add a name if you\'d like FLOW to greet you by it.';
+
+  @override
+  String get onboardingBasicsAgeLabel => 'Age';
+
+  @override
+  String get onboardingBasicsSexLabel => 'Sex';
+
+  @override
+  String get onboardingBasicsSexFemale => 'Female';
+
+  @override
+  String get onboardingBasicsSexMale => 'Male';
+
+  @override
+  String get onboardingBasicsSexPreferNotToSay => 'Prefer not to say';
+
+  @override
+  String get onboardingBasicsSexHelper =>
+      'We only use this to fine-tune your suggested target.';
+
+  @override
+  String get onboardingWeightHeadline => 'What\'s your weight?';
+
+  @override
+  String get onboardingWeightReassurance =>
+      'An estimate is fine — you can change it any time.';
+
+  @override
+  String get onboardingWeightUnitLabel => 'kg';
+
+  @override
+  String get onboardingWeightUnitLabelSpoken => 'kilograms';
+
+  @override
+  String get onboardingActivityHeadline => 'How active is your day-to-day?';
+
+  @override
+  String get onboardingActivitySubhead =>
+      'Pick the one that matches most days.';
+
+  @override
+  String get onboardingActivitySedentary =>
+      'Sedentary · Mostly sitting, little movement';
+
+  @override
+  String get onboardingActivityLight =>
+      'Lightly active · Short walks or light chores';
+
+  @override
+  String get onboardingActivityModerate =>
+      'Moderately active · Exercise a few times a week';
+
+  @override
+  String get onboardingActivityHigh =>
+      'Highly active · Intense exercise most days';
+
+  @override
+  String get onboardingActivityAthlete => 'Athlete · Daily intense training';
+
+  @override
+  String get onboardingEnvironmentHeadline =>
+      'What\'s your everyday environment like?';
+
+  @override
+  String get onboardingEnvironmentSubhead =>
+      'This affects how much water you naturally lose to heat.';
+
+  @override
+  String get onboardingEnvironmentTemperate => 'Temperate';
+
+  @override
+  String get onboardingEnvironmentWarm => 'Warm';
+
+  @override
+  String get onboardingEnvironmentHot => 'Hot';
+
+  @override
+  String get onboardingEnvironmentVeryHot => 'Very hot';
+
+  @override
+  String get onboardingCircumstancesLabel => 'Do any of these apply to you?';
+
+  @override
+  String get onboardingCircumstancePregnancy => 'Pregnant';
+
+  @override
+  String get onboardingCircumstanceBreastfeeding => 'Breastfeeding';
+
+  @override
+  String get onboardingCircumstanceMedicalCondition =>
+      'A medical condition that affects hydration';
+
+  @override
+  String get onboardingCircumstanceOther => 'Something else';
+
+  @override
+  String get onboardingCircumstanceNotice =>
+      'We\'ll flag this on your target screen. It won\'t change the number, and it\'s never shared off this device.';
+
+  @override
+  String get onboardingTargetHeadline =>
+      'This looks like a good starting point for you';
+
+  @override
+  String get onboardingTargetEyebrow => 'Your daily target';
+
+  @override
+  String get onboardingTargetUnitLabelSpoken => 'millilitres';
+
+  @override
+  String onboardingTargetHeroSemantics(int amountMl) {
+    return 'Your suggested daily target: $amountMl millilitres';
+  }
+
+  @override
+  String onboardingTargetGlassesAnchor(int glasses) {
+    return 'About $glasses glasses a day (1 glass = 250 ml)';
+  }
+
+  @override
+  String get onboardingTargetSeeCalculation => 'See how we calculated this';
+
+  @override
+  String get onboardingTargetHighCaution =>
+      'That\'s on the higher side — make sure it feels right for you.';
+
+  @override
+  String get onboardingTargetProfessionalNotice =>
+      'You mentioned something that can change how much water is right for you. It may be worth checking in with a healthcare professional.';
+
+  @override
+  String get onboardingTargetAccept => 'Accept';
+
+  @override
+  String get onboardingTargetAdjust => 'Adjust';
+
+  @override
+  String get onboardingTargetEditingInstruction =>
+      'Use the slider or the +/- buttons to fine-tune your target.';
+
+  @override
+  String get onboardingTargetRevertToSuggested => 'Use suggested amount';
+
+  @override
+  String get onboardingTargetIncompleteDraft =>
+      'Go back and finish the previous steps to see your target.';
+
+  @override
+  String get onboardingCalcSheetTitle => 'How we calculated this';
+
+  @override
+  String get onboardingCalcMethodReferenceIntake => 'Reference daily intake';
+
+  @override
+  String get onboardingCalcBaseline => 'Starting point for your age and sex';
+
+  @override
+  String get onboardingCalcWeightAdjustment => 'Weight adjustment';
+
+  @override
+  String onboardingCalcActivity(String level) {
+    return 'Activity ($level)';
+  }
+
+  @override
+  String onboardingCalcEnvironment(String level) {
+    return 'Environment ($level)';
+  }
+
+  @override
+  String get onboardingCalcTotalWaterSubtotal => 'Total water';
+
+  @override
+  String get onboardingCalcFoodWaterDeduction => 'From food and other drinks';
+
+  @override
+  String get onboardingCalcDrinkingTargetSubtotal => 'Drinking water target';
+
+  @override
+  String get onboardingCalcAssumptionFoodWaterFraction =>
+      'About a quarter of your total water need is assumed to come from food and other drinks.';
+
+  @override
+  String get onboardingCalcAssumptionWeightAdjustmentClamped =>
+      'Your weight adjustment was capped to keep this estimate realistic.';
+
+  @override
+  String get onboardingCalcAssumptionResultClamped =>
+      'Your target was kept within a safe, realistic range.';
+
+  @override
+  String get onboardingCalcDisclaimer =>
+      'This is a general estimate, not medical advice. Everyone\'s needs are a little different.';
+
+  @override
+  String get onboardingCalcGotIt => 'Got it';
+
+  @override
+  String get onboardingRemindersSkip => 'Skip';
+
+  @override
+  String get onboardingRemindersHeadline => 'When should we remind you?';
+
+  @override
+  String get onboardingRemindersWindowError =>
+      'End time must be after the start time.';
+
+  @override
+  String get onboardingRemindersStartLabel => 'Start time';
+
+  @override
+  String get onboardingRemindersEndLabel => 'End time';
+
+  @override
+  String get onboardingRemindersIntervalLabel => 'Remind me every';
+
+  @override
+  String onboardingRemindersIntervalOption(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get onboardingRemindersWeekdaysLabel => 'Active days';
+
+  @override
+  String get onboardingRemindersDayLetterMon => 'M';
+
+  @override
+  String get onboardingRemindersDayLetterTue => 'T';
+
+  @override
+  String get onboardingRemindersDayLetterWed => 'W';
+
+  @override
+  String get onboardingRemindersDayLetterThu => 'T';
+
+  @override
+  String get onboardingRemindersDayLetterFri => 'F';
+
+  @override
+  String get onboardingRemindersDayLetterSat => 'S';
+
+  @override
+  String get onboardingRemindersDayLetterSun => 'S';
+
+  @override
+  String get onboardingRemindersDayNameMon => 'Monday';
+
+  @override
+  String get onboardingRemindersDayNameTue => 'Tuesday';
+
+  @override
+  String get onboardingRemindersDayNameWed => 'Wednesday';
+
+  @override
+  String get onboardingRemindersDayNameThu => 'Thursday';
+
+  @override
+  String get onboardingRemindersDayNameFri => 'Friday';
+
+  @override
+  String get onboardingRemindersDayNameSat => 'Saturday';
+
+  @override
+  String get onboardingRemindersDayNameSun => 'Sunday';
+
+  @override
+  String onboardingRemindersPreviewCount(int count, String times) {
+    return 'You\'ll get $count reminders today: $times';
+  }
+
+  @override
+  String get onboardingRemindersPreviewNote =>
+      'You can change this anytime in Settings.';
+
+  @override
+  String get onboardingRemindersCta => 'Turn on reminders';
+
+  @override
+  String get onboardingErrorStorage =>
+      'We couldn\'t save your profile. Please try again.';
 }

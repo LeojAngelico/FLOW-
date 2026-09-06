@@ -295,5 +295,438 @@
   "errorHydrationStorage": "We couldn't save that. Please try again.",
   "@errorHydrationStorage": {
     "description": "APP-01/APP-02 — shown inline (never replacing the displayed total) when a hydration read or write fails with a StorageFailure."
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Onboarding, CPY-021 — the primary CTA on every ONB-03 to ONB-06 form screen (ONB-07's CTA has its own Accept/Adjust copy)."
+  },
+  "onboardingStepLabel": "Step {step} of {total}",
+  "@onboardingStepLabel": {
+    "description": "Onboarding, CPY-030 — CMP-09 StepHeader's caller-supplied step label, ONB-03 to ONB-07.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWelcomeHeadline": "Meet Bloop, your hydration companion",
+  "@onboardingWelcomeHeadline": {
+    "description": "ONB-02, CPY-010 — the welcome screen's pixel-title headline."
+  },
+  "onboardingWelcomeSubhead": "FLOW turns drinking water into a small daily game — track it, watch your progress, and keep a streak worth keeping.",
+  "@onboardingWelcomeSubhead": {
+    "description": "ONB-02, CPY-011 — the welcome screen's subhead, under the headline."
+  },
+  "onboardingWelcomePillarHydrateTitle": "Hydrate",
+  "@onboardingWelcomePillarHydrateTitle": {
+    "description": "ONB-02 — first Pillar (CMP-08) title, icon-droplet."
+  },
+  "onboardingWelcomePillarHydrateDescription": "Log a drink in seconds, any time of day.",
+  "@onboardingWelcomePillarHydrateDescription": {
+    "description": "ONB-02 — first Pillar description."
+  },
+  "onboardingWelcomePillarProgressTitle": "Progress",
+  "@onboardingWelcomePillarProgressTitle": {
+    "description": "ONB-02 — second Pillar (CMP-08) title, icon-chart."
+  },
+  "onboardingWelcomePillarProgressDescription": "Watch your daily and weekly trends fill in.",
+  "@onboardingWelcomePillarProgressDescription": {
+    "description": "ONB-02 — second Pillar description."
+  },
+  "onboardingWelcomePillarLearnTitle": "Learn",
+  "@onboardingWelcomePillarLearnTitle": {
+    "description": "ONB-02 — third Pillar (CMP-08) title, icon-lightbulb."
+  },
+  "onboardingWelcomePillarLearnDescription": "Pick up a hydration fact every day.",
+  "@onboardingWelcomePillarLearnDescription": {
+    "description": "ONB-02 — third Pillar description."
+  },
+  "onboardingWelcomeTrustLine": "Everything you enter stays on this device.",
+  "@onboardingWelcomeTrustLine": {
+    "description": "ONB-02, CPY-018 — the trust/privacy line above the CTA (08 §10: no data leaves the device)."
+  },
+  "onboardingWelcomeCta": "Get started",
+  "@onboardingWelcomeCta": {
+    "description": "ONB-02, CPY-019 — the welcome screen's CtaSection primary label."
+  },
+  "onboardingBasicsHeadline": "Let's get to know you",
+  "@onboardingBasicsHeadline": {
+    "description": "ONB-03 headline."
+  },
+  "onboardingBasicsSubhead": "A few basics help us suggest a target that actually fits you.",
+  "@onboardingBasicsSubhead": {
+    "description": "ONB-03 subhead."
+  },
+  "onboardingBasicsNameLabel": "Name (optional)",
+  "@onboardingBasicsNameLabel": {
+    "description": "ONB-03 — the name field's label."
+  },
+  "onboardingBasicsNameOptionalHelper": "Add a name if you'd like FLOW to greet you by it.",
+  "@onboardingBasicsNameOptionalHelper": {
+    "description": "ONB-03, CPY-045 — helper text under the optional name field."
+  },
+  "onboardingBasicsAgeLabel": "Age",
+  "@onboardingBasicsAgeLabel": {
+    "description": "ONB-03 — the age field's label."
+  },
+  "onboardingBasicsSexLabel": "Sex",
+  "@onboardingBasicsSexLabel": {
+    "description": "ONB-03 — the sex SegmentedChoice's label."
+  },
+  "onboardingBasicsSexFemale": "Female",
+  "@onboardingBasicsSexFemale": {
+    "description": "ONB-03 — Sex.female segment label."
+  },
+  "onboardingBasicsSexMale": "Male",
+  "@onboardingBasicsSexMale": {
+    "description": "ONB-03 — Sex.male segment label."
+  },
+  "onboardingBasicsSexPreferNotToSay": "Prefer not to say",
+  "@onboardingBasicsSexPreferNotToSay": {
+    "description": "ONB-03 — Sex.preferNotToSay segment label."
+  },
+  "onboardingBasicsSexHelper": "We only use this to fine-tune your suggested target.",
+  "@onboardingBasicsSexHelper": {
+    "description": "ONB-03, CPY-039 — helper text under the sex SegmentedChoice."
+  },
+  "onboardingWeightHeadline": "What's your weight?",
+  "@onboardingWeightHeadline": {
+    "description": "ONB-04 headline."
+  },
+  "onboardingWeightReassurance": "An estimate is fine — you can change it any time.",
+  "@onboardingWeightReassurance": {
+    "description": "ONB-04, CPY-042 — reused verbatim as the prefilled-weight estimate marker per the workplan's § Open product questions."
+  },
+  "onboardingWeightUnitLabel": "kg",
+  "@onboardingWeightUnitLabel": {
+    "description": "ONB-04 — unit label next to the weight StatDisplay/text field. Metric-only this pass (Decisions #8)."
+  },
+  "onboardingWeightUnitLabelSpoken": "kilograms",
+  "@onboardingWeightUnitLabelSpoken": {
+    "description": "ONB-04 — the full spoken word FlowSlider's accessibility label speaks (e.g. \"68 kilograms\"), distinct from onboardingWeightUnitLabel's short display form (\"kg\"). Gate-4 fix: previously the literal English word 'kilograms' was hardcoded in weight_page.dart."
+  },
+  "onboardingActivityHeadline": "How active is your day-to-day?",
+  "@onboardingActivityHeadline": {
+    "description": "ONB-05, CPY-049 — headline."
+  },
+  "onboardingActivitySubhead": "Pick the one that matches most days.",
+  "@onboardingActivitySubhead": {
+    "description": "ONB-05 — subhead, under the headline."
+  },
+  "onboardingActivitySedentary": "Sedentary · Mostly sitting, little movement",
+  "@onboardingActivitySedentary": {
+    "description": "ONB-05, CPY-050 — ChoiceCard combined title/descriptor, split at '·' by activity_page.dart."
+  },
+  "onboardingActivityLight": "Lightly active · Short walks or light chores",
+  "@onboardingActivityLight": {
+    "description": "ONB-05, CPY-051."
+  },
+  "onboardingActivityModerate": "Moderately active · Exercise a few times a week",
+  "@onboardingActivityModerate": {
+    "description": "ONB-05, CPY-052."
+  },
+  "onboardingActivityHigh": "Highly active · Intense exercise most days",
+  "@onboardingActivityHigh": {
+    "description": "ONB-05, CPY-053."
+  },
+  "onboardingActivityAthlete": "Athlete · Daily intense training",
+  "@onboardingActivityAthlete": {
+    "description": "ONB-05, CPY-054."
+  },
+  "onboardingEnvironmentHeadline": "What's your everyday environment like?",
+  "@onboardingEnvironmentHeadline": {
+    "description": "ONB-06, CPY-060 — headline."
+  },
+  "onboardingEnvironmentSubhead": "This affects how much water you naturally lose to heat.",
+  "@onboardingEnvironmentSubhead": {
+    "description": "ONB-06, CPY-061 — subhead."
+  },
+  "onboardingEnvironmentTemperate": "Temperate",
+  "@onboardingEnvironmentTemperate": {
+    "description": "ONB-06 — Environment.temperate IconChoiceTile label."
+  },
+  "onboardingEnvironmentWarm": "Warm",
+  "@onboardingEnvironmentWarm": {
+    "description": "ONB-06 — Environment.warm IconChoiceTile label."
+  },
+  "onboardingEnvironmentHot": "Hot",
+  "@onboardingEnvironmentHot": {
+    "description": "ONB-06 — Environment.hot IconChoiceTile label."
+  },
+  "onboardingEnvironmentVeryHot": "Very hot",
+  "@onboardingEnvironmentVeryHot": {
+    "description": "ONB-06 — Environment.veryHot IconChoiceTile label."
+  },
+  "onboardingCircumstancesLabel": "Do any of these apply to you?",
+  "@onboardingCircumstancesLabel": {
+    "description": "ONB-06 — section header above the special-circumstance CheckRows."
+  },
+  "onboardingCircumstancePregnancy": "Pregnant",
+  "@onboardingCircumstancePregnancy": {
+    "description": "ONB-06 — SpecialCircumstance.pregnancy CheckRow label."
+  },
+  "onboardingCircumstanceBreastfeeding": "Breastfeeding",
+  "@onboardingCircumstanceBreastfeeding": {
+    "description": "ONB-06 — SpecialCircumstance.breastfeeding CheckRow label."
+  },
+  "onboardingCircumstanceMedicalCondition": "A medical condition that affects hydration",
+  "@onboardingCircumstanceMedicalCondition": {
+    "description": "ONB-06 — SpecialCircumstance.medicalCondition CheckRow label."
+  },
+  "onboardingCircumstanceOther": "Something else",
+  "@onboardingCircumstanceOther": {
+    "description": "ONB-06 — SpecialCircumstance.other CheckRow label."
+  },
+  "onboardingCircumstanceNotice": "We'll flag this on your target screen. It won't change the number, and it's never shared off this device.",
+  "@onboardingCircumstanceNotice": {
+    "description": "ONB-06, CPY-071 — the conditional InfoCard shown once any special circumstance is checked (FR-011)."
+  },
+  "onboardingTargetHeadline": "This looks like a good starting point for you",
+  "@onboardingTargetHeadline": {
+    "description": "ONB-07, CPY-072 — binding wording per the workplan (do not paraphrase). The 09-content-copy-spec.md source this id names is not present in this repository, so this exact sentence is this implementer's construction honouring the plan's constraints (no 'must'/'need to'/'required'/'minimum', no urgency) rather than a verified verbatim copy — flagged for the developer to check against the real spec."
+  },
+  "onboardingTargetEyebrow": "Your daily target",
+  "@onboardingTargetEyebrow": {
+    "description": "ONB-07 — TargetHero's eyebrow label, both viewing and editing modes."
+  },
+  "onboardingTargetUnitLabelSpoken": "millilitres",
+  "@onboardingTargetUnitLabelSpoken": {
+    "description": "ONB-07 — the full spoken word FlowSlider's accessibility label speaks while TargetHero is in editing mode (e.g. \"3600 millilitres\"). Gate-4 fix: previously the literal English word 'milliliters' was hardcoded inside target_hero.dart (a Core component), which must never read AppLocalizations itself; TargetHero.unitLabel is now a required, caller-supplied parameter and target_page.dart is its only caller."
+  },
+  "onboardingTargetHeroSemantics": "Your suggested daily target: {amountMl} millilitres",
+  "@onboardingTargetHeroSemantics": {
+    "description": "ONB-07 accessibility string — merges TargetHero's eyebrow and value into one semantics node in viewing mode (manual QA item 12), matching the hydration summary precedent.",
+    "placeholders": {
+      "amountMl": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingTargetGlassesAnchor": "About {glasses} glasses a day (1 glass = 250 ml)",
+  "@onboardingTargetGlassesAnchor": {
+    "description": "ONB-07, CPY-073 — the glasses anchor line under the hero.",
+    "placeholders": {
+      "glasses": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingTargetSeeCalculation": "See how we calculated this",
+  "@onboardingTargetSeeCalculation": {
+    "description": "ONB-07, CPY-075 — tappable link opening OVL-10 (calculation_method_sheet.dart)."
+  },
+  "onboardingTargetHighCaution": "That's on the higher side — make sure it feels right for you.",
+  "@onboardingTargetHighCaution": {
+    "description": "ONB-07, CPY-074 — non-blocking caution shown above 3,500 ml (FR-014). Never disables Continue."
+  },
+  "onboardingTargetProfessionalNotice": "You mentioned something that can change how much water is right for you. It may be worth checking in with a healthcare professional.",
+  "@onboardingTargetProfessionalNotice": {
+    "description": "ONB-07, CPY-070 — binding wording per the workplan, rendered above the fold whenever any special circumstance is checked (FR-011). The 09-content-copy-spec.md source is not present in this repository, so this exact sentence is this implementer's construction rather than a verified verbatim copy — flagged for the developer to check against the real spec."
+  },
+  "onboardingTargetAccept": "Accept",
+  "@onboardingTargetAccept": {
+    "description": "ONB-07, CPY-077 — CtaSection primary label while TargetMode.suggested."
+  },
+  "onboardingTargetAdjust": "Adjust",
+  "@onboardingTargetAdjust": {
+    "description": "ONB-07, CPY-078 — CtaSection secondary label while TargetMode.suggested."
+  },
+  "onboardingTargetEditingInstruction": "Use the slider or the +/- buttons to fine-tune your target.",
+  "@onboardingTargetEditingInstruction": {
+    "description": "ONB-07, CPY-079 — instructional line shown while editing/edited."
+  },
+  "onboardingTargetRevertToSuggested": "Use suggested amount",
+  "@onboardingTargetRevertToSuggested": {
+    "description": "ONB-07, CPY-080 — CtaSection secondary label while editing/edited; reverts to the calculator's suggestion."
+  },
+  "onboardingTargetIncompleteDraft": "Go back and finish the previous steps to see your target.",
+  "@onboardingTargetIncompleteDraft": {
+    "description": "ONB-07 — defensive message shown only if this screen is somehow reached with an incomplete draft; the router never allows this in practice."
+  },
+  "onboardingCalcSheetTitle": "How we calculated this",
+  "@onboardingCalcSheetTitle": {
+    "description": "OVL-10, CPY-081 — sheet title."
+  },
+  "onboardingCalcMethodReferenceIntake": "Reference daily intake",
+  "@onboardingCalcMethodReferenceIntake": {
+    "description": "OVL-10 — display name for calculationMethodId == 'reference_intake_v1' (workplan Decisions #19)."
+  },
+  "onboardingCalcBaseline": "Starting point for your age and sex",
+  "@onboardingCalcBaseline": {
+    "description": "OVL-10, CPY-082 — breakdown line label for BreakdownLine.labelId == 'baseline'."
+  },
+  "onboardingCalcWeightAdjustment": "Weight adjustment",
+  "@onboardingCalcWeightAdjustment": {
+    "description": "OVL-10, CPY-083 — breakdown line label for labelId == 'weightAdjustment'."
+  },
+  "onboardingCalcActivity": "Activity ({level})",
+  "@onboardingCalcActivity": {
+    "description": "OVL-10 — breakdown line label for labelId == 'activity'; {level} is the activity level's localized display name.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingCalcEnvironment": "Environment ({level})",
+  "@onboardingCalcEnvironment": {
+    "description": "OVL-10 — breakdown line label for labelId == 'environment'; {level} is the environment's localized display name.",
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingCalcTotalWaterSubtotal": "Total water",
+  "@onboardingCalcTotalWaterSubtotal": {
+    "description": "OVL-10 — subtotal line label for labelId == 'totalWaterSubtotal'."
+  },
+  "onboardingCalcFoodWaterDeduction": "From food and other drinks",
+  "@onboardingCalcFoodWaterDeduction": {
+    "description": "OVL-10 — breakdown line label for labelId == 'foodWaterDeduction'."
+  },
+  "onboardingCalcDrinkingTargetSubtotal": "Drinking water target",
+  "@onboardingCalcDrinkingTargetSubtotal": {
+    "description": "OVL-10 — subtotal line label for labelId == 'drinkingTargetSubtotal'."
+  },
+  "onboardingCalcAssumptionFoodWaterFraction": "About a quarter of your total water need is assumed to come from food and other drinks.",
+  "@onboardingCalcAssumptionFoodWaterFraction": {
+    "description": "OVL-10, CPY-085 — assumption line for assumptions[] id 'foodWaterFraction'."
+  },
+  "onboardingCalcAssumptionWeightAdjustmentClamped": "Your weight adjustment was capped to keep this estimate realistic.",
+  "@onboardingCalcAssumptionWeightAdjustmentClamped": {
+    "description": "OVL-10, CPY-086 — assumption line for assumptions[] id 'weightAdjustmentClamped', shown only when it actually happened."
+  },
+  "onboardingCalcAssumptionResultClamped": "Your target was kept within a safe, realistic range.",
+  "@onboardingCalcAssumptionResultClamped": {
+    "description": "OVL-10, CPY-087 — assumption line for assumptions[] id 'resultClamped', shown only when it actually happened."
+  },
+  "onboardingCalcDisclaimer": "This is a general estimate, not medical advice. Everyone's needs are a little different.",
+  "@onboardingCalcDisclaimer": {
+    "description": "OVL-10, CPY-089 — disclaimer for disclaimer id 'referenceIntakeDisclaimer'; also reused verbatim on ONB-07 (CPY-076) so both screens agree on the wording."
+  },
+  "onboardingCalcGotIt": "Got it",
+  "@onboardingCalcGotIt": {
+    "description": "OVL-10, CPY-028 — the sheet's dismiss CTA."
+  },
+  "onboardingRemindersSkip": "Skip",
+  "@onboardingRemindersSkip": {
+    "description": "ONB-08, CPY-120 — top-right Skip control (FlowTextButton); writes reminder_settings.enabled = false and still completes onboarding (FR-017)."
+  },
+  "onboardingRemindersHeadline": "When should we remind you?",
+  "@onboardingRemindersHeadline": {
+    "description": "ONB-08, CPY-121 — headline."
+  },
+  "onboardingRemindersWindowError": "End time must be after the start time.",
+  "@onboardingRemindersWindowError": {
+    "description": "ONB-08, CPY-122 — shown under the time rows when end <= start; disables the CTA."
+  },
+  "onboardingRemindersStartLabel": "Start time",
+  "@onboardingRemindersStartLabel": {
+    "description": "ONB-08 — SettingRow label opening the native time picker for the window start."
+  },
+  "onboardingRemindersEndLabel": "End time",
+  "@onboardingRemindersEndLabel": {
+    "description": "ONB-08 — SettingRow label opening the native time picker for the window end."
+  },
+  "onboardingRemindersIntervalLabel": "Remind me every",
+  "@onboardingRemindersIntervalLabel": {
+    "description": "ONB-08 — SettingRow label opening the interval bottom sheet."
+  },
+  "onboardingRemindersIntervalOption": "{minutes} min",
+  "@onboardingRemindersIntervalOption": {
+    "description": "ONB-08 — one interval sheet row's label and the interval SettingRow's current value, e.g. '120 min'.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingRemindersWeekdaysLabel": "Active days",
+  "@onboardingRemindersWeekdaysLabel": {
+    "description": "ONB-08 — label above the seven DayToggles."
+  },
+  "onboardingRemindersDayLetterMon": "M",
+  "@onboardingRemindersDayLetterMon": {
+    "description": "ONB-08 — Monday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayLetterTue": "T",
+  "@onboardingRemindersDayLetterTue": {
+    "description": "ONB-08 — Tuesday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayLetterWed": "W",
+  "@onboardingRemindersDayLetterWed": {
+    "description": "ONB-08 — Wednesday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayLetterThu": "T",
+  "@onboardingRemindersDayLetterThu": {
+    "description": "ONB-08 — Thursday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayLetterFri": "F",
+  "@onboardingRemindersDayLetterFri": {
+    "description": "ONB-08 — Friday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayLetterSat": "S",
+  "@onboardingRemindersDayLetterSat": {
+    "description": "ONB-08 — Saturday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayLetterSun": "S",
+  "@onboardingRemindersDayLetterSun": {
+    "description": "ONB-08 — Sunday's DayToggle single-letter label."
+  },
+  "onboardingRemindersDayNameMon": "Monday",
+  "@onboardingRemindersDayNameMon": {
+    "description": "ONB-08 — Monday's DayToggle accessibility label (overrides the visible single letter, matching quickAddChipSemantics' precedent)."
+  },
+  "onboardingRemindersDayNameTue": "Tuesday",
+  "@onboardingRemindersDayNameTue": {
+    "description": "ONB-08 — Tuesday's DayToggle accessibility label."
+  },
+  "onboardingRemindersDayNameWed": "Wednesday",
+  "@onboardingRemindersDayNameWed": {
+    "description": "ONB-08 — Wednesday's DayToggle accessibility label."
+  },
+  "onboardingRemindersDayNameThu": "Thursday",
+  "@onboardingRemindersDayNameThu": {
+    "description": "ONB-08 — Thursday's DayToggle accessibility label."
+  },
+  "onboardingRemindersDayNameFri": "Friday",
+  "@onboardingRemindersDayNameFri": {
+    "description": "ONB-08 — Friday's DayToggle accessibility label."
+  },
+  "onboardingRemindersDayNameSat": "Saturday",
+  "@onboardingRemindersDayNameSat": {
+    "description": "ONB-08 — Saturday's DayToggle accessibility label."
+  },
+  "onboardingRemindersDayNameSun": "Sunday",
+  "@onboardingRemindersDayNameSun": {
+    "description": "ONB-08 — Sunday's DayToggle accessibility label."
+  },
+  "onboardingRemindersPreviewCount": "You'll get {count} reminders today: {times}",
+  "@onboardingRemindersPreviewCount": {
+    "description": "ONB-08, CPY-126 — the live preview InfoCard, recomputed from ReminderPreferences.reminderMinutes() (BR-30) on every window/interval change.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "times": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRemindersPreviewNote": "You can change this anytime in Settings.",
+  "@onboardingRemindersPreviewNote": {
+    "description": "ONB-08, CPY-127 — small caption under the live preview."
+  },
+  "onboardingRemindersCta": "Turn on reminders",
+  "@onboardingRemindersCta": {
+    "description": "ONB-08, CPY-128 — CtaSection primary label; calls RemindersNotifier.submit(enabled: true)."
+  },
+  "onboardingErrorStorage": "We couldn't save your profile. Please try again.",
+  "@onboardingErrorStorage": {
+    "description": "ONB-08 — shown inline when CompleteOnboarding returns a StorageFailure; the draft and every earlier answer stay intact (acceptance criteria: 'keeps the user on ONB-08 with the draft intact')."
   }
 }
